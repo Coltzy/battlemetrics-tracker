@@ -1,0 +1,33 @@
+{
+  "name": "battlemetrics-discord",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/Coltzy/battlemetrics-tracker"
+  },
+  "scripts": {
+    "dev": "npx nodemon ./src/index.ts",
+    "deploy": "npx ts-node ./src/deploy.ts",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts"
+  },
+  "author": "Coltzy",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "@discordjs/builders": "^1.5.0",
+    "chalk": "4",
+    "discord.js": "^14.8.0",
+    "glob": "^9.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.37.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
+  }
+}
