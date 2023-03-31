@@ -3,9 +3,7 @@ import { Routes } from 'discord-api-types/v9';
 import Logger from './Logger';
 import 'dotenv/config';
 
-import { 
-    PingInteraction
-} from './interactions/Ping';
+import PingInteraction from './interactions/Ping';
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
 
@@ -16,7 +14,7 @@ try {
         ), 
         {
             body: [
-                PingInteraction
+                PingInteraction,
             ],
         }
     );

@@ -1,14 +1,12 @@
-import { CommandInteraction, Client } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { inlineCode } from '@discordjs/builders';
 import Command from '../Command';
 
 class PingCommand implements Command {
-    public client: Client;
     public name = 'ping';
 
-    public constructor(client: Client) {
-        this.client = client;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public constructor() {}
 
     public async execute(interaction: CommandInteraction) {
         const sent = await interaction.reply({

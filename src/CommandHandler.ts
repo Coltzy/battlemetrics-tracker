@@ -42,8 +42,6 @@ class CommandHandler {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { default: Base } = require(path.resolve(dir));
             const command = new Base();
-
-            command.client = this.client;
             this.modules.set(command.name, command);
         }
     }
