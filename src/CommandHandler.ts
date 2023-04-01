@@ -18,9 +18,17 @@ class CommandHandler {
 
         client.on(Events.InteractionCreate, async (interaction) => {
             if (!interaction.isChatInputCommand()) return;
-            const name = interaction.commandName;
 
-            const command = this.modules.get(name);
+            const sub = interaction.options.getSubcommand(false);
+            let name = interaction.commandName;
+            let command;
+
+            if (sub) {
+                name = name + '-' + sub;
+                command = this.modules.get(name);
+            } else {
+                command = this.modules.get(name);
+            }
 
             if (command) {
                 try {

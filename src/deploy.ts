@@ -4,6 +4,7 @@ import Logger from './Logger';
 import 'dotenv/config';
 
 import PingInteraction from './interactions/Ping';
+import ServerInteraction from './interactions/Server';
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
 
@@ -15,6 +16,7 @@ try {
         {
             body: [
                 PingInteraction,
+                ServerInteraction
             ],
         }
     );
