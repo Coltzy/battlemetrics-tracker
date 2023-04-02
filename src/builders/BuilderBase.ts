@@ -12,7 +12,7 @@ class Builder extends PageManager {
     ) {
         super(pages);
 
-        this.links = links;
+        this.links = links || {};
 
         this.send(interaction);
     }
