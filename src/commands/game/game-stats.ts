@@ -4,7 +4,7 @@ import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
 import { Game } from '../../types/game';
 import GameStatsBuilder from '../../builders/game/GameBase';
-import { BMErrors } from '../../types/servers';
+import { BMErrors } from '../../types/BMError';
 import 'moment-duration-format';
 
 class GameStatsCommand implements Command {
@@ -28,6 +28,7 @@ class GameStatsCommand implements Command {
         }
 
         if ('errors' in data) {
+            console.log(data);
             const error = data.errors[0];
 
             if (error.title == 'Unknown Game') {

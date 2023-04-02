@@ -133,8 +133,6 @@ class RustServerStatsBuilder extends BuilderBase {
         ];
 
         super(interaction, links, pages);
-
-        console.log(attributes.details.rust_maps.thumbnailUrl);
     }
 }
 

@@ -19,16 +19,6 @@ export interface Server {
     data: ServerData;
 }
 
-export interface BMErrors {
-    errors: BMError[]
-}
-
-interface BMError {
-    status: string;
-    title: string;
-    detail: string;
-}
-
 interface RustAttributes {
     id: string;
     name: string;

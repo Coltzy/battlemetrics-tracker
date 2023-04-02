@@ -2,7 +2,8 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
-import { BMErrors, Server, RustServer } from '../../types/servers';
+import { Server, RustServer } from '../../types/servers';
+import { BMErrors } from '../../types/BMError';
 import RustServerStatsBuilder from '../../builders/server/rust';
 import 'moment-duration-format';
 
@@ -29,7 +30,7 @@ class ServerStatsCommand implements Command {
         if ('errors' in data) {
             const status = data.errors[0].status;
 
-            if (status == '400') {
+            if (status == 'Unknown Server') {
                 interaction.reply(`Server ID ${inlineCode(id)} doesn't exist.`);
             } else if (status) {
                 interaction.reply('There was an error fetching battlemetrics data.');
@@ -45,8 +46,6 @@ class ServerStatsCommand implements Command {
         } else {
             interaction.reply('This server type is currently not yet supported!');
         }
-
-        
     }
 }
 

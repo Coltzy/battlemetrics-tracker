@@ -10,7 +10,6 @@ class GameStatsBuilder extends BuilderBase {
         interaction: CommandInteraction, 
         game: GameData,
     ) {
-        console.log(game.attributes.metadata);
         const { attributes } = game;
         let i = 0;
         let j = 0;
@@ -124,13 +123,13 @@ class GameStatsBuilder extends BuilderBase {
             {
                 embed: stats,
                 button: new ButtonBuilder()
-                    .setLabel('Stats')
+                    .setLabel('📈 Stats')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: players,
                 button: new ButtonBuilder()
-                    .setLabel('Players')
+                    .setLabel('⛹️ Players')
                     .setStyle(ButtonStyle.Primary)
             }
         ];
