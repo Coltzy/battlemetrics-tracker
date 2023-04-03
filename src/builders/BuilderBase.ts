@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
-import { CommandInteraction } from 'discord.js';
+import { AttachmentBuilder, CommandInteraction } from 'discord.js';
 import PageManager, { Page } from './PageManager';
 
 class Builder extends PageManager {
@@ -8,16 +8,17 @@ class Builder extends PageManager {
     constructor(
         interaction: CommandInteraction,
         links: ActionRowBuilder<ButtonBuilder>,
-        pages: Page[]
+        pages: Page[],
+        attachments?: AttachmentBuilder
     ) {
         super(pages);
 
         this.links = links || {};
 
-        this.send(interaction);
+        this.send(interaction, attachments);
     }
 
-    private async send(interaction: CommandInteraction) {
+    private async send(interaction: CommandInteraction, attachments?: AttachmentBuilder) {
         const row = super.row();
 
         await interaction.reply({
@@ -27,6 +28,10 @@ class Builder extends PageManager {
             ],
             embeds: [
                 super.GetFirstPage()
+            ],
+            files: [
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                attachments!
             ]
         });
 

@@ -1,7 +1,8 @@
-import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
 import BuilderBase from '../BuilderBase';
 import { bold } from '@discordjs/builders';
 import { GameData } from '../../types/game';
+import { GAME_TITLES } from '../../Constants';
 import iso3311a2 from 'iso-3166-1-alpha-2';
 import GameUtils from './GameUtils';
 
@@ -14,8 +15,11 @@ class GameStatsBuilder extends BuilderBase {
         let i = 0;
         let j = 0;
 
+        const attachment = new AttachmentBuilder(`./images/${game.id}.png`);
+
         const stats = new EmbedBuilder()
-            .setTitle(game.id)
+            .setTitle(GAME_TITLES[game.id])
+            .setThumbnail(`attachment://${game.id}.png`)
             .addFields(
                 {
                     name: 'Total Players',
@@ -134,7 +138,7 @@ class GameStatsBuilder extends BuilderBase {
             }
         ];
 
-        super(interaction, links, pages);
+        super(interaction, links, pages, attachment);
     }
 }
 
