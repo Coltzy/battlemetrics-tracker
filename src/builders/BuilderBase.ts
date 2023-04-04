@@ -29,10 +29,9 @@ class Builder extends PageManager {
             embeds: [
                 super.GetFirstPage()
             ],
-            files: [
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                attachments!
-            ]
+            files: attachments ? [
+                attachments
+            ] : [] 
         });
 
         super.collector(interaction);

@@ -18,7 +18,7 @@ class GameStatsCommand implements Command {
         let data: BMErrors | Game;
 
         try {
-            data = await interaction.client.BMF.fetch('games', id);
+            data = await interaction.client.BMF.fetch('games/{ID}', id);
         } catch (err) {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
