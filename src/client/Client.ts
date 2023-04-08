@@ -19,7 +19,11 @@ class BMT extends Client {
 
     constructor() {
         super({
-            intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+            intents: [
+                GatewayIntentBits.Guilds, 
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent
+            ],
         });
 
         this.commands = new CommandHandler(this, './src/commands/**/*.ts');

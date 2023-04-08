@@ -1,24 +1,26 @@
-export interface RustServerData {
+/* Base Server */
+export interface Server {
+    data: BaseServerData;
+}
+
+/* Base Server Data */
+interface BaseServerData {
     type: string;
     id: string;
-    attributes: RustAttributes;
     relationships: Relationships;
 }
 
+/* Rust Server */
 export interface RustServer {
     data: RustServerData;
 }
 
-interface ServerData {
-    type: string;
-    id: string;
-    relationships: Relationships;
+/* Rust Server Data */
+export interface RustServerData extends BaseServerData {
+    attributes: RustAttributes;
 }
 
-export interface Server {
-    data: ServerData;
-}
-
+/* Rust Attributes */
 interface RustAttributes {
     id: string;
     name: string;
@@ -81,6 +83,7 @@ interface RustMaps {
     barren: boolean;
 }
 
+/* Game Relationships */
 interface Relationships {
     game: Game;
 }
@@ -92,4 +95,30 @@ interface Game {
 interface GameData {
     type: string;
     id: string;
+}
+
+/* Leaderboard */
+export interface ServerLeaderboard {
+    data: ServerLeaderboardPlayer[];
+    links: EndpointSliderLinks;
+}
+
+/* Leaderboard Player */
+export interface ServerLeaderboardPlayer {
+    type: string;
+    id: string;
+    attributes: ServerLeaderboardPlayerAttributes;
+}
+
+/* Leaderboard Player Attributes */
+interface ServerLeaderboardPlayerAttributes {
+    name: string;
+    value: number;
+    rank: number;
+}
+
+/* Leaderboard Links */
+export interface EndpointSliderLinks {
+    next?: string;
+    prev?: string;
 }

@@ -13,6 +13,17 @@ const ServerInteraction = new SlashCommandBuilder()
                 .setDescription('The ID of the server.')
                 .setRequired(true)
         )
+    )
+    .addSubcommand(command => 
+        command
+            .setName('leaderboard')
+            .setDescription('Leaderboard of the most played on a server.')
+        .addStringOption(option =>
+            option
+                .setName('id')
+                .setDescription('The ID of the server.')
+                .setRequired(true)
+        )
     );
 
 export default ServerInteraction;

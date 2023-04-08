@@ -10,10 +10,13 @@ export interface SendOptions {
 
 abstract class BuilderBase {
     private collector: InteractionCollector<ButtonInteraction> | undefined;
+    public deleted: boolean | undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor() {
         this.collector = undefined;
+
+        this.deleted = undefined;
     }
 
     private async disable(interaction: CommandInteraction, buttons: ActionRowBuilder<ButtonBuilder>[]) {
@@ -39,6 +42,7 @@ abstract class BuilderBase {
 
             if (i.customId == 'del') {
                 try {
+                    this.deleted = true;
                     await interaction.deleteReply();
                     this.collector?.stop();
                 } catch {
@@ -103,6 +107,8 @@ abstract class BuilderBase {
             files: attachment ? 
                 [attachment] : []
         });
+
+        this.deleted = false;
 
         this.startCollector(interaction, components);
     }
