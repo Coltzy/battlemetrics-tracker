@@ -2,12 +2,14 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import CommandHandler from '../CommandHandler';
 import Logger from '../Logger';
 import BMF from '../framework/BMF';
+import Mongo from '../framework/Mongo';
 import 'dotenv/config';
 
 declare module 'discord.js' {
     interface Client {
         commands: CommandHandler;
         BMF: BMF;
+        mongo: Mongo;
     }
 }
 
@@ -24,11 +26,14 @@ class BMT extends Client {
 
         this.BMF = new BMF();
 
+        this.mongo = new Mongo();
+
         this.once('ready', () => Logger.info('Bot active!'));
     }
 
     public activate() {
         super.login(process.env.DISCORD_TOKEN);
+        this.mongo.connect();
     }
 }
 

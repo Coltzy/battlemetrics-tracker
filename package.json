@@ -16,15 +16,14 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@discordjs/builders": "^1.5.0",
-    "@types/uuid": "^9.0.1",
     "chalk": "4",
     "discord.js": "^14.8.0",
     "glob": "^9.3.2",
     "iso-3166-1-alpha-2": "^1.0.1",
     "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
-    "node-fetch": "2",
-    "uuid": "^9.0.0"
+    "mongoose": "^7.0.3",
+    "node-fetch": "2"
   },
   "devDependencies": {
     "@types/iso-3166-1-alpha-2": "^1.0.0",
