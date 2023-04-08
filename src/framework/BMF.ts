@@ -9,8 +9,11 @@ class BMF {
     constructor() {}
 
     public async fetch(method: string, id: string, options?: { [key: string]: string }) {
-        console.log(this.uri(method, id, options));
-        const response = await fetch(this.uri(method, id, options), {
+        return await this.direct_fetch(this.uri(method, id, options));
+    }
+
+    public async direct_fetch(uri: string) {
+        const response = await fetch(uri, {
             headers: {
                 "Authorization": process.env.BATTLEMETRICS_TOKEN as string
             }

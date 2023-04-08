@@ -1,12 +1,12 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
-import BuilderBase from '../BuilderBase';
+import PageBuilder from '../PageBuilder';
 import { bold } from '@discordjs/builders';
 import { GameData } from '../../types/game';
 import { GAME_TITLES } from '../../Constants';
 import iso3311a2 from 'iso-3166-1-alpha-2';
 import GameUtils from './GameUtils';
 
-class GameStatsBuilder extends BuilderBase {
+class GameStatsBuilder extends PageBuilder {
     constructor(
         interaction: CommandInteraction, 
         game: GameData,
@@ -128,17 +128,22 @@ class GameStatsBuilder extends BuilderBase {
                 embed: stats,
                 button: new ButtonBuilder()
                     .setLabel('📈 Stats')
+                    .setCustomId('STATS')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: players,
                 button: new ButtonBuilder()
                     .setLabel('⛹️ Players')
+                    .setCustomId('PLAYERS')
                     .setStyle(ButtonStyle.Primary)
             }
         ];
 
-        super(interaction, links, pages, attachment);
+        super(interaction, pages, {
+            links,
+            attachment
+        });
     }
 }
 

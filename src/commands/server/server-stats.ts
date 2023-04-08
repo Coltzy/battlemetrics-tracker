@@ -4,7 +4,7 @@ import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
 import { Server, RustServer } from '../../types/servers';
 import { BMErrors } from '../../types/BMError';
-import RustServerStatsBuilder from '../../builders/server/rust';
+import RustServerStatsBuilder from '../../builders/rust/rust-stats';
 import 'moment-duration-format';
 
 class ServerStatsCommand implements Command {
