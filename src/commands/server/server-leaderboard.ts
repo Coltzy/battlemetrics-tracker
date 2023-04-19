@@ -1,7 +1,7 @@
 import { Client, CommandInteraction, inlineCode } from 'discord.js';
 import Command from '../../Command';
 import { ServerLeaderboard } from '../../types/servers';
-import RustServerLeaderboardBuilder from '../../builders/rust/rust-leaderboard';
+import RustServerLeaderboardBuilder from '../../builders/leaderboard/rust-leaderboard';
 import LeaderboardModel from '../../models/Leaderboard';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { BMErrors } from '../../types/BMError';
