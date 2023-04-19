@@ -5,5 +5,4 @@ export interface ServerLeaderboardMongoModel {
     value: number;
     rank: number;
     createdAt: Date;
-    updatedAt: Date;
 }

@@ -5,7 +5,6 @@ import RustServerLeaderboardBuilder from '../../builders/leaderboard/rust-leader
 import LeaderboardModel from '../../models/Leaderboard';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { BMErrors } from '../../types/BMError';
-import moment from 'moment';
 
 class ServerLeaderboardCommand implements Command {
     public name = 'server-leaderboard';
@@ -18,9 +17,8 @@ class ServerLeaderboardCommand implements Command {
         const period = 'AT';
 
         const models = await LeaderboardModel.find({ server: id });
-        const days = moment().diff(moment(models[0]?.createdAt), 'hours');
 
-        if (models.length == 0 || days >= 24) {
+        if (!models.length) {
             interaction.reply({
                 content: 'Fetching leaderboard information this may take a few seconds...',
                 fetchReply: true
