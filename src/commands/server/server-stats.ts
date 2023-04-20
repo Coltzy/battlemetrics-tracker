@@ -2,11 +2,13 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
-import { Server, RustServerData, ArkServerData } from '../../types/servers';
+import { Server, RustServerData, ArkServerData, CsgoServerData } from '../../types/servers';
 import { BMErrors } from '../../types/BMError';
-import RustServerStatsBuilder from '../../builders/stats/rust-stats';
 import 'moment-duration-format';
+
+import RustServerStatsBuilder from '../../builders/stats/rust-stats';
 import ArkServerStatsBuilder from '../../builders/stats/ark-stats';
+import CsgoServerStatsBuilder from '../../builders/stats/csgo-stats';
 
 class ServerStatsCommand implements Command {
     public name = 'server-stats';
@@ -46,6 +48,8 @@ class ServerStatsCommand implements Command {
             new RustServerStatsBuilder(interaction, server as RustServerData);
         } else if (server.relationships.game.data.id == 'ark') {
             new ArkServerStatsBuilder(interaction, server as ArkServerData);
+        } else if (server.relationships.game.data.id == 'csgo') {
+            new CsgoServerStatsBuilder(interaction, server as CsgoServerData);
         } else {
             interaction.reply('This server type is currently not yet supported!');
         }

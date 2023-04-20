@@ -16,12 +16,16 @@ export interface RustServer {
 }
 
 /* Rust Server Data */
-export interface RustServerData extends BaseServerData {
-    attributes: RustServerAttributes;
+export interface CsgoServerData extends BaseServerData {
+    attributes: CsgoServerAttributes;
 }
 
 export interface ArkServerData extends BaseServerData {
     attributes: ArkServerAttributes;
+}
+
+export interface RustServerData extends BaseServerData {
+    attributes: RustServerAttributes;
 }
 
 /* Attributes */
@@ -52,7 +56,24 @@ export interface ArkServerAttributes extends ServerAttributesBase {
     details: ArkServerDetails;
 }
 
+export interface CsgoServerAttributes extends ServerAttributesBase {
+    details: CsgoServerDetails;
+}
+
 /* Server Attribute Details */
+interface CsgoServerDetails {
+    map: string;
+    password: boolean;
+    numbots: number;
+    tags: string;
+    rules?: CsgoRules;
+    serverSteamId?: string;
+}
+
+interface CsgoRules {
+    [key: string]: string;
+}
+
 interface ArkServerDetails {
     modIds: string[];
     modHashes: string[];
