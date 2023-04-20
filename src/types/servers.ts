@@ -17,6 +17,10 @@ interface BaseServerData {
 }
 
 /* Server Data */
+export interface MinecraftServerData extends BaseServerData {
+    attributes: MinecraftServerAttributes;
+}
+
 export interface CsgoServerData extends BaseServerData {
     attributes: CsgoServerAttributes;
 }
@@ -61,7 +65,32 @@ export interface CsgoServerAttributes extends ServerAttributesBase {
     details: CsgoServerDetails;
 }
 
+export interface MinecraftServerAttributes extends ServerAttributesBase {
+    details: MinecraftServerDetails;
+}
+
 /* Server Attribute Details */
+interface MinecraftServerDetails {
+    minecraft_clean_description: string;
+    minecraft_description: MinecraftDescription | string;
+    minecraft_modded: boolean;
+    minecraft_mods?: string[];
+    minecraft_mod_hash?: string;
+    minecraft_modpack_checked?: string;
+    minecraft_version_name: string;
+    minecraft_hash: string;
+    minecraft_version: MinecraftVersion;
+}
+
+interface MinecraftDescription {
+    text: string;
+}
+
+interface MinecraftVersion {
+    name: string;
+    protocol: number;
+}
+
 interface CsgoServerDetails {
     map: string;
     password: boolean;
@@ -136,6 +165,7 @@ interface RustMaps {
 /* Game Relationships */
 interface Relationships {
     game: Game;
+    serverGroup?: ServerGroup;
 }
 
 interface Game {
@@ -143,6 +173,20 @@ interface Game {
 }
 
 interface GameData {
+    type: string;
+    id: string;
+}
+
+interface ServerGroup {
+    meta: ServerGroupMeta;
+    data: ServerGroupData;
+}
+
+interface ServerGroupMeta {
+    leader: boolean;
+}
+
+interface ServerGroupData {
     type: string;
     id: string;
 }
