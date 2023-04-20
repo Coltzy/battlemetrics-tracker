@@ -17,11 +17,15 @@ export interface RustServer {
 
 /* Rust Server Data */
 export interface RustServerData extends BaseServerData {
-    attributes: RustAttributes;
+    attributes: RustServerAttributes;
 }
 
-/* Rust Attributes */
-interface RustAttributes {
+export interface ArkServerData extends BaseServerData {
+    attributes: ArkServerAttributes;
+}
+
+/* Attributes */
+interface ServerAttributesBase {
     id: string;
     name: string;
     address: null;
@@ -32,7 +36,6 @@ interface RustAttributes {
     rank: number;
     location: number[];
     status: string;
-    details: RustDetails;
     private: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -41,7 +44,32 @@ interface RustAttributes {
     queryStatus: string;
 }
 
-interface RustDetails {
+export interface RustServerAttributes extends ServerAttributesBase {
+    details: RustServerDetails;
+}
+
+export interface ArkServerAttributes extends ServerAttributesBase {
+    details: ArkServerDetails;
+}
+
+/* Server Attribute Details */
+interface ArkServerDetails {
+    modIds: string[];
+    modHashes: string[];
+    map: string;
+    time: string;
+    time_i: string;
+    offical: boolean;
+    gamemode: string;
+    modNames: string[];
+    pve: boolean;
+    modded: boolean;
+    crossplay: boolean;
+    session_flags: string;
+    serverSteamId: string;
+}
+
+interface RustServerDetails {
     official: boolean;
     rust_type: string;
     map: string;

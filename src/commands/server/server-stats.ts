@@ -2,10 +2,11 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
-import { Server, RustServer } from '../../types/servers';
+import { Server, RustServerData, ArkServerData } from '../../types/servers';
 import { BMErrors } from '../../types/BMError';
 import RustServerStatsBuilder from '../../builders/stats/rust-stats';
 import 'moment-duration-format';
+import ArkServerStatsBuilder from '../../builders/stats/ark-stats';
 
 class ServerStatsCommand implements Command {
     public name = 'server-stats';
@@ -39,10 +40,12 @@ class ServerStatsCommand implements Command {
             return;
         }
 
-        const { data: server } = (data as unknown as RustServer);
+        const { data: server } = data;
 
         if (server.relationships.game.data.id == 'rust') {
-            new RustServerStatsBuilder(interaction, server);
+            new RustServerStatsBuilder(interaction, server as RustServerData);
+        } else if (server.relationships.game.data.id == 'ark') {
+            new ArkServerStatsBuilder(interaction, server as ArkServerData);
         } else {
             interaction.reply('This server type is currently not yet supported!');
         }
