@@ -9,8 +9,8 @@ const ServerInteraction = new SlashCommandBuilder()
             .setDescription('Fetch server stats.')
         .addStringOption(option => 
             option
-                .setName('id')
-                .setDescription('The ID of the server.')
+                .setName('query')
+                .setDescription('The query of the search.')
                 .setRequired(true)
         )
     )

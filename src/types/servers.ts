@@ -3,6 +3,12 @@ export interface Server {
     data: BaseServerData;
 }
 
+export interface ServerSearch {
+    data: BaseServerData[];
+    links: EndpointSliderLinks;
+    included: unknown[];
+}
+
 /* Base Server Data */
 interface BaseServerData {
     type: string;
@@ -10,12 +16,7 @@ interface BaseServerData {
     relationships: Relationships;
 }
 
-/* Rust Server */
-export interface RustServer {
-    data: RustServerData;
-}
-
-/* Rust Server Data */
+/* Server Data */
 export interface CsgoServerData extends BaseServerData {
     attributes: CsgoServerAttributes;
 }

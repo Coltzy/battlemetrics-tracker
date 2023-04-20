@@ -2,7 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
-import { Server, RustServerData, ArkServerData, CsgoServerData } from '../../types/servers';
+import { Server, RustServerData, ArkServerData, CsgoServerData, ServerSearch } from '../../types/servers';
 import { BMErrors } from '../../types/BMError';
 import 'moment-duration-format';
 
@@ -17,11 +17,26 @@ class ServerStatsCommand implements Command {
     public constructor() {}
 
     public async execute(interaction: CommandInteraction) {
-        const id = interaction.options.get('id')?.value as string;
-        let data: BMErrors | Server;
+        const query = interaction.options.get('query')?.value as string;
+        let response: BMErrors | Server | ServerSearch | undefined = undefined;
 
         try {
-            data = await interaction.client.BMF.fetch(`servers/${id}`);
+            let success = false;
+
+            if (!isNaN(Number(query))) {
+                response = await interaction.client.BMF.fetch(`servers/${query}`) as BMErrors | Server;
+
+                if ('data' in response) {
+                    success = true;
+                }
+            }
+
+            if (!success) {
+                response = await interaction.client.BMF.fetch('servers', {
+                    'filter[search]': query,
+                    'page[size]': '1'
+                });
+            }
         } catch (err) {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
@@ -30,19 +45,19 @@ class ServerStatsCommand implements Command {
             return;
         }
 
-        if ('errors' in data) {
-            const status = data.errors[0].status;
+        if (!response) return;
 
-            if (status == 'Unknown Server') {
-                interaction.reply(`Server ID ${inlineCode(id)} doesn't exist.`);
-            } else if (status) {
-                interaction.reply('There was an error fetching battlemetrics data.');
+        if ('data' in response && Array.isArray(response.data)) {
+            if (!response.data.length) {
+                interaction.reply(`The search for ${inlineCode(query)} didn't find any results.`);
+
+                return;
             }
 
-            return;
+            response = { data: response.data[0] };
         }
 
-        const { data: server } = data;
+        const { data: server } = response as Server;
 
         if (server.relationships.game.data.id == 'rust') {
             new RustServerStatsBuilder(interaction, server as RustServerData);
@@ -51,7 +66,7 @@ class ServerStatsCommand implements Command {
         } else if (server.relationships.game.data.id == 'csgo') {
             new CsgoServerStatsBuilder(interaction, server as CsgoServerData);
         } else {
-            interaction.reply('This server type is currently not yet supported!');
+            interaction.reply(`Server's from ${server.relationships.game.data.id} are currently not supported!`);
         }
     }
 }
