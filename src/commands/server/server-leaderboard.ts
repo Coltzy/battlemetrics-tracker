@@ -48,7 +48,7 @@ class ServerLeaderboardCommand implements Command {
 
         let uri: string;
 
-        uri = client.BMF.uri('servers/{ID}/relationships/leaderboards/time', id, {
+        uri = client.BMF.uri(`servers/${id}/relationships/leaderboards/time`, {
             'filter[period]': period,
             'page[size]': '100'
         });

@@ -8,8 +8,8 @@ class BMF {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor() {}
 
-    public async fetch(method: string, id: string, options?: { [key: string]: string }) {
-        return await this.direct_fetch(this.uri(method, id, options));
+    public async fetch(method: string, options?: { [key: string]: string }) {
+        return await this.direct_fetch(this.uri(method, options));
     }
 
     public async direct_fetch(uri: string) {
@@ -22,8 +22,8 @@ class BMF {
         return await response.json();
     }
 
-    public uri(method: string, id: string, options?: { [key: string]: string }) {
-        let uri = (ENDPOINT + method).replace(/{ID}/, id);
+    public uri(method: string, options?: { [key: string]: string }) {
+        let uri = ENDPOINT + method;
 
         if (options) {
             uri += '?' + qs.stringify(options);

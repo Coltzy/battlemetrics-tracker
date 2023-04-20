@@ -120,7 +120,7 @@ class GameStatsBuilder extends PageBuilder {
             new ButtonBuilder()
                 .setLabel('Raw')
                 .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri('games', game.id))
+                .setURL(interaction.client.BMF.uri(`games/${game.id}`))
         );
 
         const pages = [

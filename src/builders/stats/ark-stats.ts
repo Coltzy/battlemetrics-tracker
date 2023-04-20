@@ -81,7 +81,7 @@ class ArkServerStatsBuilder extends PageBuilder {
             new ButtonBuilder()
                 .setLabel('Raw')
                 .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri('servers', server.id))
+                .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
         );
 
         const pages = [
