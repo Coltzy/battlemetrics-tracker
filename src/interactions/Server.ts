@@ -21,9 +21,10 @@ const ServerInteraction = new SlashCommandBuilder()
             .setDescription('Leaderboard of the most played on a server.')
         .addStringOption(option =>
             option
-                .setName('id')
-                .setDescription('The ID of the server.')
+                .setName('query')
+                .setDescription('The query of the leaderboard search.')
                 .setRequired(true)
+                .setMaxLength(128)
         )
     );
 

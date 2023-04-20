@@ -27,7 +27,7 @@ class Util {
             response = response.data[0] ? { data: response.data[0] } : undefined;
         }
 
-        return response;
+        return response as Server | undefined;
     }
 }
 

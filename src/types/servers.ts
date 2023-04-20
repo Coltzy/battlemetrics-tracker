@@ -10,9 +10,10 @@ export interface ServerSearch {
 }
 
 /* Base Server Data */
-interface BaseServerData {
+export interface BaseServerData {
     type: string;
     id: string;
+    attributes: ServerAttributesBase;
     relationships: Relationships;
 }
 

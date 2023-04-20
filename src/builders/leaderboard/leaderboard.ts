@@ -4,17 +4,19 @@ import { ServerLeaderboardMongoModel } from '../../types/Models';
 import moment from 'moment';
 import chunk from 'chunk';
 import 'moment-duration-format';
+import { BaseServerData } from '../../types/servers';
 
-class RustServerLeaderboardBuilder extends SliderBuilder {
+class ServerLeaderboardBuilder extends SliderBuilder {
     constructor(
         interaction: CommandInteraction, 
+        server: BaseServerData,
         data: ServerLeaderboardMongoModel[],
     ) {
         data.sort((a, b) => a.rank - b.rank);
         const pages = [];
 
         const base = new EmbedBuilder()
-            .setTitle('Leaderboard');
+            .setTitle(server.attributes.name);
         const chunks = chunk(data, 10);
         let index = 1;
         
@@ -39,4 +41,4 @@ class RustServerLeaderboardBuilder extends SliderBuilder {
     }
 }
 
-export default RustServerLeaderboardBuilder;
+export default ServerLeaderboardBuilder;

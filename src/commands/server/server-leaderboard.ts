@@ -1,10 +1,12 @@
 import { Client, CommandInteraction, inlineCode } from 'discord.js';
 import Command from '../../Command';
 import { ServerLeaderboard } from '../../types/servers';
-import RustServerLeaderboardBuilder from '../../builders/leaderboard/rust-leaderboard';
 import LeaderboardModel from '../../models/Leaderboard';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { BMErrors } from '../../types/BMError';
+import ServerLeaderboardBuilder from '../../builders/leaderboard/leaderboard';
+import Util from '../../Util';
+import Logger from '../../Logger';
 
 class ServerLeaderboardCommand implements Command {
     public name = 'server-leaderboard';
@@ -13,36 +15,59 @@ class ServerLeaderboardCommand implements Command {
     public constructor() {}
 
     public async execute(interaction: CommandInteraction) {
-        const id = interaction.options.get('id')?.value as string;
+        const query = interaction.options.get('query')?.value as string;
         const period = 'AT';
+        let response;
 
-        const models = await LeaderboardModel.find({ server: id });
+        try {
+            response = await Util.searchServer(interaction.client, query);
+        } catch (err) {
+            Logger.error('There was an error when fetching from battlemetrics.');
+            console.error(err);
 
-        if (!models.length) {
+            interaction.reply('There was an error when fetching this data.');
+            return;
+        }
+
+        
+
+        if (!response) {
+            await interaction.reply(`No search results were found for ${inlineCode(query)}`);
+
+            return;
+        } 
+
+        const { id } = response.data.relationships.game.data;
+        if (!this.isValidServer(id)) {
+            await interaction.reply(`The server type ${inlineCode(id)} does not support player lists.`);
+
+            return;
+        }
+
+        const docs = await LeaderboardModel.find({ server: response.data.id });
+        const { data: server } = response;
+
+        if (!docs.length) {
             interaction.reply({
                 content: 'Fetching leaderboard information this may take a few seconds...',
                 fetchReply: true
             });
 
-            const response = await this.fetch(interaction.client, id, period);
+            const leaderboard = await this.fetch(interaction.client, response.data.id, period);
 
-            if (response && 'errors' in response) {
-                if (response.errors[0].title == 'Unknown Server') {
-                    interaction.reply(`Server ID ${inlineCode(id)} doesn't exist.`);
-                } else {
-                    interaction.reply('There was an unexpected error when running this command!');
-                }
+            if ('errors' in leaderboard) {
+                interaction.editReply('There was an unexpected error when running this command!');
             } else {
-                await this.execute(interaction);
+                new ServerLeaderboardBuilder(interaction, server, leaderboard);
             }
 
             return;
         }
 
-        new RustServerLeaderboardBuilder(interaction, models);
+        new ServerLeaderboardBuilder(interaction, server, docs);
     }
 
-    private async fetch(client: Client, id: string, period: string): Promise<BMErrors | void> {
+    private async fetch(client: Client, id: string, period: string) {
         await LeaderboardModel.deleteMany({ server: id });
         const docs: ServerLeaderboardMongoModel[] = [];
 
@@ -54,6 +79,7 @@ class ServerLeaderboardCommand implements Command {
         });
 
         for (let i = 0; i < 10; i++) {
+            if (!uri) break;
             const data = await client.BMF.direct_fetch(uri) as BMErrors | ServerLeaderboard;
 
             if ('errors' in data) {
@@ -75,6 +101,30 @@ class ServerLeaderboardCommand implements Command {
         }
 
         await LeaderboardModel.insertMany(docs);
+
+        return docs;
+    }
+
+    private isValidServer(type: string) {
+        return [
+            'csgo',
+            'rust',
+            'ark',
+            'gmod',
+            'squad',
+            'cs',
+            'tf2',
+            'hll',
+            'arma3',
+            'unturned',
+            'zomboid',
+            'css',
+            'vrising',
+            'rs2vietnam',
+            'sandstorm',
+            'postscriptum',
+            'btw',
+        ].includes(type);
     }
 }
 
