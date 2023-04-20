@@ -12,6 +12,7 @@ const ServerInteraction = new SlashCommandBuilder()
                 .setName('query')
                 .setDescription('The query of the search.')
                 .setRequired(true)
+                .setMaxLength(128)
         )
     )
     .addSubcommand(command => 
