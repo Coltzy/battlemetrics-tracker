@@ -26,6 +26,25 @@ const ServerInteraction = new SlashCommandBuilder()
                 .setRequired(true)
                 .setMaxLength(128)
         )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('isonline')
+            .setDescription('Checks to see if the player entered is online.')
+        .addStringOption(option =>
+            option
+                .setName('server')
+                .setDescription('The query for the server to check for.')
+                .setRequired(true)
+                .setMaxLength(128)
+        )
+        .addStringOption(option =>
+            option
+                .setName('player')
+                .setDescription('The name of the player to check for.')
+                .setRequired(true)
+                .setMaxLength(32)
+        )
     );
 
 export default ServerInteraction;

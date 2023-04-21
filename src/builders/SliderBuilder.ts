@@ -30,9 +30,9 @@ abstract class SliderBuilder extends BuilderBase {
 
         this.index = 0;
 
-        super.send(interaction, pages[0], {
+        super.send(interaction, pages[0], this.pages.length > 1 ? {
             buttons
-        });
+        } : undefined);
     }
 
     private isValidIndex(index: number) {

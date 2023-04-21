@@ -1,6 +1,9 @@
+import { Player } from './players';
+
 /* Base Server */
 export interface Server {
     data: BaseServerData;
+    included?: Player[];
 }
 
 export interface ServerSearch {

@@ -29,6 +29,10 @@ class Util {
 
         return response as Server | undefined;
     }
+
+    static serverToUrl(server: Server) {
+        return `https://www.battlemetrics.com/servers/${server.data.relationships.game.data.id}/${server.data.id}`;
+    }
 }
 
 export default Util;
