@@ -20,6 +20,10 @@ abstract class SliderBuilder extends BuilderBase {
                 .setCustomId('pick')
                 .setStyle(ButtonStyle.Secondary),
             new ButtonBuilder()
+                .setEmoji({ name: '🔍' })
+                .setCustomId('search')
+                .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
                 .setEmoji({ name: '➡️' })
                 .setCustomId('next')
                 .setStyle(ButtonStyle.Primary)
@@ -48,6 +52,9 @@ abstract class SliderBuilder extends BuilderBase {
         } else if (i.customId == 'next' && this.index != this.pages.length - 1) {
             this.index++;
         }
+        if (i.customId == 'search') {
+            await this.search(interaction);
+        }
         if (i.customId == 'pick') {
             await this.picker(interaction);
         }
@@ -61,8 +68,8 @@ abstract class SliderBuilder extends BuilderBase {
         }
     }
 
-    private async picker(interaction: CommandInteraction) {
-        const message = await interaction.channel?.send('Enter a page number to turn too.');
+    private async awaitMessages(interaction: CommandInteraction, prompt: string) {
+        const message = await interaction.channel?.send(prompt);
 
         const collection = await interaction.channel?.awaitMessages({
             time: ms('30s'),
@@ -75,12 +82,37 @@ abstract class SliderBuilder extends BuilderBase {
             /* empty */ 
         }
 
-        const msg = collection?.first();
+        return collection?.first();
+    }
+
+    private async picker(interaction: CommandInteraction) {
+        const msg = await this.awaitMessages(interaction, 'Enter a page number to turn too.');
 
         if (msg) {
             const num = parseInt(msg.content);
             if (!isNaN(num) && this.isValidIndex(num)) {
                 this.index = num - 1;
+            }
+        }
+    }
+
+    private async search(interaction: CommandInteraction) {
+        const msg = await this.awaitMessages(interaction, 'Enter a page number to turn too.');
+
+        if (msg) {
+            const re = new RegExp('#\\d[^ ]* (.*)');
+            const values: string[] = [];
+            this.pages.forEach(page => {
+                Array.prototype.push.apply(values, page.data.fields?.map(f => f.name.match(re)?.[1]) as string[]);
+            });
+
+            const match = values.find(name => name.toLowerCase() == msg.content.toLowerCase());
+            
+            if (match) {
+                const pos = values.indexOf(match);
+                this.index = Math.round(pos / 10);
+            } else {
+                await interaction.channel?.send('No results found for this query.');
             }
         }
     }
