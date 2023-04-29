@@ -1,6 +1,8 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
 import { CsgoServerData } from '../../types/servers';
 import PageBuilder from '../PageBuilder';
+import Command from '../../Command';
+import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 
 class CsgoServerStatsBuilder extends PageBuilder {
     constructor(
@@ -73,6 +75,16 @@ class CsgoServerStatsBuilder extends PageBuilder {
                 .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
         );
 
+        const cbs = [
+            {
+                command: new ServerLeaderboardCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('🏆 Leaderboard')
+                    .setCustomId('leaderboard')
+                    .setStyle(ButtonStyle.Primary)
+            }
+        ];
+
         const pages = [
             {
                 embed: stats,
@@ -91,7 +103,8 @@ class CsgoServerStatsBuilder extends PageBuilder {
         ];
 
         super(interaction, pages, {
-            links
+            links,
+            cbs
         });
     }
 }

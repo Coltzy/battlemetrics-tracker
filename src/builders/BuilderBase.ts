@@ -1,22 +1,33 @@
 import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builders';
-import { AttachmentBuilder, ButtonInteraction, ButtonStyle, CacheType, CommandInteraction, Embed, InteractionCollector, InteractionEditReplyOptions } from 'discord.js';
+import { AttachmentBuilder, ButtonInteraction, ButtonStyle, CacheType, Collection, CommandInteraction, Embed, InteractionCollector, InteractionReplyOptions } from 'discord.js';
+import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
 import ms from 'ms';
+import { CommandButton } from './PageBuilder';
+import Command from '../Command';
+import Util from '../Util';
 
 export interface SendOptions {
     buttons?: ActionRowBuilder<ButtonBuilder>;
     links?: ActionRowBuilder<ButtonBuilder>;
     attachment?: AttachmentBuilder;
+    cbs?: CommandButton[];
 }
 
 abstract class BuilderBase {
+    private cbs: Collection<string, Command>;
     private collector: InteractionCollector<ButtonInteraction> | undefined;
     public deleted: boolean | undefined;
+    public isSlider: boolean | undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor() {
         this.collector = undefined;
 
         this.deleted = undefined;
+
+        this.isSlider = undefined;
+
+        this.cbs = new Collection();
     }
 
     private async disable(interaction: CommandInteraction, buttons: ActionRowBuilder<ButtonBuilder>[]) {
@@ -26,7 +37,7 @@ abstract class BuilderBase {
             }
         }
 
-        await interaction.editReply({ components: buttons });
+        await Util.reply(interaction, { components: buttons });
     }
 
     private async startCollector(interaction: CommandInteraction, components: ActionRowBuilder<ButtonBuilder>[]) {
@@ -52,7 +63,16 @@ abstract class BuilderBase {
                 return;
             }
 
+            /* Handling command buttons */
+            const command = this.cbs.get(i.customId);
+            if (command) {
+                await command.execute(interaction);
+                this.collector?.stop();
+                return;
+            }
+
             await i.deferUpdate();
+
             this.collect(interaction, i as ButtonInteraction<CacheType>);
         });
 
@@ -63,11 +83,12 @@ abstract class BuilderBase {
 
     public async send(
         interaction: CommandInteraction, 
-        embed: EmbedBuilder | Embed, 
+        embed: EmbedBuilder | Embed,
         {
             buttons = new ActionRowBuilder<ButtonBuilder>(),
             links,
-            attachment
+            attachment,
+            cbs
         }: SendOptions = {}
     ) {
         const components = [];
@@ -80,19 +101,28 @@ abstract class BuilderBase {
         );
 
         if (buttons) components.push(buttons);
+
+        if (cbs) {
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(cbs.map(cb => cb.button));
+            components.push(row);
+
+            cbs.map(cb => this.cbs.set((cb.button.data as APIButtonComponentWithCustomId).custom_id, cb.command));
+        }
+
         if (links) components.push(links);
 
         if (interaction.replied) {
             const message = await interaction.fetchReply();
 
-            const options: InteractionEditReplyOptions = {
+            const options: InteractionReplyOptions = {
                 embeds: [embed],
             };
 
-            if (!message.components.length) options.components = components;
+            if (!message.components.length || this.isSlider) options.components = components;
             if (!message.attachments.size && attachment) options.files = [attachment];
 
-            await interaction.editReply(options);
+            await Util.reply(interaction, options);
 
             if (!this.collector) {
                 this.startCollector(interaction, components);
@@ -101,7 +131,7 @@ abstract class BuilderBase {
             return;
         }
 
-        await interaction.reply({
+        await Util.reply(interaction, {
             embeds: [embed],
             components,
             files: attachment ? 

@@ -27,12 +27,12 @@ class ServerStatsCommand implements Command {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
 
-            interaction.reply('There was an error when fetching this data.');
+            await Util.reply(interaction, 'There was an error when fetching this data.');
             return;
         }
 
         if (!response) {
-            interaction.reply(`The search for ${inlineCode(query)} didn't find any results.`);
+            await Util.reply(interaction, `The search for ${inlineCode(query)} didn't find any results.`);
 
             return;
         }
@@ -48,7 +48,7 @@ class ServerStatsCommand implements Command {
         } else if (server.relationships.game.data.id == 'minecraft') {
             new MinecraftServerStatsBuilder(interaction, server as MinecraftServerData);
         } else {
-            interaction.reply(`Server's from ${server.relationships.game.data.id} are currently not supported!`);
+            await Util.reply(interaction, `Server's from ${server.relationships.game.data.id} are currently not supported!`);
         }
     }
 }

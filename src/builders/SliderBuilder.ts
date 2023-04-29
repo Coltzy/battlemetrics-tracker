@@ -2,6 +2,7 @@ import { ButtonInteraction, ButtonStyle, CacheType, CommandInteraction, EmbedBui
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
 import BuilderBase from './BuilderBase';
 import ms from 'ms';
+import Util from '../Util';
 
 abstract class SliderBuilder extends BuilderBase {
     private pages: EmbedBuilder[];
@@ -33,6 +34,8 @@ abstract class SliderBuilder extends BuilderBase {
         super.send(interaction, pages[0], this.pages.length > 1 ? {
             buttons
         } : undefined);
+
+        super.isSlider = true;
     }
 
     private isValidIndex(index: number) {
@@ -52,7 +55,7 @@ abstract class SliderBuilder extends BuilderBase {
         const embed = this.pages[this.index];
 
         if (!this.deleted) {
-            await interaction.editReply({
+            await Util.reply(interaction, {
                 embeds: [embed]
             });
         }

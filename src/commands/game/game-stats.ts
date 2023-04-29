@@ -6,6 +6,7 @@ import { Game } from '../../types/game';
 import GameStatsBuilder from '../../builders/game/GameBase';
 import { BMErrors } from '../../types/BMError';
 import 'moment-duration-format';
+import Util from '../../Util';
 
 class GameStatsCommand implements Command {
     public name = 'game-stats';
@@ -23,7 +24,7 @@ class GameStatsCommand implements Command {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
 
-            interaction.reply('There was an unexpected error when fetching this data.');
+            await Util.reply(interaction, 'There was an unexpected error when fetching this data.');
             return;
         }
 
@@ -32,9 +33,9 @@ class GameStatsCommand implements Command {
             const error = data.errors[0];
 
             if (error.title == 'Unknown Game') {
-                interaction.reply(`Game ID ${inlineCode(id)} doesn't exist.`);
+                await Util.reply(interaction, `Game ID ${inlineCode(id)} doesn't exist.`);
             } else {
-                interaction.reply('There was an error fetching battlemetrics data.');
+                await Util.reply(interaction, 'There was an error fetching battlemetrics data.');
             }
 
             return;

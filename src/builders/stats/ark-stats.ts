@@ -1,6 +1,8 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { ArkServerData } from '../../types/servers';
 import PageBuilder from '../PageBuilder';
+import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
+import Command from '../../Command';
 
 class ArkServerStatsBuilder extends PageBuilder {
     constructor(
@@ -84,6 +86,16 @@ class ArkServerStatsBuilder extends PageBuilder {
                 .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
         );
 
+        const cbs = [
+            {
+                command: new ServerLeaderboardCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('🏆 Leaderboard')
+                    .setCustomId('leaderboard')
+                    .setStyle(ButtonStyle.Primary)
+            }
+        ];
+
         const pages = [
             {
                 embed: stats,
@@ -102,7 +114,8 @@ class ArkServerStatsBuilder extends PageBuilder {
         ];
 
         super(interaction, pages, {
-            links
+            links,
+            cbs
         });
     }
 }

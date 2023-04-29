@@ -1,7 +1,9 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { RustServerData } from '../../types/servers';
 import moment from 'moment';
-import PageBuilder from '../PageBuilder';
+import PageBuilder, { CommandButton } from '../PageBuilder';
+import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
+import Command from '../../Command';
 
 class RustServerStatsBuilder extends PageBuilder {
     constructor(
@@ -115,25 +117,36 @@ class RustServerStatsBuilder extends PageBuilder {
                 .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
         );
 
+        const cbs = [
+            {
+                command: new ServerLeaderboardCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('🏆 Leaderboard')
+                    .setCustomId('leaderboard')
+                    .setStyle(ButtonStyle.Primary)
+            }
+        ];
+
         const pages = [
             {
                 embed: stats,
                 button: new ButtonBuilder()
                     .setLabel('📈 Stats')
-                    .setCustomId('01')
+                    .setCustomId('stats')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: map,
                 button: new ButtonBuilder()
                     .setLabel('🗺️ Map')
-                    .setCustomId('02')
+                    .setCustomId('map')
                     .setStyle(ButtonStyle.Primary)
             }
         ];
 
         super(interaction, pages, {
-            links
+            links,
+            cbs
         });
     }
 }

@@ -25,21 +25,19 @@ class ServerLeaderboardCommand implements Command {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
 
-            interaction.reply('There was an error when fetching this data.');
+            Util.reply(interaction, 'There was an error when fetching this data.');
             return;
         }
 
-        
-
         if (!response) {
-            await interaction.reply(`No search results were found for ${inlineCode(query)}`);
+            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
 
             return;
         } 
 
         const { id } = response.data.relationships.game.data;
         if (!this.isValidServer(id)) {
-            await interaction.reply(`The server type ${inlineCode(id)} does not support player lists.`);
+            await Util.reply(interaction, `The server type ${inlineCode(id)} does not support player lists.`);
 
             return;
         }
@@ -48,15 +46,17 @@ class ServerLeaderboardCommand implements Command {
         const { data: server } = response;
 
         if (!docs.length) {
-            interaction.reply({
+            await Util.reply(interaction, {
                 content: 'Fetching leaderboard information this may take a few seconds...',
-                fetchReply: true
+                components: [],
+                embeds: [],
+                fetchReply: true,
             });
 
             const leaderboard = await this.fetch(interaction.client, response.data.id, period);
 
             if ('errors' in leaderboard) {
-                interaction.editReply('There was an unexpected error when running this command!');
+                await Util.reply(interaction, 'There was an unexpected error when running this command!');
             } else {
                 new ServerLeaderboardBuilder(interaction, server, leaderboard);
             }

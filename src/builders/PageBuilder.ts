@@ -2,9 +2,16 @@ import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builde
 import BuilderBase, { SendOptions } from './BuilderBase';
 import { ButtonInteraction, CacheType, CommandInteraction } from 'discord.js';
 import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
+import Command from '../Command';
 
 interface Page {
     embed: EmbedBuilder;
+    button: ButtonBuilder;
+}
+
+/* TODO: Improve by passing result params */
+export interface CommandButton {
+    command: Command;
     button: ButtonBuilder;
 }
 
@@ -15,19 +22,13 @@ class PageBuilder extends BuilderBase {
         super();
 
         this.pages = pages;
-
-        const {
-            links,
-            attachment
-        } = options;
-
+        
         const page = this.getFirstPage();
         const buttons = this.buildRow();
 
         super.send(interaction, page, {
             buttons,
-            links,
-            attachment
+            ...options
         });
     }
 

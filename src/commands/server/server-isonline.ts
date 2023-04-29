@@ -25,12 +25,12 @@ class ServerIsonlineCommand implements Command {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
 
-            interaction.reply('There was an error when fetching this data.');
+            await Util.reply(interaction, 'There was an error when fetching this data.');
             return;
         }
 
         if (!response) {
-            await interaction.reply(`No search results were found for ${inlineCode(server)}`);
+            await Util.reply(interaction, `No search results were found for ${inlineCode(server)}`);
 
             return;
         }
@@ -45,12 +45,12 @@ class ServerIsonlineCommand implements Command {
             Logger.error('There was an error when fetching from battlemetrics.');
             console.error(err);
 
-            interaction.reply('There was an error when fetching this data.');
+            await Util.reply(interaction, 'There was an error when fetching this data.');
             return;
         }
 
         if ('errors' in res) {
-            await interaction.reply('There was an error when fetching the player data.');
+            await Util.reply(interaction, 'There was an error when fetching the player data.');
         }
 
         const filtered = res.included?.filter((p) => p.attributes.name.toLowerCase() == player.toLowerCase());
@@ -58,7 +58,7 @@ class ServerIsonlineCommand implements Command {
         if (filtered?.length) {
             new ServerIsonlineBuilder(interaction, response, filtered);
         } else {
-            await interaction.reply('No players are online that go by this name.');
+            await Util.reply(interaction, 'No players are online that go by this name.');
         }
     }
 }
