@@ -36,7 +36,7 @@ class ServerLeaderboardCommand implements Command {
         } 
 
         const { id } = response.data.relationships.game.data;
-        if (!this.isValidServer(id)) {
+        if (!Util.serverHasPlayerList(id)) {
             await Util.reply(interaction, `The server type ${inlineCode(id)} does not support player lists.`);
 
             return;
@@ -103,28 +103,6 @@ class ServerLeaderboardCommand implements Command {
         await LeaderboardModel.insertMany(docs);
 
         return docs;
-    }
-
-    private isValidServer(type: string) {
-        return [
-            'csgo',
-            'rust',
-            'ark',
-            'gmod',
-            'squad',
-            'cs',
-            'tf2',
-            'hll',
-            'arma3',
-            'unturned',
-            'zomboid',
-            'css',
-            'vrising',
-            'rs2vietnam',
-            'sandstorm',
-            'postscriptum',
-            'btw',
-        ].includes(type);
     }
 }
 

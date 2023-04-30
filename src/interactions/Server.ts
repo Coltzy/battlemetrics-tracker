@@ -45,6 +45,18 @@ const ServerInteraction = new SlashCommandBuilder()
                 .setRequired(true)
                 .setMaxLength(32)
         )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('players')
+            .setDescription('Shows a list of all online players on a server.')
+        .addStringOption(option =>
+            option
+                .setName('query')
+                .setDescription('The query for the server to list.')
+                .setRequired(true)
+                .setMaxLength(128)
+        )
     );
 
 export default ServerInteraction;

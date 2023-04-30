@@ -43,6 +43,17 @@ class Util {
     static serverToUrl(server: Server) {
         return `https://www.battlemetrics.com/servers/${server.data.relationships.game.data.id}/${server.data.id}`;
     }
+
+    static serverHasPlayerList(type: string) {
+        return [
+            'csgo', 'rust', 'ark',
+            'gmod', 'squad', 'cs',
+            'tf2', 'hll', 'arma3',
+            'unturned', 'zomboid', 'css',
+            'vrising', 'rs2vietnam', 'sandstorm',
+            'postscriptum', 'btw',
+        ].includes(type);
+    }
 }
 
 export default Util;
