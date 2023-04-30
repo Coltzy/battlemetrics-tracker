@@ -1,9 +1,10 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { RustServerData } from '../../types/servers';
 import moment from 'moment';
-import PageBuilder, { CommandButton } from '../PageBuilder';
+import PageBuilder from '../PageBuilder';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 import Command from '../../Command';
+import ServerPlayersCommand from '../../commands/server/server-players';
 
 class RustServerStatsBuilder extends PageBuilder {
     constructor(
@@ -124,7 +125,14 @@ class RustServerStatsBuilder extends PageBuilder {
                     .setLabel('🏆 Leaderboard')
                     .setCustomId('leaderboard')
                     .setStyle(ButtonStyle.Primary)
-            }
+            },
+            {
+                command: new ServerPlayersCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('👥 Player list')
+                    .setCustomId('players')
+                    .setStyle(ButtonStyle.Primary)
+            },
         ];
 
         const pages = [

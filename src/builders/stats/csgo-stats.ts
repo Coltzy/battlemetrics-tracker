@@ -3,6 +3,7 @@ import { CsgoServerData } from '../../types/servers';
 import PageBuilder from '../PageBuilder';
 import Command from '../../Command';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
+import ServerPlayersCommand from '../../commands/server/server-players';
 
 class CsgoServerStatsBuilder extends PageBuilder {
     constructor(
@@ -82,7 +83,14 @@ class CsgoServerStatsBuilder extends PageBuilder {
                     .setLabel('🏆 Leaderboard')
                     .setCustomId('leaderboard')
                     .setStyle(ButtonStyle.Primary)
-            }
+            },
+            {
+                command: new ServerPlayersCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('👥 Player list')
+                    .setCustomId('players')
+                    .setStyle(ButtonStyle.Primary)
+            },
         ];
 
         const pages = [

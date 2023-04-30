@@ -3,6 +3,7 @@ import { ArkServerData } from '../../types/servers';
 import PageBuilder from '../PageBuilder';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 import Command from '../../Command';
+import ServerPlayersCommand from '../../commands/server/server-players';
 
 class ArkServerStatsBuilder extends PageBuilder {
     constructor(
@@ -93,7 +94,14 @@ class ArkServerStatsBuilder extends PageBuilder {
                     .setLabel('🏆 Leaderboard')
                     .setCustomId('leaderboard')
                     .setStyle(ButtonStyle.Primary)
-            }
+            },
+            {
+                command: new ServerPlayersCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('👥 Player list')
+                    .setCustomId('players')
+                    .setStyle(ButtonStyle.Primary)
+            },
         ];
 
         const pages = [
