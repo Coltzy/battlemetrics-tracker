@@ -1,6 +1,6 @@
 import { Client, CommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { BMErrors } from './types/BMError';
-import { Server, ServerSearch } from './types/servers';
+import { BaseServerData, Server, ServerSearch } from './types/servers';
 
 class Util {
     static async reply(interaction: CommandInteraction, options: InteractionReplyOptions | string) {
@@ -40,8 +40,8 @@ class Util {
         return response as Server | undefined;
     }
 
-    static serverToUrl(server: Server) {
-        return `https://www.battlemetrics.com/servers/${server.data.relationships.game.data.id}/${server.data.id}`;
+    static serverToUrl(server: BaseServerData) {
+        return `https://www.battlemetrics.com/servers/${server.relationships.game.data.id}/${server.id}`;
     }
 
     static serverHasPlayerList(type: string) {
