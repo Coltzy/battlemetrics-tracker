@@ -93,18 +93,25 @@ abstract class BuilderBase {
     ) {
         const components = [];
 
-        buttons.addComponents(
-            new ButtonBuilder()
+        const del = new ButtonBuilder()
                 .setEmoji({ name: '🗑️' })
                 .setCustomId('del')
-                .setStyle(ButtonStyle.Danger)
-        );
+                .setStyle(ButtonStyle.Danger);
 
-        if (buttons) components.push(buttons);
+        if (!cbs?.length || buttons.components.length) {
+            buttons.addComponents(del);
+        }
+
+        if (buttons.components.length) components.push(buttons);
 
         if (cbs) {
             const row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(cbs.map(cb => cb.button));
+
+            if (!buttons.components.includes(del)) {
+                row.addComponents(del);
+            }
+            
             components.push(row);
 
             cbs.map(cb => this.cbs.set((cb.button.data as APIButtonComponentWithCustomId).custom_id, cb.command));
