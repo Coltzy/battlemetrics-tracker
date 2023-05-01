@@ -5,6 +5,8 @@ import moment from 'moment';
 import Util from '../../Util';
 import 'moment-duration-format';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import Command from '../../Command';
+import PlayerServersCommand from '../../commands/player/player-servers';
 
 class PlayerStatsBuilder extends BuilderBase {
     constructor(
@@ -48,10 +50,21 @@ ${onlineServers.map((s) => hyperlink(s.attributes.name, Util.serverToUrl(s))).jo
                     }))
             );
 
+            const cbs = [
+                {
+                    command: new PlayerServersCommand() as unknown as Command,
+                    button: new ButtonBuilder()
+                        .setLabel('Servers')
+                        .setCustomId('servers')
+                        .setStyle(ButtonStyle.Primary)
+                },
+            ];
+
         super();
 
         super.send(interaction, embed, {
-            links
+            links,
+            cbs
         });
     }
 

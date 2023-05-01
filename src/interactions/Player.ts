@@ -13,6 +13,17 @@ const PlayerInteraction = new SlashCommandBuilder()
                 .setDescription('The ID of the player.')
                 .setRequired(true)
         )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('servers')
+            .setDescription('Lists all the past servers a play has played on.')
+        .addStringOption(option =>
+            option
+                .setName('query')
+                .setDescription('The ID of the player.')
+                .setRequired(true)
+        )
     );
 
 export default PlayerInteraction;
