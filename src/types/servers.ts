@@ -1,9 +1,9 @@
-import { ServerPlayer } from './players';
+import { PlayerServerData } from './players';
 
 /* Base Server */
 export interface Server {
     data: BaseServerData;
-    included?: ServerPlayer[];
+    included?: PlayerServerData[];
 }
 
 export interface ServerSearch {

@@ -2,9 +2,10 @@ import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
 import { Player } from '../../types/players';
 import moment from 'moment';
 import Util from '../../Util';
-import 'moment-duration-format';
+import { stripIndent } from 'common-tags';
 import SliderBuilder from '../SliderBuilder';
 import chunk from 'chunk';
+import 'moment-duration-format';
 
 class PlayerServersBuilder extends SliderBuilder {
     constructor(
@@ -29,10 +30,10 @@ class PlayerServersBuilder extends SliderBuilder {
                     chunk.map(server => {
                         return {
                             name: server.attributes.name,
-                            value: `
-First seen: ${moment(server.meta.firstSeen).fromNow()}
-Time played: ${moment.duration(server.meta.timePlayed * 1000, 'ms').format('HH [hours] mm [mins]')}
-Id: ${hyperlink(server.id, Util.serverToUrl(server))}
+                            value: stripIndent`
+                                First seen: ${moment(server.meta.firstSeen).fromNow()}
+                                Time played: ${moment.duration(server.meta.timePlayed * 1000, 'ms').format('HH [hours] mm [mins]')}
+                                Id: ${hyperlink(server.id, Util.serverToUrl(server))}
                             `
                         };
                     })

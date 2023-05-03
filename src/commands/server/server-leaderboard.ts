@@ -4,9 +4,8 @@ import { ServerLeaderboard } from '../../types/servers';
 import LeaderboardModel from '../../models/Leaderboard';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { BMErrors } from '../../types/BMError';
-import ServerLeaderboardBuilder from '../../builders/leaderboard/leaderboard';
+import ServerLeaderboardBuilder from '../../builders/leaderboard/builder-server-leaderboard';
 import Util from '../../Util';
-import Logger from '../../Logger';
 
 class ServerLeaderboardCommand implements Command {
     public name = 'server-leaderboard';
@@ -17,17 +16,7 @@ class ServerLeaderboardCommand implements Command {
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;
         const period = 'AT';
-        let response;
-
-        try {
-            response = await Util.searchServer(interaction.client, query);
-        } catch (err) {
-            Logger.error('There was an error when fetching from battlemetrics.');
-            console.error(err);
-
-            Util.reply(interaction, 'There was an error when fetching this data.');
-            return;
-        }
+        const response = await Util.searchServer(interaction.client, query);
 
         if (!response) {
             await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
@@ -43,7 +32,6 @@ class ServerLeaderboardCommand implements Command {
         }
 
         const docs = await LeaderboardModel.find({ server: response.data.id });
-        const { data: server } = response;
 
         if (!docs.length) {
             await Util.reply(interaction, {
@@ -58,13 +46,13 @@ class ServerLeaderboardCommand implements Command {
             if ('errors' in leaderboard) {
                 await Util.reply(interaction, 'There was an unexpected error when running this command!');
             } else {
-                new ServerLeaderboardBuilder(interaction, server, leaderboard);
+                new ServerLeaderboardBuilder(interaction, response, leaderboard);
             }
 
             return;
         }
 
-        new ServerLeaderboardBuilder(interaction, server, docs);
+        new ServerLeaderboardBuilder(interaction, response, docs);
     }
 
     private async fetch(client: Client, id: string, period: string) {

@@ -7,14 +7,11 @@ import path from 'path';
 class CommandHandler {
     public modules: Collection<string, Command>;
     private dir: string;
-    private client: Client;
 
     constructor(client: Client, dir: string) {
         this.modules = new Collection();
 
         this.dir = dir;
-
-        this.client = client;
 
         client.on(Events.InteractionCreate, async (interaction) => {
             if (!interaction.isChatInputCommand()) return;
@@ -33,6 +30,7 @@ class CommandHandler {
             if (command) {
                 try {
                     await command.execute(interaction);
+                    Logger.info(`Command ${command.name} was used.`);
                 } catch (err) {
                     Logger.error(`An error has occured whilst executing command: ${name}`);
                     console.error(err);

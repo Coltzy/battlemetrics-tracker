@@ -1,25 +1,24 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
-import PageBuilder from '../PageBuilder';
 import { bold } from '@discordjs/builders';
-import { GameData } from '../../types/game';
-import { GAME_TITLES } from '../../Constants';
+import PageBuilder from '../PageBuilder';
+import { Game } from '../../types/game';
 import iso3311a2 from 'iso-3166-1-alpha-2';
-import GameUtils from './GameUtils';
+import GameUtils from './builder-game-utils';
 
 class GameStatsBuilder extends PageBuilder {
     constructor(
         interaction: CommandInteraction, 
-        game: GameData,
+        game: Game,
     ) {
-        const { attributes } = game;
+        const { attributes } = game.data;
         let i = 0;
         let j = 0;
 
-        const attachment = new AttachmentBuilder(`./images/${game.id}.png`);
+        const attachment = new AttachmentBuilder(`./images/${game.data.id}.png`);
 
         const stats = new EmbedBuilder()
-            .setTitle(GAME_TITLES[game.id])
-            .setThumbnail(`attachment://${game.id}.png`)
+            .setTitle(attributes.name)
+            .setThumbnail(`attachment://${game.data.id}.png`)
             .addFields(
                 {
                     name: 'Total Players',
@@ -65,7 +64,7 @@ class GameStatsBuilder extends PageBuilder {
         }
 
         const players = new EmbedBuilder()
-            .setTitle(game.id)
+            .setTitle(game.data.id)
             .addFields(
                 {
                     name: 'Min Players (24H)',
@@ -120,7 +119,7 @@ class GameStatsBuilder extends PageBuilder {
             new ButtonBuilder()
                 .setLabel('Raw')
                 .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri(`games/${game.id}`))
+                .setURL(interaction.client.BMF.uri(`games/${game.data.id}`))
         );
 
         const pages = [

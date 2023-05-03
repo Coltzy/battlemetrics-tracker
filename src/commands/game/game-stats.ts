@@ -3,9 +3,8 @@ import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
 import { Game } from '../../types/game';
-import GameStatsBuilder from '../../builders/game/GameBase';
+import GameStatsBuilder from '../../builders/game/builder-game-stats';
 import { BMErrors } from '../../types/BMError';
-import 'moment-duration-format';
 import Util from '../../Util';
 
 class GameStatsCommand implements Command {
@@ -29,7 +28,6 @@ class GameStatsCommand implements Command {
         }
 
         if ('errors' in data) {
-            console.log(data);
             const error = data.errors[0];
 
             if (error.title == 'Unknown Game') {
@@ -41,8 +39,7 @@ class GameStatsCommand implements Command {
             return;
         }
 
-        const { data: game } = (data as unknown as Game);
-        new GameStatsBuilder(interaction, game);
+        new GameStatsBuilder(interaction, data);
     }
 }
 

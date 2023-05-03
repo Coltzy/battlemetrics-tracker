@@ -13,21 +13,24 @@ export interface SendOptions {
     cbs?: CommandButton[];
 }
 
-abstract class BuilderBase {
+interface BuilderBase {
+    collect?(interaction: CommandInteraction, i: ButtonInteraction<CacheType>): void | Promise<void>; 
+}
+
+class BuilderBase {
     private cbs: Collection<string, Command>;
     private collector: InteractionCollector<ButtonInteraction> | undefined;
+    public slider: boolean | undefined;
     public deleted: boolean | undefined;
-    public isSlider: boolean | undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor() {
+        this.cbs = new Collection();
+
         this.collector = undefined;
 
+        this.slider = undefined;
+
         this.deleted = undefined;
-
-        this.isSlider = undefined;
-
-        this.cbs = new Collection();
     }
 
     private async disable(interaction: CommandInteraction, buttons: ActionRowBuilder<ButtonBuilder>[]) {
@@ -73,7 +76,7 @@ abstract class BuilderBase {
 
             await i.deferUpdate();
 
-            this.collect(interaction, i as ButtonInteraction<CacheType>);
+            this.collect?.(interaction, i as ButtonInteraction<CacheType>);
         });
 
         this.collector?.once('end', (_, reason) => {
@@ -126,7 +129,7 @@ abstract class BuilderBase {
                 embeds: [embed],
             };
 
-            if (!message.components.length || this.isSlider) options.components = components;
+            if (!message.components.length || this.slider) options.components = components;
             if (!message.attachments.size && attachment) options.files = [attachment];
 
             await Util.reply(interaction, options);
@@ -149,8 +152,6 @@ abstract class BuilderBase {
 
         this.startCollector(interaction, components);
     }
-
-    abstract collect(interaction: CommandInteraction, i: ButtonInteraction<CacheType>): void | Promise<void>;
 }
 
 export default BuilderBase;

@@ -1,15 +1,22 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
-import Logger from '../../Logger';
 import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData } from '../../types/servers';
 import Util from '../../Util';
-import 'moment-duration-format';
 
-import RustServerStatsBuilder from '../../builders/stats/rust-stats';
-import ArkServerStatsBuilder from '../../builders/stats/ark-stats';
-import CsgoServerStatsBuilder from '../../builders/stats/csgo-stats';
-import MinecraftServerStatsBuilder from '../../builders/stats/minecraft-stats';
+import RustServerStatsBuilder from '../../builders/stats/builder-rust-stats';
+import ArkServerStatsBuilder from '../../builders/stats/builder-ark-stats';
+import CsgoServerStatsBuilder from '../../builders/stats/builder-csgo-stats';
+import MinecraftServerStatsBuilder from '../../builders/stats/builder-minecraft-stats';
+
+type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData;
+
+const Builders = {
+    'rust': RustServerStatsBuilder,
+    'ark': ArkServerStatsBuilder,
+    'csgo': CsgoServerStatsBuilder,
+    'minecraft': MinecraftServerStatsBuilder
+};
 
 class ServerStatsCommand implements Command {
     public name = 'server-stats';
@@ -19,17 +26,7 @@ class ServerStatsCommand implements Command {
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;
-        let response;
-        
-        try {
-            response = await Util.searchServer(interaction.client, query);
-        } catch (err) {
-            Logger.error('There was an error when fetching from battlemetrics.');
-            console.error(err);
-
-            await Util.reply(interaction, 'There was an error when fetching this data.');
-            return;
-        }
+        const response = await Util.searchServer(interaction.client, query);
 
         if (!response) {
             await Util.reply(interaction, `The search for ${inlineCode(query)} didn't find any results.`);
@@ -38,15 +35,10 @@ class ServerStatsCommand implements Command {
         }
 
         const { data: server } = response as Server;
-
-        if (server.relationships.game.data.id == 'rust') {
-            new RustServerStatsBuilder(interaction, server as RustServerData);
-        } else if (server.relationships.game.data.id == 'ark') {
-            new ArkServerStatsBuilder(interaction, server as ArkServerData);
-        } else if (server.relationships.game.data.id == 'csgo') {
-            new CsgoServerStatsBuilder(interaction, server as CsgoServerData);
-        } else if (server.relationships.game.data.id == 'minecraft') {
-            new MinecraftServerStatsBuilder(interaction, server as MinecraftServerData);
+        const builder = Builders[server.relationships.game.data.id as keyof typeof Builders];
+        
+        if (builder) {
+            new builder(interaction, server as AllServerData);
         } else {
             await Util.reply(interaction, `Server's from ${server.relationships.game.data.id} are currently not supported!`);
         }

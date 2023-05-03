@@ -25,7 +25,7 @@ interface PlayerServerMetadata {
     online: boolean;
 }
 
-export interface ServerPlayer extends PlayerData {
+export interface PlayerServerData extends PlayerData {
     meta: PlayerMeta;
 }
 

@@ -39,7 +39,7 @@ abstract class SliderBuilder extends BuilderBase {
             buttons
         } : undefined);
 
-        super.isSlider = true;
+        super.slider = true;
     }
 
     private isValidIndex(index: number) {
@@ -51,11 +51,9 @@ abstract class SliderBuilder extends BuilderBase {
             this.index--;
         } else if (i.customId == 'next' && this.index != this.pages.length - 1) {
             this.index++;
-        }
-        if (i.customId == 'search') {
+        } else if (i.customId == 'search') {
             await this.search(interaction);
-        }
-        if (i.customId == 'pick') {
+        } else if (i.customId == 'pick') {
             await this.picker(interaction);
         }
         
@@ -97,7 +95,7 @@ abstract class SliderBuilder extends BuilderBase {
     }
 
     private async search(interaction: CommandInteraction) {
-        const msg = await this.awaitMessages(interaction, 'Enter a page number to turn too.');
+        const msg = await this.awaitMessages(interaction, 'Enter a search term.');
 
         if (msg) {
             const re = new RegExp('#\\d[^ ]* (.*)');

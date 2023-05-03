@@ -191,6 +191,11 @@
   resolved "https://registry.yarnpkg.com/@types/chunk/-/chunk-0.0.0.tgz#644651a09113cb500a8563f5c8a9de657aa292c9"
   integrity sha512-8z7Z9E1UoxUfwb4SUuWZZCAa5T+vi2daACygqUed7NpPnq04CJo0L3l0heHh3R9fLi/pOUbfR/ZwHd2+YEQIxg==
 
+"@types/common-tags@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@types/common-tags/-/common-tags-1.8.1.tgz#a5a49ca5ebbb58e0f8947f3ec98950c8970a68a9"
+  integrity sha512-20R/mDpKSPWdJs5TOpz3e7zqbeCNuMCPhV7Yndk9KU2Rbij2r5W4RzwDPkzC+2lzUqXYu9rFzTktCBnDjHuNQg==
+
 "@types/iso-3166-1-alpha-2@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/iso-3166-1-alpha-2/-/iso-3166-1-alpha-2-1.0.0.tgz#00211e6e524067891af82eb2b137ba7c1fdabf9e"
@@ -500,6 +505,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+common-tags@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.8.2.tgz#94ebb3c076d26032745fd54face7f688ef5ac9c6"
+  integrity sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA==
 
 concat-map@0.0.1:
   version "0.0.1"

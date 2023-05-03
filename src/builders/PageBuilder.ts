@@ -23,11 +23,12 @@ class PageBuilder extends BuilderBase {
 
         this.pages = pages;
         
-        const page = this.getFirstPage();
-        const buttons = this.buildRow();
+        const row = new ActionRowBuilder<ButtonBuilder>();
+        const page = this.pages[0].embed;
+        this.pages.map((p) => row.addComponents(p.button));
 
         super.send(interaction, page, {
-            buttons,
+            buttons: row,
             ...options
         });
     }
@@ -38,27 +39,9 @@ class PageBuilder extends BuilderBase {
             if (custom_id == i.customId) {
                 return page;
             }
-        })?.embed;
+        })?.embed as EmbedBuilder;
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await super.send(interaction, embed!);
-    }
-
-    private buildRow() {
-        const row = new ActionRowBuilder<ButtonBuilder>();
-        for (const page of this.pages) {
-            row.addComponents(page.button);
-        }
-
-        return row;
-    }
-
-    private getFirstPage() {
-        if (!this.pages[0].embed) {
-            throw new Error('First page is missing an embed!');
-        }
-
-        return this.pages[0].embed;
+        await super.send(interaction, embed);
     }
 }
 

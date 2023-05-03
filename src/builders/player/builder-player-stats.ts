@@ -1,12 +1,12 @@
-import { EmbedBuilder, CommandInteraction, inlineCode, hyperlink, ButtonInteraction, CacheType, ButtonStyle } from 'discord.js';
+import { EmbedBuilder, CommandInteraction, inlineCode, hyperlink, ButtonStyle } from 'discord.js';
 import BuilderBase from '../BuilderBase';
 import { Player } from '../../types/players';
 import moment from 'moment';
 import Util from '../../Util';
-import 'moment-duration-format';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
 import Command from '../../Command';
 import PlayerServersCommand from '../../commands/player/player-servers';
+import 'moment-duration-format';
 
 class PlayerStatsBuilder extends BuilderBase {
     constructor(
@@ -67,9 +67,6 @@ ${onlineServers.map((s) => hyperlink(s.attributes.name, Util.serverToUrl(s))).jo
             cbs
         });
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-    collect(interaction: CommandInteraction<CacheType>, i: ButtonInteraction<CacheType>) {}
 }
 
 export default PlayerStatsBuilder;

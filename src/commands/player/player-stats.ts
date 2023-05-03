@@ -2,7 +2,6 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import Logger from '../../Logger';
 import Util from '../../Util';
-import 'moment-duration-format';
 import { Player } from '../../types/players';
 import { BMErrors } from '../../types/BMError';
 import PlayerStatsBuilder from '../../builders/player/builder-player-stats';

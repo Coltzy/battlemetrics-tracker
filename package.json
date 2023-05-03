@@ -18,6 +18,7 @@
     "@discordjs/builders": "^1.5.0",
     "chalk": "4",
     "chunk": "^0.0.3",
+    "common-tags": "^1.8.2",
     "discord-api-types": "^0.37.37",
     "discord.js": "^14.8.0",
     "glob": "^9.3.2",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@types/chunk": "^0.0.0",
+    "@types/common-tags": "^1.8.1",
     "@types/iso-3166-1-alpha-2": "^1.0.0",
     "@types/moment-duration-format": "^2.2.3",
     "@types/ms": "^0.7.31",

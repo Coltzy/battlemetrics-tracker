@@ -7,12 +7,12 @@ const GameInteraction = new SlashCommandBuilder()
         command
             .setName('stats')
             .setDescription('Fetch game stats.')
-        .addStringOption(option => 
-            option
-                .setName('id')
-                .setDescription('The ID of the game.')
-                .setRequired(true)
-        )
+            .addStringOption(option => 
+                option
+                    .setName('id')
+                    .setDescription('The ID of the game.')
+                    .setRequired(true)
+            )
     );
 
-export default GameInteraction;
+export default GameInteraction; 

@@ -1,16 +1,16 @@
 import { EmbedBuilder, CommandInteraction, inlineCode } from 'discord.js';
 import SliderBuilder from '../SliderBuilder';
 import { Server } from '../../types/servers';
-import { ServerPlayer } from '../../types/players';
+import { PlayerServerData } from '../../types/players';
 import moment from 'moment';
+import { stripIndent } from 'common-tags';
 import Util from '../../Util';
-import 'moment-duration-format';
 
 class ServerIsonlineBuilder extends SliderBuilder {
     constructor(
         interaction: CommandInteraction,
         server: Server,
-        players: ServerPlayer[],
+        players: PlayerServerData[],
     ) {
         const pages = [];
         let index = 1;
@@ -20,10 +20,10 @@ class ServerIsonlineBuilder extends SliderBuilder {
 
             const embed = new EmbedBuilder()
                 .setTitle(attributes.name)
-                .setDescription(`
-Online on: [${server.data.attributes.name}](${Util.serverToUrl(server.data)})
+                .setDescription(stripIndent`
+                    Online on: [${server.data.attributes.name}](${Util.serverToUrl(server.data)})
 
-Player Id: ${inlineCode(attributes.id)}
+                    Player Id: ${inlineCode(attributes.id)}
                 `)
                 .addFields(
                     {
