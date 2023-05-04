@@ -21,6 +21,7 @@ class PlayerStatsBuilder extends BuilderBase {
         
         const embed = new EmbedBuilder()
             .setTitle(attributes.name)
+            .setURL(Util.playerToUrl(player.data))
             .setDescription(`
 Player Id: ${inlineCode(attributes.id)}
 

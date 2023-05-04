@@ -20,6 +20,7 @@ class ServerIsonlineBuilder extends SliderBuilder {
 
             const embed = new EmbedBuilder()
                 .setTitle(attributes.name)
+                .setURL(Util.playerToUrl(player))
                 .setDescription(stripIndent`
                     Online on: [${server.data.attributes.name}](${Util.serverToUrl(server.data)})
 

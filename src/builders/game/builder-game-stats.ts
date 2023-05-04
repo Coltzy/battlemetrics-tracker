@@ -18,6 +18,7 @@ class GameStatsBuilder extends PageBuilder {
 
         const stats = new EmbedBuilder()
             .setTitle(attributes.name)
+            .setURL(`https://www.battlemetrics.com/servers/${game.data.id}`)
             .setThumbnail(`attachment://${game.data.id}.png`)
             .addFields(
                 {

@@ -18,7 +18,8 @@ class PlayerServersBuilder extends SliderBuilder {
 
         const servers = player.included.sort((a, b) => Date.parse(b.meta.lastSeen) - Date.parse(a.meta.lastSeen));
         const base = new EmbedBuilder()
-            .setTitle(attributes.name);
+            .setTitle(attributes.name)
+            .setURL(Util.playerToUrl(player.data));
         const chunks = chunk(servers, 5);
         let index = 1;
 

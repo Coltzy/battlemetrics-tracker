@@ -1,9 +1,10 @@
-import { EmbedBuilder, CommandInteraction } from 'discord.js';
+import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
 import SliderBuilder from '../SliderBuilder';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { Server } from '../../types/servers';
 import moment from 'moment';
 import chunk from 'chunk';
+import Util from '../../Util';
 import 'moment-duration-format';
 
 class ServerLeaderboardBuilder extends SliderBuilder {
@@ -17,7 +18,9 @@ class ServerLeaderboardBuilder extends SliderBuilder {
         const pages = [];
 
         const base = new EmbedBuilder()
-            .setTitle(attributes.name);
+            .setTitle(attributes.name)
+            .setURL(Util.serverToUrl(server.data))
+            .setDescription('All time leaderboard of the server.');
         const chunks = chunk(data, 10);
         let index = 1;
         
@@ -30,7 +33,7 @@ class ServerLeaderboardBuilder extends SliderBuilder {
 
                         return {
                             name: `#${player.rank} ${player.name}`,
-                            value: duration.format('HH [hours] mm [mins]')
+                            value: `${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
                         };
                     })
             );

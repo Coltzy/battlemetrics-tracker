@@ -1,9 +1,10 @@
-import { EmbedBuilder, CommandInteraction, inlineCode } from 'discord.js';
+import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
 import SliderBuilder from '../SliderBuilder';
 import moment from 'moment';
 import { Server } from '../../types/servers';
 import { PlayerServerData } from '../../types/players';
 import chunk from 'chunk';
+import Util from '../../Util';
 
 class ServerPlayersBuilder extends SliderBuilder {
     constructor(
@@ -27,8 +28,8 @@ class ServerPlayersBuilder extends SliderBuilder {
                 .addFields(
                     chunk.map(player => {
                         return {
-                            name: player.attributes.name + ' ' + inlineCode(player.attributes.id),
-                            value: 'Playtime: ' + moment(player.attributes.updatedAt).fromNow(true)
+                            name: player.attributes.name,
+                            value: `Playtime: ${moment(player.attributes.updatedAt).fromNow(true)} (${hyperlink(player.id, Util.playerToUrl(player))})`
                         };
                     })
                 );
