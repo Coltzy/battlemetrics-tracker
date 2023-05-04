@@ -3,7 +3,14 @@ import { BaseServerData } from "./servers";
 /* Player */
 export interface Player {
     data: PlayerData;
+}
+
+export interface PlayerWithServerMeta extends Player {
     included: PlayerServerMeta[];
+}
+
+export interface PlayerWithIdentifers extends Player {
+    included: PlayerIdentifier[];
 }
 
 export interface PlayerData {
@@ -29,6 +36,22 @@ export interface PlayerServerData extends PlayerData {
     meta: PlayerMeta;
 }
 
+/* Player Identifiers */
+interface PlayerIdentifier {
+    type: string;
+    id: string;
+    attributes: PlayerIdentifierAttributes;
+    relationships: PlayerRelationships;
+}
+
+interface PlayerIdentifierAttributes {
+    type: string;
+    identifier: string;
+    lastSeen: string;
+    private: boolean;
+    metadata: null;
+}
+
 /* Player Attributes */
 interface PlayerAttributes {
     id: string;
@@ -41,7 +64,7 @@ interface PlayerAttributes {
 
 /* Player Relationships */
 interface PlayerRelationships {
-    server: PlayerRelationshipsServer;
+    player: PlayerRelationshipsServer;
 }
 
 interface PlayerRelationshipsServer {

@@ -2,7 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import Logger from '../../Logger';
 import Util from '../../Util';
-import { Player } from '../../types/players';
+import { Player, PlayerWithServerMeta } from '../../types/players';
 import { BMErrors } from '../../types/BMError';
 import PlayerServersBuilder from '../../builders/player/builder-player-servers';
 
@@ -40,7 +40,7 @@ class PlayerServersCommand implements Command {
 
         if (!response) return;
 
-        new PlayerServersBuilder(interaction, response);
+        new PlayerServersBuilder(interaction, response as PlayerWithServerMeta);
     }
 }
 

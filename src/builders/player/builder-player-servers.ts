@@ -1,5 +1,5 @@
 import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
-import { Player } from '../../types/players';
+import { PlayerWithServerMeta } from '../../types/players';
 import moment from 'moment';
 import Util from '../../Util';
 import { stripIndent } from 'common-tags';
@@ -10,7 +10,7 @@ import 'moment-duration-format';
 class PlayerServersBuilder extends SliderBuilder {
     constructor(
         interaction: CommandInteraction,
-        player: Player,
+        player: PlayerWithServerMeta,
     ) {
         const pages = [];
 

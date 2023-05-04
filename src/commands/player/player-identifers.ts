@@ -2,12 +2,12 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import Logger from '../../Logger';
 import Util from '../../Util';
-import { Player, PlayerWithServerMeta } from '../../types/players';
+import { Player, PlayerWithIdentifers } from '../../types/players';
 import { BMErrors } from '../../types/BMError';
-import PlayerStatsBuilder from '../../builders/player/builder-player-stats';
+import PlayerIdentifiersBuilder from '../../builders/player/builder-player-identifiers';
 
-class PlayerStatsCommand implements Command {
-    public name = 'player-stats';
+class PlayerIdentifiersCommand implements Command {
+    public name = 'player-identifiers';
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public constructor() {}
@@ -18,7 +18,7 @@ class PlayerStatsCommand implements Command {
         
         try {
             response = await interaction.client.BMF.fetch(`players/${query}`, {
-                'include': 'server'
+                'include': 'identifier'
             });
         } catch (err) {
             Logger.error('There was an error when fetching from battlemetrics.');
@@ -29,6 +29,7 @@ class PlayerStatsCommand implements Command {
         }
 
         if (response && 'errors' in response) {
+            console.log(response);
             if (response.errors[0].status == '400') {
                 await Util.reply(interaction, 'Invalid player ID provided.');
             } else {
@@ -40,8 +41,8 @@ class PlayerStatsCommand implements Command {
 
         if (!response) return;
 
-        new PlayerStatsBuilder(interaction, response as PlayerWithServerMeta);
+        new PlayerIdentifiersBuilder(interaction, response as PlayerWithIdentifers);
     }
 }
 
-export default PlayerStatsCommand;
+export default PlayerIdentifiersCommand;

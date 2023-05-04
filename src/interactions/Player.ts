@@ -24,6 +24,17 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setDescription('The ID of the player.')
                     .setRequired(true)
             )
-    );
+    )
+    .addSubcommand(command =>
+        command
+            .setName('identifiers')
+            .setDescription('Lists all past identifiers of a player.')
+            .addStringOption(option =>
+                option
+                    .setName('query')
+                    .setDescription('The ID of the player.')
+                    .setRequired(true)
+            )
+        );
 
 export default PlayerInteraction;

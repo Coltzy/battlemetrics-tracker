@@ -1,6 +1,6 @@
 import { EmbedBuilder, CommandInteraction, inlineCode, hyperlink, ButtonStyle } from 'discord.js';
 import BuilderBase from '../BuilderBase';
-import { Player } from '../../types/players';
+import { PlayerWithServerMeta } from '../../types/players';
 import moment from 'moment';
 import Util from '../../Util';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
@@ -11,10 +11,12 @@ import 'moment-duration-format';
 class PlayerStatsBuilder extends BuilderBase {
     constructor(
         interaction: CommandInteraction,
-        player: Player,
+        player: PlayerWithServerMeta,
     ) {
         const { attributes } = player.data;
         const { included: servers } = player;
+
+        console.log(player.data);
 
         const lastServer = servers.sort((a, b) => Date.parse(b.meta.lastSeen) - Date.parse(a.meta.lastSeen))[0];
         const onlineServers = servers.filter((s) => s.meta.online);
