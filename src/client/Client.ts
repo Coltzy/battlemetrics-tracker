@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from 'discord.js';
+import { ActivityType, Client, GatewayIntentBits } from 'discord.js';
 import CommandHandler from '../CommandHandler';
 import Logger from '../Logger';
 import BMF from '../framework/BMF';
@@ -32,7 +32,11 @@ class BMT extends Client {
 
         this.mongo = new Mongo();
 
-        this.once('ready', () => Logger.info('Bot active!'));
+        this.once('ready', () => {
+            Logger.info('Bot active!');
+
+            this.user?.setActivity('battlemetrics', { type: ActivityType.Watching });
+        });
     }
 
     public activate() {
