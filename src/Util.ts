@@ -1,6 +1,5 @@
-import { Client, CommandInteraction, InteractionReplyOptions } from 'discord.js';
-import { BMErrors } from './types/BMError';
-import { BaseServerData, Server, ServerSearch } from './types/servers';
+import { CommandInteraction, InteractionReplyOptions } from 'discord.js';
+import { BaseServerData } from './types/servers';
 import { PlayerData } from './types/players';
 
 class Util {
@@ -12,33 +11,6 @@ class Util {
         }
 
         await interaction.reply(options);
-    }
-
-    static async searchServer(client: Client, query: string) {
-        let response: BMErrors | Server | ServerSearch | undefined = undefined;
-
-        let success = false;
-
-        if (!isNaN(Number(query))) {
-            response = await client.BMF.fetch(`servers/${query}`) as BMErrors | Server;
-
-            if ('data' in response) {
-                success = true;
-            }
-        }
-
-        if (!success) {
-            response = await client.BMF.fetch('servers', {
-                'filter[search]': query,
-                'page[size]': '1'
-            });
-        }
-
-        if (response && 'data' in response && Array.isArray(response.data)) {
-            response = response.data[0] ? { data: response.data[0] } : undefined;
-        }
-
-        return response as Server | undefined;
     }
 
     static serverToUrl(server: BaseServerData) {

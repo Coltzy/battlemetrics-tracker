@@ -1,3 +1,6 @@
+import { BMErrors } from '../types/BMError';
+import { Server, ServerSearch } from '../types/servers';
+import { Client } from 'discord.js';
 import fetch from 'node-fetch';
 import qs from 'querystring';
 import 'dotenv/config';
@@ -30,6 +33,33 @@ class BMF {
         }
 
         return uri;
+    }
+
+    public async searchServer(query: string) {
+        let response: BMErrors | Server | ServerSearch | undefined = undefined;
+
+        let success = false;
+
+        if (!isNaN(Number(query))) {
+            response = await this.fetch(`servers/${query}`) as BMErrors | Server;
+
+            if ('data' in response) {
+                success = true;
+            }
+        }
+
+        if (!success) {
+            response = await this.fetch('servers', {
+                'filter[search]': query,
+                'page[size]': '1'
+            });
+        }
+
+        if (response && 'data' in response && Array.isArray(response.data)) {
+            response = response.data[0] ? { data: response.data[0] } : undefined;
+        }
+
+        return response as Server | undefined;
     }
 }
 
