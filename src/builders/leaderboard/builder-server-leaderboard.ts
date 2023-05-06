@@ -41,7 +41,9 @@ class ServerLeaderboardBuilder extends SliderBuilder {
             pages.push(embed);
         }
 
-        super(interaction, pages);
+        super(interaction, pages, {
+            searchRegex: new RegExp('#\\d[^ ]* (.*)')
+        });
     }
 }
 

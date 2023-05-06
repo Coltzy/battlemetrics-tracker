@@ -1,14 +1,20 @@
 import { ButtonInteraction, ButtonStyle, CacheType, CommandInteraction, EmbedBuilder } from 'discord.js';
-import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { ActionRowBuilder, ButtonBuilder, inlineCode } from '@discordjs/builders';
 import BuilderBase from './BuilderBase';
+import fuzzysort from 'fuzzysort';
 import ms from 'ms';
 import Util from '../Util';
 
+interface SliderOptions {
+    searchRegex: RegExp;
+}
+
 abstract class SliderBuilder extends BuilderBase {
+    private options: SliderOptions | undefined;
     private pages: EmbedBuilder[];
     private index: number;
 
-    constructor(interaction: CommandInteraction, pages: EmbedBuilder[]) {
+    constructor(interaction: CommandInteraction, pages: EmbedBuilder[], options?: SliderOptions) {
         const buttons = new ActionRowBuilder<ButtonBuilder>();
         buttons.addComponents(
             new ButtonBuilder()
@@ -34,6 +40,8 @@ abstract class SliderBuilder extends BuilderBase {
         this.pages = pages;
 
         this.index = 0;
+
+        this.options = options;
 
         super.send(interaction, pages[0], this.pages.length > 1 ? {
             buttons
@@ -86,7 +94,7 @@ abstract class SliderBuilder extends BuilderBase {
     private async picker(interaction: CommandInteraction) {
         const msg = await this.awaitMessages(interaction, 'Enter a page number to turn too.');
 
-        if (msg) {
+        if (msg && msg.content) {
             const num = parseInt(msg.content);
             if (!isNaN(num) && this.isValidIndex(num)) {
                 this.index = num - 1;
@@ -97,18 +105,28 @@ abstract class SliderBuilder extends BuilderBase {
     private async search(interaction: CommandInteraction) {
         const msg = await this.awaitMessages(interaction, 'Enter a search term.');
 
-        if (msg) {
-            const re = new RegExp('#\\d[^ ]* (.*)');
+        if (msg && msg.content) {
             const values: string[] = [];
             this.pages.forEach(page => {
-                Array.prototype.push.apply(values, page.data.fields?.map(f => f.name.match(re)?.[1]) as string[]);
+                Array.prototype.push.apply(values, page.data.fields?.map((f) => {
+                    let string = f.name;
+
+                    if (this.options?.searchRegex) {
+                        string = f.name.match(this.options.searchRegex)?.[1] as string;
+                    }
+
+                    return string;
+                }) as string[]);
             });
 
-            const match = values.find(name => name.toLowerCase() == msg.content.toLowerCase());
+            const matches = fuzzysort.go(msg.content, values);
+            const result = typeof matches[0] == 'object' ? matches[0] : null;
             
-            if (match) {
-                const pos = values.indexOf(match);
-                this.index = Math.round(pos / 10);
+            if (result) {
+                const target = result.target;
+                const pos = values.indexOf(target);
+                this.index = Math.floor(pos / 10);
+                await interaction.channel?.send(`Match found for ${inlineCode(target)}.`);
             } else {
                 await interaction.channel?.send('No results found for this query.');
             }

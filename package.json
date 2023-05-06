@@ -21,6 +21,7 @@
     "common-tags": "^1.8.2",
     "discord-api-types": "^0.37.37",
     "discord.js": "^14.8.0",
+    "fuzzysort": "^2.0.4",
     "glob": "^9.3.2",
     "iso-3166-1-alpha-2": "^1.0.1",
     "moment": "^2.29.4",
