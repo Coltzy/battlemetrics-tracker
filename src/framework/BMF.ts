@@ -43,7 +43,7 @@ class BMF {
         }) as ServerSearch;
 
         if ('data' in response) {
-            return response.data;
+            return response.data.map((data) => new Object({ data })) as Server[];
         }
 
         return undefined;
@@ -69,9 +69,7 @@ class BMF {
         const res = await this.searchServers(query, 1);
 
         if (res && res.length) {
-            response = { data: res[0] };
-
-            return response;
+            return response as Server;
         }
 
         return undefined;
