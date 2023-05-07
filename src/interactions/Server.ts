@@ -13,7 +13,19 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setDescription('The query of the search.')
                     .setRequired(true)
                     .setMaxLength(128)
-            )
+        )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('list')
+            .setDescription('List a group of servers by a query.')
+            .addStringOption(option =>
+               option
+                .setName('query')
+                .setDescription('The query of the server search.')
+                .setRequired(true)
+                .setMaxLength(128) 
+        )
     )
     .addSubcommand(command => 
         command
@@ -25,7 +37,7 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setDescription('The query of the leaderboard search.')
                     .setRequired(true)
                     .setMaxLength(128)
-            )
+        )
     )
     .addSubcommand(command =>
         command
@@ -44,8 +56,8 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setDescription('The name of the player to check for.')
                     .setRequired(true)
                     .setMaxLength(32)
-            )
         )
+    )
         .addSubcommand(command =>
             command
                 .setName('players')
@@ -56,7 +68,7 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setDescription('The query for the server to list.')
                     .setRequired(true)
                     .setMaxLength(128)
-            )
+        )
     );
 
 export default ServerInteraction;
