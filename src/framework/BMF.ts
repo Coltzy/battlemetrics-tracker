@@ -1,6 +1,5 @@
 import { BMErrors } from '../types/BMError';
 import { Server, ServerSearch } from '../types/servers';
-import { Client } from 'discord.js';
 import fetch from 'node-fetch';
 import qs from 'querystring';
 import 'dotenv/config';
@@ -35,8 +34,23 @@ class BMF {
         return uri;
     }
 
-    public async searchServer(query: string) {
-        let response: BMErrors | Server | ServerSearch | undefined = undefined;
+    public async searchServers(query: string, limit = 100) {
+        if (limit < 1 && limit > 100) throw new Error('Invalid limit for `searchServers`');
+
+        const response = await this.fetch('servers', {
+            'filter[search]': query,
+            'page[size]': limit.toString()
+        }) as ServerSearch;
+
+        if ('data' in response) {
+            return response.data;
+        }
+
+        return undefined;
+    }
+
+    public async getServer(query: string) {
+        let response: BMErrors | Server | Server[] | undefined = undefined;
 
         let success = false;
 
@@ -48,18 +62,19 @@ class BMF {
             }
         }
 
-        if (!success) {
-            response = await this.fetch('servers', {
-                'filter[search]': query,
-                'page[size]': '1'
-            });
+        if (success) {
+            return response as Server;
         }
 
-        if (response && 'data' in response && Array.isArray(response.data)) {
-            response = response.data[0] ? { data: response.data[0] } : undefined;
+        const res = await this.searchServers(query, 1);
+
+        if (res && res.length) {
+            response = { data: res[0] };
+
+            return response;
         }
 
-        return response as Server | undefined;
+        return undefined;
     }
 }
 

@@ -14,7 +14,7 @@ class ServerIsonlineCommand implements Command {
     public async execute(interaction: CommandInteraction) {
         const server = interaction.options.get('server')?.value as string;
         const player = interaction.options.get('player')?.value as string;
-        const response = await interaction.client.BMF.searchServer(server);
+        const response = await interaction.client.BMF.getServer(server);
 
         if (!response) {
             await Util.reply(interaction, `No search results were found for ${inlineCode(server)}`);

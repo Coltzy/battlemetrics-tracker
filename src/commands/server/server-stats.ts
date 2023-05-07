@@ -26,7 +26,7 @@ class ServerStatsCommand implements Command {
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;
-        const response = await interaction.client.BMF.searchServer(query);
+        const response = await interaction.client.BMF.getServer(query);
 
         if (!response) {
             await Util.reply(interaction, `The search for ${inlineCode(query)} didn't find any results.`);
