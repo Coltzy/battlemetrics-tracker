@@ -1,8 +1,8 @@
 import { Server } from '../types/servers';
+import { Player } from '../types/players';
 import fetch from 'node-fetch';
 import qs from 'querystring';
 import 'dotenv/config';
-import { Player } from '../types/players';
 
 const ENDPOINT = 'https://api.battlemetrics.com/';
 
@@ -60,6 +60,13 @@ class BMF {
         let response = undefined;
 
         let success = false;
+
+        const regex = new RegExp(/battlemetrics\.com\/(?:servers|players)\/(.*)/);
+        const match = query.match(regex);
+
+        if (match) {
+            query = match[1];
+        }
 
         if (!isNaN(Number(query))) {
             response = await this.fetch(`${method}/${query}`);
