@@ -16,8 +16,6 @@ class PlayerStatsBuilder extends BuilderBase {
         const { attributes } = player.data;
         const { included: servers } = player;
 
-        console.log(player.data);
-
         const lastServer = servers.sort((a, b) => Date.parse(b.meta.lastSeen) - Date.parse(a.meta.lastSeen))[0];
         const onlineServers = servers.filter((s) => s.meta.online);
         
@@ -37,8 +35,9 @@ ${onlineServers.map((s) => hyperlink(s.attributes.name, Util.serverToUrl(s))).jo
                     inline: true
                 },
                 {
-                    name: servers.length ? 'Online for' : 'Last seen',
-                    value: moment(lastServer.meta.lastSeen).fromNow(servers.length ? true : false),
+                    name: 'Last seen',
+                    value: onlineServers.length ? 'now' 
+                        : moment(lastServer.meta.lastSeen).fromNow(servers.length ? true : false),
                     inline: true
                 }
             );
