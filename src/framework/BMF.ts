@@ -1,10 +1,12 @@
-import { BMErrors } from '../types/BMError';
-import { Server, ServerSearch } from '../types/servers';
+import { Server } from '../types/servers';
 import fetch from 'node-fetch';
 import qs from 'querystring';
 import 'dotenv/config';
+import { Player } from '../types/players';
 
 const ENDPOINT = 'https://api.battlemetrics.com/';
+
+type SearchMethod = 'servers' | 'players';
 
 class BMF {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -34,42 +36,51 @@ class BMF {
         return uri;
     }
 
-    public async searchServers(query: string, limit = 100) {
-        if (limit < 1 && limit > 100) throw new Error('Invalid limit for `searchServers`');
+    search(method: 'servers', query: string, limit?: number): Promise<Server[] | undefined>;
+    search(method: 'players', query: string, limit?: number): Promise<Player[] | undefined>;
+    public async search(method: SearchMethod, query: string, limit = 100) {
+        if (limit < 1 && limit > 100) throw new Error('Invalid limit for search.');
 
-        const response = await this.fetch('servers', {
+        const response = await this.fetch(method, {
             'filter[search]': query,
             'page[size]': limit.toString()
-        }) as ServerSearch;
+        });
 
         if ('data' in response) {
-            return response.data.map((data) => new Object({ data })) as Server[];
+            return response.data.map((data: unknown) => new Object({ data }));
         }
 
         return undefined;
     }
 
-    public async getServer(query: string) {
-        let response: BMErrors | Server | Server[] | undefined = undefined;
+
+    get(method: 'servers', query: string): Promise<Server | undefined>;
+    get(method: 'players', query: string): Promise<Player | undefined>;
+    public async get(method: SearchMethod, query: string) {
+        let response = undefined;
 
         let success = false;
 
         if (!isNaN(Number(query))) {
-            response = await this.fetch(`servers/${query}`) as BMErrors | Server;
+            response = await this.fetch(`${method}/${query}`);
 
-            if ('data' in response) {
+            if (response && 'data' in response) {
                 success = true;
             }
         }
 
         if (success) {
-            return response as Server;
+            return response;
         }
 
-        const res = await this.searchServers(query, 1);
+        if (method == 'servers') {
+            response = await this.search('servers', query, 1);
+        } else {
+            response = await this.search('players', query, 1);
+        }
 
-        if (res && res.length) {
-            return response as Server;
+        if (response && response.length) {
+            return response[0];
         }
 
         return undefined;
