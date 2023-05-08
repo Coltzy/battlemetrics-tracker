@@ -1,9 +1,7 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, inlineCode } from 'discord.js';
 import Command from '../../Command';
-import Logger from '../../Logger';
 import Util from '../../Util';
-import { Player, PlayerWithServerMeta } from '../../types/players';
-import { BMErrors } from '../../types/BMError';
+import { PlayerWithServerMeta } from '../../types/players';
 import PlayerStatsBuilder from '../../builders/player/builder-player-stats';
 
 class PlayerStatsCommand implements Command {
@@ -14,33 +12,23 @@ class PlayerStatsCommand implements Command {
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;
-        let response: Player | BMErrors | undefined;
-        
-        try {
-            response = await interaction.client.BMF.fetch(`players/${query}`, {
-                'include': 'server'
-            });
-        } catch (err) {
-            Logger.error('There was an error when fetching from battlemetrics.');
-            console.error(err);
+        const response = await interaction.client.BMF.get('players', query);
 
-            await Util.reply(interaction, 'There was an error when fetching this data.');
-            return;
-        }
-
-        if (response && 'errors' in response) {
-            if (response.errors[0].status == '400') {
-                await Util.reply(interaction, 'Invalid player ID provided.');
-            } else {
-                await Util.reply(interaction, 'There was an error when fetching from battlemetrics.');
-            }
+        if (!response) {
+            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
 
             return;
         }
 
-        if (!response) return;
+        const res = await interaction.client.BMF.fetch(`players/${response.data.id}`, {
+            'include': 'server'
+        });
 
-        new PlayerStatsBuilder(interaction, response as PlayerWithServerMeta);
+        if (!res) {
+            await Util.reply(interaction, 'There seems to have been an issue executing this command.');
+        } else {
+            new PlayerStatsBuilder(interaction, res as PlayerWithServerMeta);
+        }
     }
 }
 

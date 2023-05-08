@@ -11,7 +11,7 @@ class ServerListCommand implements Command {
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;
-        const response = await interaction.client.BMF.searchServers(query);
+        const response = await interaction.client.BMF.search('servers', query);
 
         if (!response) {
             await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);

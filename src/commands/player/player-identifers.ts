@@ -1,9 +1,7 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, inlineCode } from 'discord.js';
 import Command from '../../Command';
-import Logger from '../../Logger';
 import Util from '../../Util';
-import { Player, PlayerWithIdentifers } from '../../types/players';
-import { BMErrors } from '../../types/BMError';
+import { PlayerWithIdentifers } from '../../types/players';
 import PlayerIdentifiersBuilder from '../../builders/player/builder-player-identifiers';
 
 class PlayerIdentifiersCommand implements Command {
@@ -14,34 +12,25 @@ class PlayerIdentifiersCommand implements Command {
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;
-        let response: Player | BMErrors | undefined;
-        
-        try {
-            response = await interaction.client.BMF.fetch(`players/${query}`, {
-                'include': 'identifier'
-            });
-        } catch (err) {
-            Logger.error('There was an error when fetching from battlemetrics.');
-            console.error(err);
+        const response = await interaction.client.BMF.get('players', query);
 
-            await Util.reply(interaction, 'There was an error when fetching this data.');
-            return;
-        }
-
-        if (response && 'errors' in response) {
-            console.log(response);
-            if (response.errors[0].status == '400') {
-                await Util.reply(interaction, 'Invalid player ID provided.');
-            } else {
-                await Util.reply(interaction, 'There was an error when fetching from battlemetrics.');
-            }
+        if (!response) {
+            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
 
             return;
         }
 
-        if (!response) return;
+        const res = await interaction.client.BMF.fetch(`players/${response.data.id}`, {
+            'include': 'identifier'
+        });
 
-        new PlayerIdentifiersBuilder(interaction, response as PlayerWithIdentifers);
+        if (!res) {
+            await Util.reply(interaction, 'There seems to have been an issue executing this command.');
+        } else if (res.included.length <= 1) {
+            await Util.reply(interaction, 'This player has no previous identifiers.');
+        } else {
+            new PlayerIdentifiersBuilder(interaction, res as PlayerWithIdentifers);
+        }
     }
 }
 
