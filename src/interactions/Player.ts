@@ -16,6 +16,17 @@ const PlayerInteraction = new SlashCommandBuilder()
     )
     .addSubcommand(command =>
         command
+            .setName('list')
+            .setDescription('List a group of players by a query.')
+            .addStringOption(option =>
+                option
+                    .setName('query')
+                    .setDescription('The query of the player search.')
+                    .setRequired(true)
+            )
+    )
+    .addSubcommand(command =>
+        command
             .setName('servers')
             .setDescription('Lists all the past servers a play has played on.')
             .addStringOption(option =>
