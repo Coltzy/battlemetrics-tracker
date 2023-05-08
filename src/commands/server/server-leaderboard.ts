@@ -4,7 +4,7 @@ import { ServerLeaderboard } from '../../types/servers';
 import LeaderboardModel from '../../models/Leaderboard';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { BMErrors } from '../../types/BMError';
-import ServerLeaderboardBuilder from '../../builders/leaderboard/builder-server-leaderboard';
+import ServerLeaderboardBuilder from '../../builders/server/builder-server-leaderboard';
 import Util from '../../Util';
 
 class ServerLeaderboardCommand implements Command {
