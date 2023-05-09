@@ -1,21 +1,23 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
-import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData } from '../../types/servers';
+import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData } from '../../types/servers';
 import Util from '../../Util';
 
 import RustServerStatsBuilder from '../../builders/server/stats/builder-rust-stats';
 import ArkServerStatsBuilder from '../../builders/server/stats/builder-ark-stats';
 import CsgoServerStatsBuilder from '../../builders/server/stats/builder-csgo-stats';
 import MinecraftServerStatsBuilder from '../../builders/server/stats/builder-minecraft-stats';
+import GmodServerStatsBuilder from '../../builders/server/stats/builder-gmod-stats';
 
-type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData;
+type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData & GmodServerData;
 
 const Builders = {
     'rust': RustServerStatsBuilder,
     'ark': ArkServerStatsBuilder,
     'csgo': CsgoServerStatsBuilder,
-    'minecraft': MinecraftServerStatsBuilder
+    'minecraft': MinecraftServerStatsBuilder,
+    'gmod': GmodServerStatsBuilder
 };
 
 class ServerStatsCommand implements Command {

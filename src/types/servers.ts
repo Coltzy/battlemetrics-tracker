@@ -37,6 +37,10 @@ export interface RustServerData extends BaseServerData {
     attributes: RustServerAttributes;
 }
 
+export interface GmodServerData extends BaseServerData {
+    attributes: GmodServerAttributes;
+}
+
 /* Attributes */
 interface ServerAttributesBase {
     id: string;
@@ -73,7 +77,20 @@ export interface MinecraftServerAttributes extends ServerAttributesBase {
     details: MinecraftServerDetails;
 }
 
+export interface GmodServerAttributes extends ServerAttributesBase {
+    details: GmodServerDetails;
+}
+
 /* Server Attribute Details */
+interface GmodServerDetails {
+    map: string;
+    password: boolean;
+    numbots: number;
+    gameMode: string;
+    rules: { [key: string]: string };
+    serverSteamId: string;
+}
+
 interface MinecraftServerDetails {
     minecraft_clean_description: string;
     minecraft_description: MinecraftDescription | string;
