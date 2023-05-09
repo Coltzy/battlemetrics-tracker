@@ -4,10 +4,10 @@ import { inlineCode } from '@discordjs/builders';
 import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData } from '../../types/servers';
 import Util from '../../Util';
 
-import RustServerStatsBuilder from '../../builders/stats/builder-rust-stats';
-import ArkServerStatsBuilder from '../../builders/stats/builder-ark-stats';
-import CsgoServerStatsBuilder from '../../builders/stats/builder-csgo-stats';
-import MinecraftServerStatsBuilder from '../../builders/stats/builder-minecraft-stats';
+import RustServerStatsBuilder from '../../builders/server/stats/builder-rust-stats';
+import ArkServerStatsBuilder from '../../builders/server/stats/builder-ark-stats';
+import CsgoServerStatsBuilder from '../../builders/server/stats/builder-csgo-stats';
+import MinecraftServerStatsBuilder from '../../builders/server/stats/builder-minecraft-stats';
 
 type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData;
 

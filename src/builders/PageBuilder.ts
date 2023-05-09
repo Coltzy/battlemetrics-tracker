@@ -4,7 +4,7 @@ import { ButtonInteraction, CacheType, CommandInteraction } from 'discord.js';
 import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
 import Command from '../Command';
 
-interface Page {
+export interface Page {
     embed: EmbedBuilder;
     button: ButtonBuilder;
 }

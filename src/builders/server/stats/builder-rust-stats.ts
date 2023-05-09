@@ -1,12 +1,9 @@
-import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { RustServerData } from '../../types/servers';
+import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import { RustServerData } from '../../../types/servers';
 import moment from 'moment';
-import PageBuilder from '../PageBuilder';
-import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
-import Command from '../../Command';
-import ServerPlayersCommand from '../../commands/server/server-players';
+import ServerStatsBaseBuilder from '../builder-server-stats-base';
 
-class RustServerStatsBuilder extends PageBuilder {
+class RustServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
         interaction: CommandInteraction, 
         server: RustServerData,
@@ -83,57 +80,20 @@ class RustServerStatsBuilder extends PageBuilder {
         .setImage(attributes.details.rust_headerimage)
         .setFooter({ text: attributes.name });
 
+        const url = attributes.details.rust_url;
+        if (url) {
+            stats.setURL(url);
+        }
+
         const map = new EmbedBuilder()
             .setFooter({ text: attributes.name });
 
         if (attributes.details.rust_maps) {
-            map.setImage(attributes.details.rust_maps.thumbnailUrl);
+            map.setImage(attributes.details.rust_maps.thumbnailUrl)
+                .setDescription(hyperlink('Click here to view map.', attributes.details.rust_maps.url));
         } else {
             map.setDescription('Map image preview is unavailable.');
         }
-
-        const links = new ActionRowBuilder<ButtonBuilder>();
-        if (attributes.details.rust_maps) {
-            links.addComponents(
-                new ButtonBuilder()
-                    .setLabel('Rust Maps')
-                    .setStyle(ButtonStyle.Link)
-                    .setURL(attributes.details.rust_maps.url)
-            );
-        }
-
-        if (attributes.details.rust_url) {
-            links.addComponents(
-                new ButtonBuilder()
-                    .setLabel('Website')
-                    .setStyle(ButtonStyle.Link)
-                    .setURL(attributes.details.rust_url)
-            );
-        }
-
-        links.addComponents(
-            new ButtonBuilder()
-                .setLabel('Raw')
-                .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
-        );
-
-        const cbs = [
-            {
-                command: new ServerLeaderboardCommand() as unknown as Command,
-                button: new ButtonBuilder()
-                    .setLabel('🏆 Leaderboard')
-                    .setCustomId('leaderboard')
-                    .setStyle(ButtonStyle.Primary)
-            },
-            {
-                command: new ServerPlayersCommand() as unknown as Command,
-                button: new ButtonBuilder()
-                    .setLabel('👥 Player list')
-                    .setCustomId('players')
-                    .setStyle(ButtonStyle.Primary)
-            },
-        ];
 
         const pages = [
             {
@@ -152,10 +112,7 @@ class RustServerStatsBuilder extends PageBuilder {
             }
         ];
 
-        super(interaction, pages, {
-            links,
-            cbs
-        });
+        super(interaction, pages, server);
     }
 }
 

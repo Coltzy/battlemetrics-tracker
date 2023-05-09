@@ -1,11 +1,8 @@
-import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
-import { CsgoServerData } from '../../types/servers';
-import PageBuilder from '../PageBuilder';
-import Command from '../../Command';
-import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
-import ServerPlayersCommand from '../../commands/server/server-players';
+import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
+import { CsgoServerData } from '../../../types/servers';
+import ServerStatsBaseBuilder from '../builder-server-stats-base';
 
-class CsgoServerStatsBuilder extends PageBuilder {
+class CsgoServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
         interaction: CommandInteraction, 
         server: CsgoServerData,
@@ -67,32 +64,6 @@ class CsgoServerStatsBuilder extends PageBuilder {
             );
         }
 
-        const links = new ActionRowBuilder<ButtonBuilder>();
-
-        links.addComponents(
-            new ButtonBuilder()
-                .setLabel('Raw')
-                .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
-        );
-
-        const cbs = [
-            {
-                command: new ServerLeaderboardCommand() as unknown as Command,
-                button: new ButtonBuilder()
-                    .setLabel('🏆 Leaderboard')
-                    .setCustomId('leaderboard')
-                    .setStyle(ButtonStyle.Primary)
-            },
-            {
-                command: new ServerPlayersCommand() as unknown as Command,
-                button: new ButtonBuilder()
-                    .setLabel('👥 Player list')
-                    .setCustomId('players')
-                    .setStyle(ButtonStyle.Primary)
-            },
-        ];
-
         const pages = [
             {
                 embed: stats,
@@ -110,10 +81,7 @@ class CsgoServerStatsBuilder extends PageBuilder {
             }
         ];
 
-        super(interaction, pages, {
-            links,
-            cbs
-        });
+        super(interaction, pages, server);
     }
 }
 

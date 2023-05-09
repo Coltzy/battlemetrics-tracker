@@ -1,22 +1,21 @@
-import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { MinecraftServerData } from '../../types/servers';
-import PageBuilder from '../PageBuilder';
+import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { ArkServerData } from '../../../types/servers';
+import ServerStatsBaseBuilder from '../builder-server-stats-base';
 
-class MinecraftServerStatsBuilder extends PageBuilder {
+class ArkServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
         interaction: CommandInteraction, 
-        server: MinecraftServerData,
+        server: ArkServerData,
     ) {
         const { attributes } = server;
 
         const stats = new EmbedBuilder()
             .setTitle(attributes.name)
-            .setDescription(attributes.details.minecraft_clean_description)
             .addFields(
                 {
                     name: 'Rank',
                     value: '#' + attributes.rank.toString(), 
-                    inline: true
+                    inline: true 
                 },
                 { 
                     name: 'Player count', 
@@ -39,13 +38,23 @@ class MinecraftServerStatsBuilder extends PageBuilder {
                     inline: true
                 },
                 {
-                    name: 'Version',
-                    value: `${attributes.details.minecraft_version_name} (Protocol ${attributes.details.minecraft_version.protocol})`,
+                    name: 'Map',
+                    value: attributes.details.map,
                     inline: true
                 },
                 {
-                    name: 'Modded',
-                    value: attributes.details.minecraft_modded.toString(),
+                    name: 'In-game Day',
+                    value: attributes.details.time,
+                    inline: true
+                },
+                { 
+                    name: 'Server Type', 
+                    value: attributes.details.offical ? 'Offical' : 'Unoffical', 
+                    inline: true
+                },
+                {
+                    name: 'PVE',
+                    value: attributes.details.pve.toString(),
                     inline: true
                 }
             )
@@ -55,20 +64,17 @@ class MinecraftServerStatsBuilder extends PageBuilder {
             .setTitle('Server Mods')
             .setFooter({ text: attributes.name });
 
-        if (!attributes.details.minecraft_mods?.length) {
-            mods.setDescription('This is not a modded server.');
+        if (attributes.details.modIds.length) {
+            const path = 'https://steamcommunity.com/sharedfiles/filedetails/?id=';
+            
+            mods.setDescription(
+                attributes.details.modIds.map((id, index) => {
+                    return `[${attributes.details.modNames[index]}](${path + id})`;
+                }).join('\n')
+            );
         } else {
-            mods.setDescription(attributes.details.minecraft_mods.join('\n'));
+            mods.setDescription('This server dosen\'t have any mods.');
         }
-
-        const links = new ActionRowBuilder<ButtonBuilder>();
-
-        links.addComponents(
-            new ButtonBuilder()
-                .setLabel('Raw')
-                .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
-        );
 
         const pages = [
             {
@@ -87,10 +93,8 @@ class MinecraftServerStatsBuilder extends PageBuilder {
             }
         ];
 
-        super(interaction, pages, {
-            links
-        });
+        super(interaction, pages, server);
     }
 }
 
-export default MinecraftServerStatsBuilder;
+export default ArkServerStatsBuilder;
