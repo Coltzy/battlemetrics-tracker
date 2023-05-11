@@ -58,7 +58,7 @@ class CsgoServerStatsBuilder extends ServerStatsBaseBuilder {
             rules.setDescription(
                 Object.entries(attributes.details.rules).map(([key, value]) => {
                     return `${inlineCode(key)}: ${value}`;
-                }).join('\n')
+                }).join('\n').substring(0, 4096)
             );
         }
 

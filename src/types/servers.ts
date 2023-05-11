@@ -49,6 +49,10 @@ export interface SquadServerData extends BaseServerData {
     attributes: SquadServerAttributes;
 }
 
+export interface CsServerData extends BaseServerData {
+    attributes: CsServerAttributes;
+}
+
 /* Attributes */
 interface ServerAttributesBase {
     id: string;
@@ -97,7 +101,21 @@ export interface SquadServerAttributes extends ServerAttributesBase {
     details: SquadServerDetails;
 }
 
+export interface CsServerAttributes extends ServerAttributesBase {
+    details: CsServerDetails;
+}
+
 /* Server Attribute Details */
+interface CsServerDetails {
+    map: string;
+    password: boolean;
+    numbots: number;
+    version: string;
+    game: string;
+    secure: number;
+    rules: CsgoRules;
+}
+
 interface SquadServerDetails {
     map: string;
     gameMode: string;
