@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
-import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData } from '../../types/servers';
+import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData, DayzServerData } from '../../types/servers';
 import Util from '../../Util';
 
 import RustServerStatsBuilder from '../../builders/server/stats/builder-rust-stats';
@@ -9,15 +9,17 @@ import ArkServerStatsBuilder from '../../builders/server/stats/builder-ark-stats
 import CsgoServerStatsBuilder from '../../builders/server/stats/builder-csgo-stats';
 import MinecraftServerStatsBuilder from '../../builders/server/stats/builder-minecraft-stats';
 import GmodServerStatsBuilder from '../../builders/server/stats/builder-gmod-stats';
+import DayzServerStatsBuilder from '../../builders/server/stats/builder-dayz-stats';
 
-type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData & GmodServerData;
+type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData & GmodServerData & DayzServerData;
 
 const Builders = {
     'rust': RustServerStatsBuilder,
     'ark': ArkServerStatsBuilder,
     'csgo': CsgoServerStatsBuilder,
     'minecraft': MinecraftServerStatsBuilder,
-    'gmod': GmodServerStatsBuilder
+    'gmod': GmodServerStatsBuilder,
+    'dayz': DayzServerStatsBuilder
 };
 
 class ServerStatsCommand implements Command {

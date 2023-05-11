@@ -41,6 +41,10 @@ export interface GmodServerData extends BaseServerData {
     attributes: GmodServerAttributes;
 }
 
+export interface DayzServerData extends BaseServerData {
+    attributes: DayzServerAttributes;
+}
+
 /* Attributes */
 interface ServerAttributesBase {
     id: string;
@@ -81,7 +85,23 @@ export interface GmodServerAttributes extends ServerAttributesBase {
     details: GmodServerDetails;
 }
 
+export interface DayzServerAttributes extends ServerAttributesBase {
+    details: DayzServerDetails;
+}
+
 /* Server Attribute Details */
+interface DayzServerDetails {
+    version: string;
+    password: boolean;
+    official: boolean;
+    time: string;
+    third_person: boolean;
+    modded: true;
+    modIds: number[];
+    modNames: string[];
+    serverSteamId: string;
+}
+
 interface GmodServerDetails {
     map: string;
     password: boolean;
