@@ -1,6 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
-import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData, DayzServerData } from '../../types/servers';
+import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData, DayzServerData, SquadServerData } from '../../types/servers';
 
 import RustServerStatsBuilder from '../../builders/server/stats/builder-rust-stats';
 import ArkServerStatsBuilder from '../../builders/server/stats/builder-ark-stats';
@@ -8,8 +8,9 @@ import CsgoServerStatsBuilder from '../../builders/server/stats/builder-csgo-sta
 import MinecraftServerStatsBuilder from '../../builders/server/stats/builder-minecraft-stats';
 import GmodServerStatsBuilder from '../../builders/server/stats/builder-gmod-stats';
 import DayzServerStatsBuilder from '../../builders/server/stats/builder-dayz-stats';
+import SquadServerStatsBuilder from '../../builders/server/stats/builder-squad-stats';
 
-type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData & GmodServerData & DayzServerData;
+type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData & GmodServerData & DayzServerData & SquadServerData;
 
 const Builders = {
     'rust': RustServerStatsBuilder,
@@ -17,7 +18,8 @@ const Builders = {
     'csgo': CsgoServerStatsBuilder,
     'minecraft': MinecraftServerStatsBuilder,
     'gmod': GmodServerStatsBuilder,
-    'dayz': DayzServerStatsBuilder
+    'dayz': DayzServerStatsBuilder,
+    'squad': SquadServerStatsBuilder
 };
 
 class ServerStatsCommand implements Command {
@@ -38,8 +40,7 @@ class ServerStatsCommand implements Command {
         const builder = Builders[server.relationships.game.data.id as keyof typeof Builders];
         
         if (!builder) {
-            await interaction.respond(`Server's from ${server.relationships.game.data.id} are currently not supported!`);
-            
+            return await interaction.respond(`Server's from ${server.relationships.game.data.id} are currently not supported!`);
         }
 
         new builder(interaction, server as AllServerData);
