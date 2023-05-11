@@ -2,17 +2,23 @@ import { CommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { BaseServerData } from './types/servers';
 import { PlayerData } from './types/players';
 
-class Util {
-    static async reply(interaction: CommandInteraction, options: InteractionReplyOptions | string) {
-        if (interaction.replied) {
-            await interaction.editReply(options);
+declare module 'discord.js' {
+    interface CommandInteraction {
+        respond: (content: InteractionReplyOptions | string) => void;
+    }
+}
 
-            return;
-        }
+CommandInteraction.prototype.respond = async function (content: InteractionReplyOptions | string) {
+    if (this.replied) {
+        await this.editReply(content);
 
-        await interaction.reply(options);
+        return;
     }
 
+    await this.reply(content);
+};
+
+class Util {
     static serverToUrl(server: BaseServerData) {
         return `https://www.battlemetrics.com/servers/${server.relationships.game.data.id}/${server.id}`;
     }

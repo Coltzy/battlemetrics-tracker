@@ -19,22 +19,18 @@ class ServerLeaderboardCommand implements Command {
         const response = await interaction.client.BMF.get('servers', query);
 
         if (!response) {
-            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
-
-            return;
+            return await interaction.respond(`No search results were found for the query.`);
         } 
 
         const { id } = response.data.relationships.game.data;
         if (!Util.serverHasPlayerList(id)) {
-            await Util.reply(interaction, `The server type ${inlineCode(id)} does not support player lists.`);
-
-            return;
+            return await interaction.respond(`The server type ${inlineCode(id)} does not support player lists.`);
         }
 
         const docs = await LeaderboardModel.find({ server: response.data.id });
 
         if (!docs.length) {
-            await Util.reply(interaction, {
+            await interaction.respond({
                 content: 'Fetching leaderboard information this may take a few seconds...',
                 components: [],
                 embeds: [],
@@ -44,10 +40,10 @@ class ServerLeaderboardCommand implements Command {
             const leaderboard = await this.fetch(interaction.client, response.data.id, period);
 
             if ('errors' in leaderboard) {
-                await Util.reply(interaction, 'There was an unexpected error when running this command!');
-            } else {
-                new ServerLeaderboardBuilder(interaction, response, leaderboard);
+                return await interaction.respond('There was an unexpected error when running this command!');
             }
+
+            new ServerLeaderboardBuilder(interaction, response, leaderboard);
 
             return;
         }

@@ -1,8 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
-import { inlineCode } from '@discordjs/builders';
 import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData, DayzServerData } from '../../types/servers';
-import Util from '../../Util';
 
 import RustServerStatsBuilder from '../../builders/server/stats/builder-rust-stats';
 import ArkServerStatsBuilder from '../../builders/server/stats/builder-ark-stats';
@@ -33,19 +31,18 @@ class ServerStatsCommand implements Command {
         const response = await interaction.client.BMF.get('servers', query);
 
         if (!response) {
-            await Util.reply(interaction, `The search for ${inlineCode(query)} didn't find any results.`);
-
-            return;
+            return await interaction.respond(`No search results were found for the query.`);
         }
 
         const { data: server } = response as Server;
         const builder = Builders[server.relationships.game.data.id as keyof typeof Builders];
         
-        if (builder) {
-            new builder(interaction, server as AllServerData);
-        } else {
-            await Util.reply(interaction, `Server's from ${server.relationships.game.data.id} are currently not supported!`);
+        if (!builder) {
+            await interaction.respond(`Server's from ${server.relationships.game.data.id} are currently not supported!`);
+            
         }
+
+        new builder(interaction, server as AllServerData);
     }
 }
 

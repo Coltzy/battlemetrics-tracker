@@ -1,7 +1,6 @@
-import { CommandInteraction, inlineCode } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import ServerListBuilder from '../../builders/server/builder-server-list';
-import Util from '../../Util';
 
 class ServerListCommand implements Command {
     public name = 'server-list';
@@ -14,9 +13,7 @@ class ServerListCommand implements Command {
         const response = await interaction.client.BMF.search('servers', query);
 
         if (!response || !response.length) {
-            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
-
-            return;
+            return await interaction.respond(`No search results were found for the query.`);
         }
 
         new ServerListBuilder(interaction, response);

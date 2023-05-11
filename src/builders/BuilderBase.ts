@@ -4,7 +4,6 @@ import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
 import ms from 'ms';
 import { CommandButton } from './PageBuilder';
 import Command from '../Command';
-import Util from '../Util';
 
 export interface SendOptions {
     buttons?: ActionRowBuilder<ButtonBuilder>;
@@ -40,7 +39,7 @@ class BuilderBase {
             }
         }
 
-        await Util.reply(interaction, { components: buttons });
+        await interaction.respond({ components: buttons });
     }
 
     private async startCollector(interaction: CommandInteraction, components: ActionRowBuilder<ButtonBuilder>[]) {
@@ -132,7 +131,7 @@ class BuilderBase {
             if (!message.components.length || this.slider) options.components = components;
             if (!message.attachments.size && attachment) options.files = [attachment];
 
-            await Util.reply(interaction, options);
+            await interaction.respond(options);
 
             if (!this.collector) {
                 this.startCollector(interaction, components);
@@ -141,7 +140,7 @@ class BuilderBase {
             return;
         }
 
-        await Util.reply(interaction, {
+        await interaction.respond({
             embeds: [embed],
             components,
             files: attachment ? 

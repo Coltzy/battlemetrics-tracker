@@ -1,6 +1,5 @@
-import { CommandInteraction, inlineCode } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
-import Util from '../../Util';
 import { PlayerWithServerMeta } from '../../types/players';
 import PlayerServersBuilder from '../../builders/player/builder-player-servers';
 
@@ -15,9 +14,7 @@ class PlayerServersCommand implements Command {
         const response = await interaction.client.BMF.get('players', query);
 
         if (!response) {
-            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
-
-            return;
+            return await interaction.respond(`No search results were found for the query.`);
         }
 
         const res = await interaction.client.BMF.fetch(`players/${response.data.id}`, {
@@ -25,12 +22,12 @@ class PlayerServersCommand implements Command {
         });
 
         if (!res) {
-            await Util.reply(interaction, 'There seems to have been an issue executing this command.');
+            return await interaction.respond('There seems to have been an issue executing this command.');
         } else if (!res.included.length) {
-            await Util.reply(interaction, 'This player has no previous servers.');
-        } else {
-            new PlayerServersBuilder(interaction, res as PlayerWithServerMeta);
+            return await interaction.respond('This player has no previous servers.');
         }
+
+        new PlayerServersBuilder(interaction, res as PlayerWithServerMeta);
     }
 }
 

@@ -1,6 +1,5 @@
-import { CommandInteraction, inlineCode } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
-import Util from '../../Util';
 import PlayerListBuilder from '../../builders/player/builder-player-list';
 
 class PlayerListCommand implements Command {
@@ -14,9 +13,7 @@ class PlayerListCommand implements Command {
         const response = await interaction.client.BMF.search('players', query);
 
         if (!response || !response.length) {
-            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
-
-            return;
+            return await interaction.respond(`No search results were found for the query.`);
         }
 
         new PlayerListBuilder(interaction, response);

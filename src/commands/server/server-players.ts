@@ -15,16 +15,14 @@ class ServerPlayersCommand implements Command {
         const response = await interaction.client.BMF.get('servers', query);
 
         if (!response) {
-            await Util.reply(interaction, `No search results were found for ${inlineCode(query)}`);
+            await interaction.respond(`No search results were found for the query.`);
 
             return;
         } 
         
         const { id } = response.data.relationships.game.data;
         if (!Util.serverHasPlayerList(id)) {
-            await Util.reply(interaction, `The server type ${inlineCode(id)} does not support player lists.`);
-
-            return;
+            return await interaction.respond(`The server type ${inlineCode(id)} does not support player lists.`);
         }
 
         const res = await interaction.client.BMF.fetch(`servers/${response.data.id}`, {
@@ -32,9 +30,7 @@ class ServerPlayersCommand implements Command {
         }) as Server;
 
         if (res.included && !res.included.length) {
-            await Util.reply(interaction, `They are no online players on the server ${inlineCode(response.data.attributes.name)}`);
-
-            return;
+            return await interaction.respond(`They are no online players on the server ${inlineCode(response.data.attributes.name)}`);
         }
 
         new ServerPlayersBuilder(interaction, res);

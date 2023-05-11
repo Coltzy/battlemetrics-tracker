@@ -3,7 +3,6 @@ import { ActionRowBuilder, ButtonBuilder, inlineCode } from '@discordjs/builders
 import BuilderBase from './BuilderBase';
 import fuzzysort from 'fuzzysort';
 import ms from 'ms';
-import Util from '../Util';
 
 interface SliderOptions {
     searchRegex: RegExp;
@@ -68,7 +67,7 @@ abstract class SliderBuilder extends BuilderBase {
         const embed = this.pages[this.index];
 
         if (!this.deleted) {
-            await Util.reply(interaction, {
+            await interaction.respond({
                 embeds: [embed]
             });
         }
