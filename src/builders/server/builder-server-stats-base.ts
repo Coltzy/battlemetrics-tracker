@@ -1,4 +1,4 @@
-import { CommandInteraction, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, ActionRowBuilder, AttachmentBuilder } from 'discord.js';
 import PageBuilder, { Page } from '../PageBuilder';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 import ServerPlayersCommand from '../../commands/server/server-players';
@@ -10,6 +10,8 @@ class ServerStatsBaseBuilder extends PageBuilder {
         pages: Page[],
         server: BaseServerData
     ) {
+        const attachment = new AttachmentBuilder(`./images/${server.relationships.game.data.id}.png`);
+        
         const cbs = [
             {
                 command: new ServerLeaderboardCommand(),
@@ -35,9 +37,17 @@ class ServerStatsBaseBuilder extends PageBuilder {
                     .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
             );
 
+        for (const page of pages) {
+            page.embed.setFooter({
+                text: server.attributes.name,
+                iconURL: `attachment://${server.relationships.game.data.id}.png`
+            });
+        }
+
         super(interaction, pages, {
             links,
-            cbs
+            cbs,
+            attachment
         });
     }
 }

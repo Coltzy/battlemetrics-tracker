@@ -48,13 +48,11 @@ class MinecraftServerStatsBuilder extends ServerStatsBaseBuilder {
                     value: attributes.details.minecraft_modded.toString(),
                     inline: true
                 }
-            )
-        .setFooter({ text: attributes.name });
+            );
 
         const mods = new EmbedBuilder()
-            .setTitle('Server Mods')
-            .setFooter({ text: attributes.name });
-
+            .setTitle('Server Mods');
+            
         if (!attributes.details.minecraft_mods?.length) {
             mods.setDescription('This is not a modded server.');
         } else {

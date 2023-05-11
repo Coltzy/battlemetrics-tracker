@@ -57,12 +57,10 @@ class ArkServerStatsBuilder extends ServerStatsBaseBuilder {
                     value: attributes.details.pve.toString(),
                     inline: true
                 }
-            )
-        .setFooter({ text: attributes.name });
+            );
 
         const mods = new EmbedBuilder()
-            .setTitle('Server Mods')
-            .setFooter({ text: attributes.name });
+            .setTitle('Server Mods');
 
         if (attributes.details.modIds.length) {
             const path = 'https://steamcommunity.com/sharedfiles/filedetails/?id=';

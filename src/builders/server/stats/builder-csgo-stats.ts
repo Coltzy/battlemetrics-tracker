@@ -47,12 +47,10 @@ class CsgoServerStatsBuilder extends ServerStatsBaseBuilder {
                     value: attributes.details.password.toString(),
                     inline: true
                 }
-            )
-        .setFooter({ text: attributes.name });
+            );
 
         const rules = new EmbedBuilder()
-            .setTitle('Server Rules')
-            .setFooter({ text: attributes.name });
+            .setTitle('Server Rules');
 
         if (!attributes.details.rules) {
             rules.setDescription('This server dosen\'t have public rules.');

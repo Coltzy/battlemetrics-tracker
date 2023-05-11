@@ -62,12 +62,10 @@ class DayzServerStatsBuilder extends ServerStatsBaseBuilder {
                     value: attributes.details.third_person.toString(),
                     inline: true
                 }
-            )
-        .setFooter({ text: attributes.name });
+            );
 
         const mods = new EmbedBuilder()
-            .setTitle('Mods')
-            .setFooter({ text: attributes.name });
+            .setTitle('Mods');
 
         if (attributes.details.modIds.length) {
             const path = 'https://steamcommunity.com/sharedfiles/filedetails/?id=';

@@ -77,8 +77,7 @@ class RustServerStatsBuilder extends ServerStatsBaseBuilder {
                     inline: true
                 }
             )
-        .setImage(attributes.details.rust_headerimage)
-        .setFooter({ text: attributes.name });
+        .setImage(attributes.details.rust_headerimage);
 
         const url = attributes.details.rust_url;
         if (url) {
@@ -86,7 +85,7 @@ class RustServerStatsBuilder extends ServerStatsBaseBuilder {
         }
 
         const map = new EmbedBuilder()
-            .setFooter({ text: attributes.name });
+            .setTitle('Map');
 
         if (attributes.details.rust_maps) {
             map.setImage(attributes.details.rust_maps.thumbnailUrl)
