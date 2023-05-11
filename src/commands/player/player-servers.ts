@@ -26,6 +26,8 @@ class PlayerServersCommand implements Command {
 
         if (!res) {
             await Util.reply(interaction, 'There seems to have been an issue executing this command.');
+        } else if (!res.included.length) {
+            await Util.reply(interaction, 'This player has no previous servers.');
         } else {
             new PlayerServersBuilder(interaction, res as PlayerWithServerMeta);
         }

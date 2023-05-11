@@ -3,6 +3,7 @@ import BuilderBase from '../BuilderBase';
 import { PlayerWithServerMeta } from '../../types/players';
 import moment from 'moment';
 import Util from '../../Util';
+import { stripIndent } from 'common-tags';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
 import Command from '../../Command';
 import PlayerServersCommand from '../../commands/player/player-servers';
@@ -16,18 +17,13 @@ class PlayerStatsBuilder extends BuilderBase {
         const { attributes } = player.data;
         const { included: servers } = player;
 
-        const lastServer = servers.sort((a, b) => Date.parse(b.meta.lastSeen) - Date.parse(a.meta.lastSeen))[0];
-        const onlineServers = servers.filter((s) => s.meta.online);
+        servers.sort((a, b) => Date.parse(b.meta.lastSeen) - Date.parse(a.meta.lastSeen));
+        const online = servers.filter((s) => s.meta.online);
         
         const embed = new EmbedBuilder()
             .setTitle(attributes.name)
             .setURL(Util.playerToUrl(player.data))
-            .setDescription(`
-Player Id: ${inlineCode(attributes.id)}
-
-Current server(s):    
-${onlineServers.map((s) => hyperlink(s.attributes.name, Util.serverToUrl(s))).join('\n') || 'None'}
-            `)
+            .setDescription(`Player Id: ${inlineCode(attributes.id)}`)
             .addFields(
                 {
                     name: 'First seen',
@@ -36,11 +32,19 @@ ${onlineServers.map((s) => hyperlink(s.attributes.name, Util.serverToUrl(s))).jo
                 },
                 {
                     name: 'Last seen',
-                    value: onlineServers.length ? 'now' 
-                        : moment(lastServer.meta.lastSeen).fromNow(servers.length ? true : false),
+                    value: online.length ? 'now' : moment(servers[0]?.meta.lastSeen || attributes.createdAt).fromNow(),
                     inline: true
                 }
             );
+
+        if (online.length) {
+            embed.setDescription(stripIndent`
+                ${embed.data.description}
+
+                Current server(s):    
+                ${online.map((s) => hyperlink(s.attributes.name, Util.serverToUrl(s))).join('\n') || 'None'}
+            `);
+        }
 
         const links = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
