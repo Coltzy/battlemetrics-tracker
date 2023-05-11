@@ -16,16 +16,15 @@ export interface CommandButton {
 }
 
 class PageBuilder extends BuilderBase {
-    private pages: Page[];
+    private pages: Page[] | undefined;
 
-    constructor(interaction: CommandInteraction, pages: Page[], options: SendOptions) {
+    constructor(interaction: CommandInteraction, pages: Page[] | EmbedBuilder, options: SendOptions) {
         super();
 
-        this.pages = pages;
-        
+        const page = !(pages instanceof EmbedBuilder) ? pages[0].embed : pages;
+
         const row = new ActionRowBuilder<ButtonBuilder>();
-        const page = this.pages[0].embed;
-        this.pages.map((p) => row.addComponents(p.button));
+        if (this.pages) this.pages.map((p) => row.addComponents(p.button));
 
         super.send(interaction, page, {
             buttons: row,
@@ -34,8 +33,8 @@ class PageBuilder extends BuilderBase {
     }
 
     public async collect(interaction: CommandInteraction, i: ButtonInteraction<CacheType>) {
-        const embed = this.pages.find(page => {
-            const { custom_id } = page.button.data as APIButtonComponentWithCustomId;
+        const embed = this.pages?.find(page => {
+            const { custom_id } = page.button?.data as APIButtonComponentWithCustomId;
             if (custom_id == i.customId) {
                 return page;
             }

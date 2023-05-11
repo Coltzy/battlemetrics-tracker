@@ -87,7 +87,7 @@ class BuilderBase {
         interaction: CommandInteraction, 
         embed: EmbedBuilder | Embed,
         {
-            buttons = new ActionRowBuilder<ButtonBuilder>(),
+            buttons,
             links,
             attachment,
             cbs
@@ -100,17 +100,17 @@ class BuilderBase {
                 .setCustomId('del')
                 .setStyle(ButtonStyle.Danger);
 
-        if (!cbs?.length || buttons.components.length) {
-            buttons.addComponents(del);
+        if (!cbs?.length || buttons?.components.length) {
+            buttons?.addComponents(del);
         }
 
-        if (buttons.components.length) components.push(buttons);
+        if (buttons?.components.length) components.push(buttons);
 
         if (cbs) {
             const row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(cbs.map(cb => cb.button));
 
-            if (!buttons.components.includes(del)) {
+            if (!buttons?.components.includes(del)) {
                 row.addComponents(del);
             }
             

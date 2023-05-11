@@ -3,11 +3,12 @@ import PageBuilder, { Page } from '../PageBuilder';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 import ServerPlayersCommand from '../../commands/server/server-players';
 import { BaseServerData } from '../../types/servers';
+import { EmbedBuilder } from '@discordjs/builders';
 
 class ServerStatsBaseBuilder extends PageBuilder {
     constructor(
         interaction: CommandInteraction, 
-        pages: Page[],
+        pages: Page[] | EmbedBuilder,
         server: BaseServerData
     ) {
         const attachment = new AttachmentBuilder(`./images/${server.relationships.game.data.id}.png`);
@@ -37,8 +38,9 @@ class ServerStatsBaseBuilder extends PageBuilder {
                     .setURL(interaction.client.BMF.uri(`servers/${server.id}`))
             );
 
-        for (const page of pages) {
-            page.embed.setFooter({
+        const embeds = Array.isArray(pages) ? pages.map((e) => e.embed) : [pages];
+        for (const embed of embeds) {
+            embed.setFooter({
                 text: server.attributes.name,
                 iconURL: `attachment://${server.relationships.game.data.id}.png`
             });
