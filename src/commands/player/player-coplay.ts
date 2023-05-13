@@ -37,6 +37,8 @@ class PlayerCoplayCommand implements Command {
 
         if (!res) {
             return await interaction.respond('There seems to have been an issue executing this command.');
+        } else if (!res.data.length) {
+            return await interaction.respond('This player has no previous coplay experiences.');
         }
 
         new PlayerCoplayBuilder(interaction, response, res as PlayerCoplayData);
