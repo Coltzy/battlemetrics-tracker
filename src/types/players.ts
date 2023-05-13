@@ -36,6 +36,30 @@ export interface PlayerServerData extends PlayerData {
     meta: PlayerMeta;
 }
 
+/* Player Sessions */
+export interface PlayerSessionData {
+    data: PlayerSession[];
+}
+
+export interface PlayerSessionDataWithServers extends PlayerSessionData {
+    included: BaseServerData[];
+}
+
+interface PlayerSession {
+    type: string;
+    id: string;
+    attributes: PlayerSessionAttributes;
+    relationships: PlayerServerRelationship;
+}
+
+interface PlayerSessionAttributes {
+    start: string;
+    stop: string;
+    firstTime: boolean;
+    name: string;
+    private: boolean;
+}
+
 /* Player Coplay */
 export interface PlayerCoplayData {
     data: PlayerCoplay[];
@@ -81,6 +105,20 @@ interface PlayerAttributes {
 /* Player Relationships */
 interface PlayerRelationships {
     player: PlayerRelationshipsServer;
+}
+
+interface PlayerServerRelationship {
+    server: PlayerRelationships;
+    player: PlayerRelationships;
+
+}
+
+interface RelationshipIdentifiers {
+    identifiers: RelationshipIdentifiersData;
+}
+
+interface RelationshipIdentifiersData {
+    data: RelationshipIdentifiers;
 }
 
 interface PlayerRelationshipsServer {

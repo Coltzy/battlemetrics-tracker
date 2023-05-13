@@ -62,6 +62,22 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setName('server')
                     .setDescription('The specific server for the coplay.')
             )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('session')
+            .setDescription('List a players previous session history.')
+            .addStringOption(option =>
+                option
+                    .setName('player')
+                    .setDescription('The query for the player search.')
+                    .setRequired(true)
+            )
+            .addStringOption(option =>
+                option
+                    .setName('server')
+                    .setDescription('The query for a server search to filter the sessions too.')
+            )
     );
 
 export default PlayerInteraction;
