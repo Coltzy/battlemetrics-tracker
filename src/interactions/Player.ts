@@ -46,6 +46,22 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setDescription('The ID of the player.')
                     .setRequired(true)
             )
-        );
+        )
+    .addSubcommand(command =>
+        command
+            .setName('coplay')
+            .setDescription('List time spent with other players over the last 24 hours.')
+            .addStringOption(option =>
+                option
+                    .setName('player')
+                    .setDescription('The query for the player search.')
+                    .setRequired(true)
+            )
+            .addStringOption(option => 
+                option
+                    .setName('server')
+                    .setDescription('The specific server for the coplay.')
+            )
+    );
 
 export default PlayerInteraction;

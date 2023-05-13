@@ -36,6 +36,22 @@ export interface PlayerServerData extends PlayerData {
     meta: PlayerMeta;
 }
 
+/* Player Coplay */
+export interface PlayerCoplayData {
+    data: PlayerCoplay[];
+}
+
+interface PlayerCoplay {
+    type: string;
+    id: string;
+    attributes: PlayerCoplayAttributes;
+}
+
+interface PlayerCoplayAttributes {
+    name: string;
+    duration: number;
+}
+
 /* Player Identifiers */
 interface PlayerIdentifier {
     type: string;

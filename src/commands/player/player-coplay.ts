@@ -1,0 +1,46 @@
+import { CommandInteraction } from 'discord.js';
+import Command from '../../Command';
+import ms from 'ms';
+import { PlayerCoplayData } from '../../types/players';
+import PlayerCoplayBuilder from '../../builders/player/builder-player-coplay';
+
+class PlayerCoplayCommand implements Command {
+    public name = 'player-coplay';
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public constructor() {}
+
+    public async execute(interaction: CommandInteraction) {
+        const player = interaction.options.get('player')?.value as string;
+        const name = interaction.options.get('server')?.value as string | undefined; 
+        const response = await interaction.client.BMF.get('players', player);
+
+        if (!response) {
+            return await interaction.respond('No search results were found for the query.');
+        }
+
+        const options = {
+            'filter[period]': new Date(Date.now() - ms('1d')).toISOString() + ":" + new Date(Date.now()).toISOString(),
+        } as { [key: string]: string };
+
+        if (name) {
+            const server = await interaction.client.BMF.get('servers', name);
+            
+            if (!server) {
+                return await interaction.respond('No search results were found for the server.');
+            }
+
+            options['filter[servers]'] = server.data.id;
+        }
+
+        const res = await interaction.client.BMF.fetch(`players/${response.data.id}/relationships/coplay`, options);
+
+        if (!res) {
+            return await interaction.respond('There seems to have been an issue executing this command.');
+        }
+
+        new PlayerCoplayBuilder(interaction, response, res as PlayerCoplayData);
+    }
+}
+
+export default PlayerCoplayCommand;
