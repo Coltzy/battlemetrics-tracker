@@ -1,5 +1,5 @@
 import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
-import { Player } from '../../types/players';
+import { PlayerData } from '../../types/players';
 import Util from '../../Util';
 import SliderBuilder from '../SliderBuilder';
 import chunk from 'chunk';
@@ -7,7 +7,7 @@ import chunk from 'chunk';
 class PlayerListBuilder extends SliderBuilder {
     constructor(
         interaction: CommandInteraction,
-        players: Player[],
+        players: PlayerData[],
     ) {
         const pages = [];
 
@@ -22,8 +22,8 @@ class PlayerListBuilder extends SliderBuilder {
                 .addFields(
                     chunk.map((chunk) => {
                         return {
-                            name: chunk.data.attributes.name,
-                            value: `Id: ${hyperlink(chunk.data.id, Util.playerToUrl(chunk.data))}`
+                            name: chunk.attributes.name,
+                            value: `Id: ${hyperlink(chunk.id, Util.playerToUrl(chunk))}`
                         };
                     })
                 );

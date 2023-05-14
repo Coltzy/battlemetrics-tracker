@@ -20,9 +20,20 @@ const PlayerInteraction = new SlashCommandBuilder()
             .setDescription('List a group of players by a query.')
             .addStringOption(option =>
                 option
-                    .setName('query')
+                    .setName('player')
                     .setDescription('The query of the player search.')
-                    .setRequired(true)
+            )
+            .addStringOption(option =>
+                option
+                    .setName('server')
+                    .setDescription('The filter for a server search.')
+            )
+            .addIntegerOption(option =>
+                option
+                    .setName('limit')
+                    .setDescription('The limit of results to fetch.')
+                    .setMaxValue(100)
+                    .setMinValue(1)
             )
     )
     .addSubcommand(command =>

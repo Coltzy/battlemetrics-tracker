@@ -9,14 +9,33 @@ class PlayerListCommand implements Command {
     public constructor() {}
 
     public async execute(interaction: CommandInteraction) {
-        const query = interaction.options.get('query')?.value as string;
-        const response = await interaction.client.BMF.search('players', query);
+        const player = interaction.options.get('player')?.value as string | undefined;
+        const server = interaction.options.get('server')?.value as string | undefined;
+        const limit = interaction.options.get('limit')?.value || 10 as number;
 
-        if (!response || !response.length) {
+        const options = {
+            'page[size]': limit
+        } as { [key: string]: string };
+
+        if (player) {
+            options['filter[search]'] = player;
+        }
+
+        if (server) {
+            const s = await interaction.client.BMF.get('servers', server);
+
+            if (s) {
+                options['filter[servers]'] = s.data.attributes.id;
+            }
+        }
+
+        const response = await interaction.client.BMF.fetch('players', options);
+
+        if (!response || !response.data?.length) {
             return await interaction.respond(`No search results were found for the query.`);
         }
 
-        new PlayerListBuilder(interaction, response);
+        new PlayerListBuilder(interaction, response.data);
     }
 }
 
