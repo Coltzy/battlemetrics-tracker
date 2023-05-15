@@ -20,13 +20,15 @@ class ServerLeaderboardBuilder extends SliderBuilder {
         const base = new EmbedBuilder()
             .setTitle(attributes.name)
             .setURL(Util.serverToUrl(server.data))
-            .setDescription('All time leaderboard of the server.');
+            .setDescription(`
+                All time leaderboard of the server.
+
+                Last Updated: ${moment(data[0].createdAt).fromNow()}
+            `);
         const chunks = chunk(data, 10);
-        let index = 1;
         
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
-                .setFooter({ text: `Last Updated: ${moment(data[0].createdAt).fromNow()} ~ Page: ${index++}/${chunks.length}` })
                 .addFields(
                     chunk.map(player => {
                         const duration = moment.duration(player.value * 1000, 'ms');

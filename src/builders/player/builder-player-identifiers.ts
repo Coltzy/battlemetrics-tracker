@@ -19,12 +19,10 @@ class PlayerIdentifiersBuilder extends SliderBuilder {
             .setTitle(attributes.name)
             .setURL(Util.playerToUrl(player.data));
         const chunks = chunk(identifiers, 5);
-        let index = 1;
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .setDescription('Players past name identifiers.')
-                .setFooter({ text: `Page: ${index++}/${chunks.length}` })
                 .addFields(
                     chunk.map(identifiers => {
                         return {

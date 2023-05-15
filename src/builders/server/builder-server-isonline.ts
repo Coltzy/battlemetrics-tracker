@@ -13,7 +13,6 @@ class ServerIsonlineBuilder extends SliderBuilder {
         players: PlayerServerData[],
     ) {
         const pages = [];
-        let index = 1;
 
         for (const player of players) {
             const { attributes } = player;
@@ -38,10 +37,6 @@ class ServerIsonlineBuilder extends SliderBuilder {
                         inline: true
                     }
                 );
-
-            if (players.length > 1) {
-                embed.setFooter({ text: `Player: ${index++}/${players.length}` });
-            }
 
             pages.push(embed);
         }

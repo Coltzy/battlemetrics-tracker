@@ -42,6 +42,13 @@ abstract class SliderBuilder extends BuilderBase {
 
         this.options = options;
 
+        let i = 1;
+        if (pages.length > 1) {
+            for (const page of pages) {
+                page.setFooter({ text: `Page: ${i++}/${pages.length}` });
+            }
+        }
+
         super.send(interaction, pages[0], this.pages.length > 1 ? {
             buttons
         } : undefined);

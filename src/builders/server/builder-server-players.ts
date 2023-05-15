@@ -19,12 +19,10 @@ class ServerPlayersBuilder extends SliderBuilder {
             .setTitle(attributes.name);
 
         const chunks = chunk(players, 10);
-        let index = 1;
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .setDescription('Player list.')
-                .setFooter({ text: `Page: ${index++}/${chunks.length}` })
                 .addFields(
                     chunk.map(player => {
                         return {

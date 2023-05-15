@@ -18,12 +18,10 @@ class PlayerCoplayBuilder extends SliderBuilder {
             .setTitle(player.data.attributes.name)
             .setURL(Util.playerToUrl(player.data));
         const chunks = chunk(coplay.data, 5);
-        let index = 1;
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .setDescription('Player coplay.')
-                .setFooter({ text: `Page: ${index++}/${chunks.length}` })
                 .addFields(
                     chunk.map(coplay => {
                         const duration = moment.duration(coplay.attributes.duration * 1000);

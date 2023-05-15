@@ -14,11 +14,9 @@ class ServerListBuilder extends SliderBuilder {
         const base = new EmbedBuilder()
             .setTitle('Search results.');
         const chunks = chunk(servers, 10);
-        let index = 1;
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
-                .setFooter({ text: `Page ${index++}/${chunks.length}` })
                 .addFields(
                     chunk.map((chunk) => {
                         return {
