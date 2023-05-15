@@ -35,6 +35,11 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setMaxValue(100)
                     .setMinValue(1)
             )
+            .addBooleanOption(option =>
+                option
+                    .setName('online')
+                    .setDescription('The filter wether to only return online players.')
+            )
     )
     .addSubcommand(command =>
         command

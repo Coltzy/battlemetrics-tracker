@@ -12,8 +12,10 @@ class PlayerListCommand implements Command {
         const player = interaction.options.get('player')?.value as string | undefined;
         const server = interaction.options.get('server')?.value as string | undefined;
         const limit = interaction.options.get('limit')?.value || 10 as number;
+        const online = interaction.options.get('online')?.value || false as boolean;
 
         const options = {
+            'filter[online]': online,
             'page[size]': limit
         } as { [key: string]: string };
 
