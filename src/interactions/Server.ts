@@ -34,6 +34,18 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setName('country')
                     .setDescription('The ISO country code to filter the servers.')
             )
+            .addStringOption(option =>
+                option
+                    .setName('sort')
+                    .setDescription('Sorting option to effect the results.')
+                    .addChoices(
+                        { name: 'rank', value: 'rank' },
+                        { name: 'name', value: 'name' },
+                        { name: '-name', value: '-name' },
+                        { name: 'players', value: 'players' },
+                        { name: '-players', value: '-players' }
+                    )
+            )
     )
     .addSubcommand(command => 
         command

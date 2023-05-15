@@ -1,5 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
+import { PlayerData } from '../../types/players';
 import PlayerListBuilder from '../../builders/player/builder-player-list';
 
 class PlayerListCommand implements Command {
@@ -9,19 +10,19 @@ class PlayerListCommand implements Command {
     public constructor() {}
 
     public async execute(interaction: CommandInteraction) {
-        const player = interaction.options.get('player')?.value as string | undefined;
+        const query = interaction.options.get('query')?.value as string | undefined;
         const server = interaction.options.get('server')?.value as string | undefined;
         const limit = interaction.options.get('limit')?.value || 10 as number;
         const online = interaction.options.get('online')?.value || false as boolean;
+        const sort = interaction.options.get('sort')?.value as string;
 
         const options = {
             'filter[online]': online,
             'page[size]': limit
         } as { [key: string]: string };
 
-        if (player) {
-            options['filter[search]'] = player;
-        }
+        if (query) options['filter[search]'] = query;
+        if (sort) options['sort'] = sort;
 
         if (server) {
             const s = await interaction.client.BMF.get('servers', server);
@@ -37,7 +38,7 @@ class PlayerListCommand implements Command {
             return await interaction.respond(`No search results were found for the query.`);
         }
 
-        new PlayerListBuilder(interaction, response.data);
+        new PlayerListBuilder(interaction, response.data as PlayerData[]);
     }
 }
 

@@ -20,7 +20,7 @@ const PlayerInteraction = new SlashCommandBuilder()
             .setDescription('List a group of players by a query.')
             .addStringOption(option =>
                 option
-                    .setName('player')
+                    .setName('query')
                     .setDescription('The query of the player search.')
             )
             .addStringOption(option =>
@@ -39,6 +39,23 @@ const PlayerInteraction = new SlashCommandBuilder()
                 option
                     .setName('online')
                     .setDescription('The filter wether to only return online players.')
+            )
+            .addStringOption(option =>
+                option
+                    .setName('sort')
+                    .setDescription('Sorting option affecting the results.')
+                    .addChoices(
+                        { name: 'created at', value: 'createdAt' },
+                        { name: '-created at', value: '-createdAt' },
+                        { name: 'updated at ', value: 'updatedAt' },
+                        { name: '-updated at ', value: '-updatedAt' },
+                        { name: 'name', value: 'name' },
+                        { name: '-name', value: '-name' },
+                        { name: 'first seen', value: 'firstSeen' },
+                        { name: '-first seen', value: '-firstSeen' },
+                        { name: 'last seen', value: 'lastSeen' },
+                        { name: '-last seen', value: '-lastSeen' }
+                    )
             )
     )
     .addSubcommand(command =>
