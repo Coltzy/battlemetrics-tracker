@@ -1,13 +1,13 @@
 import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
 import SliderBuilder from '../SliderBuilder';
-import { Server } from '../../types/servers';
+import { BaseServerData } from '../../types/servers';
 import chunk from 'chunk';
 import Util from '../../Util';
 
 class ServerListBuilder extends SliderBuilder {
     constructor(
         interaction: CommandInteraction, 
-        servers: Server[],
+        servers: BaseServerData[],
     ) {
         const pages = [];
 
@@ -20,8 +20,8 @@ class ServerListBuilder extends SliderBuilder {
                 .addFields(
                     chunk.map((chunk) => {
                         return {
-                            name: chunk.data.attributes.name,
-                            value: `Id: ${hyperlink(chunk.data.id, Util.serverToUrl(chunk.data))}`
+                            name: chunk.attributes.name,
+                            value: `Id: ${hyperlink(chunk.id, Util.serverToUrl(chunk))}`
                         };
                     })
                 );
