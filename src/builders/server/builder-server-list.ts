@@ -1,26 +1,27 @@
-import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
-import SliderBuilder from '../SliderBuilder';
+import { EmbedBuilder, hyperlink } from 'discord.js';
+import FitlerBuildBase from '../../bases/FilterBuildBase';
 import { BaseServerData } from '../../types/servers';
 import chunk from 'chunk';
 import Util from '../../Util';
 
-class ServerListBuilder extends SliderBuilder {
-    constructor(
-        interaction: CommandInteraction, 
-        servers: BaseServerData[],
-    ) {
+class ServerListBuilder extends FitlerBuildBase {
+    constructor() {
+        super();
+    }
+
+    build(data: BaseServerData[]): EmbedBuilder[] {
         const pages = [];
 
         const base = new EmbedBuilder()
             .setTitle('Search results.');
-        const chunks = chunk(servers, 10);
+        const chunks = chunk(data, 10);
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
                     chunk.map((chunk) => {
                         return {
-                            name: chunk.attributes.name,
+                            name: chunk.attributes.name || '\u200b',
                             value: `Id: ${hyperlink(chunk.id, Util.serverToUrl(chunk))}`
                         };
                     })
@@ -29,7 +30,7 @@ class ServerListBuilder extends SliderBuilder {
             pages.push(embed);
         }
 
-        super(interaction, pages);
+        return pages;
     }
 }
 

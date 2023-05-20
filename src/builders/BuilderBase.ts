@@ -1,155 +1,105 @@
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builders';
-import { AttachmentBuilder, ButtonInteraction, ButtonStyle, CacheType, Collection, CommandInteraction, Embed, InteractionCollector, InteractionReplyOptions } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { ButtonInteraction, ButtonStyle, Collection, CommandInteraction, InteractionCollector, InteractionReplyOptions, Message } from 'discord.js';
 import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
 import ms from 'ms';
-import { CommandButton } from './PageBuilder';
 import Command from '../Command';
+import 'dotenv/config';
 
-export interface SendOptions {
-    buttons?: ActionRowBuilder<ButtonBuilder>;
-    links?: ActionRowBuilder<ButtonBuilder>;
-    attachment?: AttachmentBuilder;
-    cbs?: CommandButton[];
-}
-
+/* Abstract function for other builders to access the collector */
 interface BuilderBase {
-    collect?(interaction: CommandInteraction, i: ButtonInteraction<CacheType>): void | Promise<void>; 
+    collector?(interaction: ButtonInteraction, sent: Message): void | Promise<void>; 
 }
-
+ 
 class BuilderBase {
-    private cbs: Collection<string, Command>;
-    private collector: InteractionCollector<ButtonInteraction> | undefined;
-    public slider: boolean | undefined;
-    public deleted: boolean | undefined;
+    public cbs: Collection<string, Command>;
+    public deleted: boolean;
+    public interaction: CommandInteraction;
+    public coll: InteractionCollector<ButtonInteraction> | undefined;
 
-    constructor() {
+    constructor(interaction: CommandInteraction) {
         this.cbs = new Collection();
 
-        this.collector = undefined;
+        this.deleted = false;
 
-        this.slider = undefined;
+        this.interaction = interaction;
 
-        this.deleted = undefined;
+        this.coll = undefined;
     }
 
-    private async disable(interaction: CommandInteraction, buttons: ActionRowBuilder<ButtonBuilder>[]) {
-        for (const row of buttons) {
-            for (const component of row.components) {
-                if (component.data.style != ButtonStyle.Link) component.setDisabled(true);
-            }
-        }
+    /* Function from the collector to handle base features */
+    private async collect(i: ButtonInteraction) {
+        let sent;
+        try {
+            sent = await this.interaction.fetchReply();
+        } catch { /* empty */ }
 
-        await interaction.respond({ components: buttons });
-    }
+        if (sent?.id != i.message.id) return;
 
-    private async startCollector(interaction: CommandInteraction, components: ActionRowBuilder<ButtonBuilder>[]) {
-        this.collector = await interaction.channel?.createMessageComponentCollector({
-            filter: (i) => i.user.id == interaction.user.id,
-            time: ms('2m')
-        }) as InteractionCollector<ButtonInteraction>;
-
-        const message = await interaction.fetchReply();
-
-        this.collector?.on('collect', async (i) => {
-            if (message.id != i.message.id) return;
-
-            if (i.customId == 'del') {
-                try {
-                    this.deleted = true;
-                    await interaction.deleteReply();
-                    this.collector?.stop();
-                } catch {
-                    /* empty */
-                }
-
-                return;
-            }
-
-            /* Handling command buttons */
-            const command = this.cbs.get(i.customId);
-            if (command) {
-                await command.execute(interaction);
-                this.collector?.stop();
-                return;
-            }
-
-            await i.deferUpdate();
-
-            this.collect?.(interaction, i as ButtonInteraction<CacheType>);
-        });
-
-        this.collector?.once('end', (_, reason) => {
-            if (reason == 'time') this.disable(interaction, components);
-        });
-    }
-
-    public async send(
-        interaction: CommandInteraction, 
-        embed: EmbedBuilder | Embed,
-        {
-            buttons,
-            links,
-            attachment,
-            cbs
-        }: SendOptions = {}
-    ) {
-        const components = [];
-
-        const del = new ButtonBuilder()
-                .setEmoji({ name: '🗑️' })
-                .setCustomId('del')
-                .setStyle(ButtonStyle.Danger);
-
-        if (!cbs?.length || buttons?.components.length) {
-            buttons?.addComponents(del);
-        }
-
-        if (buttons?.components.length) components.push(buttons);
-
-        if (cbs) {
-            const row = new ActionRowBuilder<ButtonBuilder>()
-                .addComponents(cbs.map(cb => cb.button));
-
-            if (!buttons?.components.includes(del)) {
-                row.addComponents(del);
-            }
-            
-            components.push(row);
-
-            cbs.map(cb => this.cbs.set((cb.button.data as APIButtonComponentWithCustomId).custom_id, cb.command));
-        }
-
-        if (links) components.push(links);
-
-        if (interaction.replied) {
-            const message = await interaction.fetchReply();
-
-            const options: InteractionReplyOptions = {
-                embeds: [embed],
-            };
-
-            if (!message.components.length || this.slider) options.components = components;
-            if (!message.attachments.size && attachment) options.files = [attachment];
-
-            await interaction.respond(options);
-
-            if (!this.collector) {
-                this.startCollector(interaction, components);
-            }
+        /* Handles deleting interaction on button press */
+        if (i.customId == 'del') {
+            if (sent.deletable) await sent.delete();
+            this.deleted = true;
 
             return;
         }
 
-        await interaction.respond({
-            embeds: [embed],
-            components,
-            files: attachment ? 
-                [attachment] : []
-        });
+        /* Handles command buttons */
+        const command = this.cbs.get(i.customId);
+        if (command) {
+            await command.execute(this.interaction);
+            this.coll?.stop();
+            return;
+        }
 
-        this.deleted = false;
+        await i.deferUpdate();
 
-        this.startCollector(interaction, components);
+        if (this.collector) await this.collector(i, sent);
+    }
+
+    /* Disables all buttons in the given rows */
+    private async disable(rows: ActionRowBuilder<ButtonBuilder>[]) {
+        for (const { components } of rows) {
+            components.map((component) => component.setDisabled(true));
+        }
+    }
+
+    /* Method to respond from all builder classes */
+    public async respond(options: InteractionReplyOptions) {
+        const button = new ButtonBuilder()
+            .setCustomId('del')
+            .setEmoji({ name: '🗑️' })
+            .setStyle(ButtonStyle.Danger);
+
+        if (!options.components?.length) {
+            options.components = [new ActionRowBuilder<ButtonBuilder>()];
+        }
+
+        const row = options.components?.[0] as ActionRowBuilder<ButtonBuilder>;
+        if (!row.components.some((button) => (button.data as APIButtonComponentWithCustomId).custom_id == 'del')) {
+            row.addComponents(button);
+        }
+
+        try {
+            await this.interaction.respond(options);
+        } catch { /* empty */ }
+
+        if (!this.coll) {
+            const collector = await this.interaction.channel?.createMessageComponentCollector({
+                time: ms(process.env.INTERACTION_COLLECTOR_DURATION as string),
+                filter: (i) => i.user.id == this.interaction.user.id
+            });
+
+            this.coll = collector as InteractionCollector<ButtonInteraction>;
+
+            collector?.on('collect', (i) => this.collect(i as ButtonInteraction));
+
+            collector?.on('end', async (_, reason) => {
+                if (reason == 'time') {
+                    this.disable(options.components as ActionRowBuilder<ButtonBuilder>[]);
+                    await this.respond({ components: options.components });
+                }
+            });
+        }
     }
 }
 

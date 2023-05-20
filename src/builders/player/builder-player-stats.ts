@@ -4,7 +4,7 @@ import { PlayerWithServerMeta } from '../../types/players';
 import moment from 'moment';
 import Util from '../../Util';
 import { stripIndent } from 'common-tags';
-import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { ButtonBuilder } from '@discordjs/builders';
 import Command from '../../Command';
 import PlayerServersCommand from '../../commands/player/player-servers';
 import 'moment-duration-format';
@@ -46,31 +46,21 @@ class PlayerStatsBuilder extends BuilderBase {
             `);
         }
 
-        const links = new ActionRowBuilder<ButtonBuilder>()
-            .addComponents(
-                new ButtonBuilder()
-                    .setLabel('Raw')
-                    .setStyle(ButtonStyle.Link)
-                    .setURL(interaction.client.BMF.uri(`players/${attributes.id}`, {
-                        'include': 'server'
-                    }))
-            );
+        // TODO: Fix cbs with base builder
+        const cbs = [
+            {
+                command: new PlayerServersCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('Servers')
+                    .setCustomId('servers')
+                    .setStyle(ButtonStyle.Primary)
+            },
+        ];
 
-            const cbs = [
-                {
-                    command: new PlayerServersCommand() as unknown as Command,
-                    button: new ButtonBuilder()
-                        .setLabel('Servers')
-                        .setCustomId('servers')
-                        .setStyle(ButtonStyle.Primary)
-                },
-            ];
+        super(interaction);
 
-        super();
-
-        super.send(interaction, embed, {
-            links,
-            cbs
+        super.respond({
+            embeds: [embed]
         });
     }
 }

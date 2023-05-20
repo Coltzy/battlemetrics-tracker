@@ -1,6 +1,6 @@
 import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
 import { bold } from '@discordjs/builders';
-import PageBuilder from '../PageBuilder';
+import PageBuilder, { Page } from '../PageBuilder';
 import { Game } from '../../types/game';
 import iso3311a2 from 'iso-3166-1-alpha-2';
 import GameUtils from './builder-game-utils';
@@ -138,12 +138,9 @@ class GameStatsBuilder extends PageBuilder {
                     .setCustomId('PLAYERS')
                     .setStyle(ButtonStyle.Primary)
             }
-        ];
+        ] as Page[];
 
-        super(interaction, pages, {
-            links,
-            attachment
-        });
+        super(interaction, pages, { attachment });
     }
 }
 

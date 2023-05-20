@@ -2,6 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { PlayerData } from '../../types/players';
 import PlayerListBuilder from '../../builders/player/builder-player-list';
+import FilterBuilder, { FilterButton } from '../../builders/FilterBuilder';
 
 class PlayerListCommand implements Command {
     public name = 'player-list';
@@ -14,7 +15,6 @@ class PlayerListCommand implements Command {
         const server = interaction.options.get('server')?.value as string | undefined;
         const limit = interaction.options.get('limit')?.value || 10 as number;
         const online = interaction.options.get('online')?.value || false as boolean;
-        const sort = interaction.options.get('sort')?.value as string;
 
         const options = {
             'filter[online]': online,
@@ -22,7 +22,6 @@ class PlayerListCommand implements Command {
         } as { [key: string]: string };
 
         if (query) options['filter[search]'] = query;
-        if (sort) options['sort'] = sort;
 
         if (server) {
             const s = await interaction.client.BMF.get('servers', server);
@@ -32,13 +31,41 @@ class PlayerListCommand implements Command {
             }
         }
 
+        if (!query) options['sort'] = '-lastSeen';
+
         const response = await interaction.client.BMF.fetch('players', options);
 
         if (!response || !response.data?.length) {
             return await interaction.respond(`No search results were found for the query.`);
         }
 
-        new PlayerListBuilder(interaction, response.data as PlayerData[]);
+        const builder = new PlayerListBuilder();
+        const pages = builder.build(response.data as PlayerData[]);
+        const uri = interaction.client.BMF.uri('players', options);
+
+        const filters = [
+            { 
+                name: 'Last seen', 
+                value: 'lastSeen', 
+                description: (negative) => `Sorting by last seen. Most recent ${negative ? 'first' : 'last'}.` 
+            },
+            { 
+                name: 'First seen', 
+                value: 'firstSeen', 
+                description: (negative) => `Sorting by first seen. ${negative ? 'Oldest' : 'Newest'} players first.` 
+            },
+        ] as FilterButton[];
+
+        if (query) {
+            filters.push({ 
+                name: 'Relevance', 
+                value: 'relevance', 
+                remove: true, 
+                description: 'Sorting by relevance.' 
+            });
+        }
+        
+        new FilterBuilder(interaction, pages, uri, builder, filters);
     }
 }
 

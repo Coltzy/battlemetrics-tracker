@@ -1,89 +1,116 @@
-import { ButtonInteraction, ButtonStyle, CacheType, CommandInteraction, EmbedBuilder } from 'discord.js';
+import { APIButtonComponentWithCustomId, ButtonInteraction, ButtonStyle, CommandInteraction, EmbedBuilder, InteractionReplyOptions, Message } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, inlineCode } from '@discordjs/builders';
 import BuilderBase from './BuilderBase';
 import fuzzysort from 'fuzzysort';
 import ms from 'ms';
 
-interface SliderOptions {
-    searchRegex: RegExp;
+interface SliderBuilder {
+    fcollector(i: ButtonInteraction): Promise<void>; 
+    build(): ActionRowBuilder<ButtonBuilder>;
 }
 
-abstract class SliderBuilder extends BuilderBase {
-    private options: SliderOptions | undefined;
-    private pages: EmbedBuilder[];
-    private index: number;
+class SliderBuilder extends BuilderBase {
+    public slides: EmbedBuilder[];
+    public index: number;
+    private buttons: ActionRowBuilder<ButtonBuilder>;
 
-    constructor(interaction: CommandInteraction, pages: EmbedBuilder[], options?: SliderOptions) {
-        const buttons = new ActionRowBuilder<ButtonBuilder>();
-        buttons.addComponents(
-            new ButtonBuilder()
-                .setEmoji({ name: '⬅️' })
-                .setCustomId('prev')
-                .setStyle(ButtonStyle.Primary),
-            new ButtonBuilder()
-                .setEmoji({ name: '🗒️' })
-                .setCustomId('pick')
-                .setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder()
-                .setEmoji({ name: '🔍' })
-                .setCustomId('search')
-                .setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder()
-                .setEmoji({ name: '➡️' })
-                .setCustomId('next')
-                .setStyle(ButtonStyle.Primary)
-        );
+    constructor(interaction: CommandInteraction, slides: EmbedBuilder[]) {
+        const buttons = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(
+                new ButtonBuilder()
+                    .setEmoji({ name: '⬅️' })
+                    .setCustomId('prev')
+                    .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                    .setEmoji({ name: '🗒️' })
+                    .setCustomId('pick')
+                    .setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder()
+                    .setEmoji({ name: '🔍' })
+                    .setCustomId('search')
+                    .setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder()
+                    .setEmoji({ name: '➡️' })
+                    .setCustomId('next')
+                    .setStyle(ButtonStyle.Primary)
+            );
 
-        super();
+        super(interaction);
 
-        this.pages = pages;
+        this.slides = slides;
 
         this.index = 0;
 
-        this.options = options;
+        this.buttons = buttons;
 
-        let i = 1;
-        if (pages.length > 1) {
-            for (const page of pages) {
-                page.setFooter({ text: `Page: ${i++}/${pages.length}` });
-            }
-        }
+        if (!this.fcollector) this.set(slides);
+    }
 
-        super.send(interaction, pages[0], this.pages.length > 1 ? {
-            buttons
-        } : undefined);
+    public set(slides: EmbedBuilder[], options?: InteractionReplyOptions) {
+        this.slides = slides;
 
-        super.slider = true;
+        if (this.slides.length > 1) this.enumerate();
+
+        this.index = 0;
+
+        const embed = this.slides[this.index];
+
+        const opts = {
+            embeds: [embed],
+            components: [],
+            ...options
+        } as InteractionReplyOptions;
+
+        if (this.slides.length > 1) opts.components?.unshift(this.buttons);
+
+        super.respond(opts);
     }
 
     private isValidIndex(index: number) {
-        return index > 0 && index < this.pages.length + 1;
+        return index > 0 && index < this.slides.length + 1;
     }
 
-    public async collect(interaction: CommandInteraction, i: ButtonInteraction<CacheType>) {
-        if (i.customId == 'prev' && this.index != 0) {
-            this.index--;
-        } else if (i.customId == 'next' && this.index != this.pages.length - 1) {
+    public async collector(i: ButtonInteraction, sent: Message) {
+        const ids = this.buttons.components.map((button) => (button.data as APIButtonComponentWithCustomId).custom_id);
+
+        if (!ids.includes(i.customId)) {
+            this.fcollector(i);
+
+            return;
+        }
+
+        if (i.customId == 'next' && this.index != this.slides.length - 1) {
             this.index++;
+        } else if (i.customId == 'prev' && this.index != 0) {
+            this.index--;
         } else if (i.customId == 'search') {
-            await this.search(interaction);
+            await this.search();
         } else if (i.customId == 'pick') {
-            await this.picker(interaction);
+            await this.picker();
         }
         
-        const embed = this.pages[this.index];
+        const embed = this.slides[this.index];
+        const json = sent.embeds[0].toJSON();
+        delete json.type;
 
         if (!this.deleted) {
-            await interaction.respond({
-                embeds: [embed]
-            });
+            await this.interaction.respond({ embeds: [embed] });
         }
     }
 
-    private async awaitMessages(interaction: CommandInteraction, prompt: string) {
-        const message = await interaction.channel?.send(prompt);
+    private enumerate() {
+        if (this.slides.length < 1) return;
+        let i = 1;
 
-        const collection = await interaction.channel?.awaitMessages({
+        for (const slide of this.slides) {
+            slide.setFooter({ text: `Slide: ${i++}/${this.slides.length}` });
+        }
+    }
+
+    private async awaitMessages(prompt: string) {
+        const message = await this.interaction.channel?.send(prompt);
+
+        const collection = await this.interaction.channel?.awaitMessages({
             time: ms('30s'),
             max: 1,
         });
@@ -97,8 +124,8 @@ abstract class SliderBuilder extends BuilderBase {
         return collection?.first();
     }
 
-    private async picker(interaction: CommandInteraction) {
-        const msg = await this.awaitMessages(interaction, 'Enter a page number to turn too.');
+    private async picker() {
+        const msg = await this.awaitMessages('Enter a slide number to turn too.');
 
         if (msg && msg.content) {
             const num = parseInt(msg.content);
@@ -108,21 +135,13 @@ abstract class SliderBuilder extends BuilderBase {
         }
     }
 
-    private async search(interaction: CommandInteraction) {
-        const msg = await this.awaitMessages(interaction, 'Enter a search term.');
+    private async search() {
+        const msg = await this.awaitMessages('Enter a search term.');
 
         if (msg && msg.content) {
             const values: string[] = [];
-            this.pages.forEach(page => {
-                Array.prototype.push.apply(values, page.data.fields?.map((f) => {
-                    let string = f.name;
-
-                    if (this.options?.searchRegex) {
-                        string = f.name.match(this.options.searchRegex)?.[1] as string;
-                    }
-
-                    return string;
-                }) as string[]);
+            this.slides.forEach((slides) => {
+                Array.prototype.push.apply(values, slides.data.fields?.map((f) => f.name) as string[]);
             });
 
             const matches = fuzzysort.go(msg.content, values);
@@ -132,9 +151,9 @@ abstract class SliderBuilder extends BuilderBase {
                 const target = result.target;
                 const pos = values.indexOf(target);
                 this.index = Math.floor(pos / 10);
-                await interaction.channel?.send(`Match found for ${inlineCode(target)}.`);
+                await this.interaction.channel?.send(`Match found for ${inlineCode(target)}.`);
             } else {
-                await interaction.channel?.send('No results found for this query.');
+                await this.interaction.channel?.send('No results found for this query.');
             }
         }
     }

@@ -1,46 +1,62 @@
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builders';
-import BuilderBase, { SendOptions } from './BuilderBase';
-import { ButtonInteraction, CacheType, CommandInteraction } from 'discord.js';
-import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
+import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import BuilderBase from './BuilderBase';
+import { ButtonInteraction, Collection, CommandInteraction, EmbedBuilder, AttachmentBuilder, InteractionReplyOptions, APIButtonComponentWithCustomId } from 'discord.js';
 import Command from '../Command';
 
-export interface Page {
-    embed: EmbedBuilder;
-    button: ButtonBuilder;
+interface PageBuilderOptions {
+    cbs?: CommandButton[];
+    attachment?: AttachmentBuilder;
 }
 
-/* TODO: Improve by passing result params */
-export interface CommandButton {
-    command: Command;
+export interface Page {
     button: ButtonBuilder;
+    embed: EmbedBuilder;
+}
+
+export interface CommandButton {
+    button: ButtonBuilder;
+    command: Command;
 }
 
 class PageBuilder extends BuilderBase {
-    private pages: Page[] | undefined;
+    private pages: Collection<string, EmbedBuilder>;
+    private components: ActionRowBuilder<ButtonBuilder>[];
 
-    constructor(interaction: CommandInteraction, pages: Page[] | EmbedBuilder, options: SendOptions) {
-        super();
+    constructor(interaction: CommandInteraction, pages: Page[], options?: PageBuilderOptions) {
+        super(interaction);
 
-        const page = !(pages instanceof EmbedBuilder) ? pages[0].embed : pages;
+        this.pages = new Collection();
+        pages.map((page) => this.pages.set((page.button.data as APIButtonComponentWithCustomId).custom_id, page.embed));
+
+        const embed = pages[0].embed;
 
         const row = new ActionRowBuilder<ButtonBuilder>();
-        if (this.pages) this.pages.map((p) => row.addComponents(p.button));
+        if (pages.length) pages.map((page) => row.addComponents(page.button));
 
-        super.send(interaction, page, {
-            buttons: row,
-            ...options
-        });
+        const opts = {
+            embeds: [embed],
+            components: [row],
+            files: [options?.attachment]
+        } as InteractionReplyOptions;
+
+        if (options?.cbs) {
+            const row = new ActionRowBuilder<ButtonBuilder>();
+            options.cbs.map((cb) => {
+                this.cbs.set((cb.button.data as APIButtonComponentWithCustomId).custom_id, cb.command);
+                row.addComponents(cb.button);
+            });
+
+            opts.components?.push(row);
+        }
+
+        this.components = opts.components as ActionRowBuilder<ButtonBuilder>[];
+
+        super.respond(opts);
     }
 
-    public async collect(interaction: CommandInteraction, i: ButtonInteraction<CacheType>) {
-        const embed = this.pages?.find(page => {
-            const { custom_id } = page.button?.data as APIButtonComponentWithCustomId;
-            if (custom_id == i.customId) {
-                return page;
-            }
-        })?.embed as EmbedBuilder;
-
-        await super.send(interaction, embed);
+    public async collector(i: ButtonInteraction) {
+        const embed = this.pages.get(i.customId) as EmbedBuilder;
+        await super.respond({ components: this.components, embeds: [embed] });
     }
 }
 

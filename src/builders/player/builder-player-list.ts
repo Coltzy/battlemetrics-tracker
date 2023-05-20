@@ -1,19 +1,20 @@
-import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
+import { EmbedBuilder, hyperlink } from 'discord.js';
 import { PlayerData } from '../../types/players';
 import Util from '../../Util';
-import SliderBuilder from '../SliderBuilder';
+import FitlerBuildBase from '../../bases/FilterBuildBase';
 import chunk from 'chunk';
 
-class PlayerListBuilder extends SliderBuilder {
-    constructor(
-        interaction: CommandInteraction,
-        players: PlayerData[],
-    ) {
+class PlayerListBuilder extends FitlerBuildBase {
+    constructor() {
+        super();
+    }
+
+    build(data: PlayerData[]): EmbedBuilder[] {
         const pages = [];
 
         const base = new EmbedBuilder()
             .setTitle('Search results.');
-        const chunks = chunk(players, 10);
+        const chunks = chunk(data, 10);
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
@@ -29,7 +30,7 @@ class PlayerListBuilder extends SliderBuilder {
             pages.push(embed);
         }
 
-        super(interaction, pages);
+        return pages;
     }
 }
 

@@ -45,10 +45,6 @@ export interface DayzServerData extends BaseServerData {
     attributes: DayzServerAttributes;
 }
 
-export interface SquadServerData extends BaseServerData {
-    attributes: SquadServerAttributes;
-}
-
 export interface CsServerData extends BaseServerData {
     attributes: CsServerAttributes;
 }
@@ -97,10 +93,6 @@ export interface DayzServerAttributes extends ServerAttributesBase {
     details: DayzServerDetails;
 }
 
-export interface SquadServerAttributes extends ServerAttributesBase {
-    details: SquadServerDetails;
-}
-
 export interface CsServerAttributes extends ServerAttributesBase {
     details: CsServerDetails;
 }
@@ -114,26 +106,6 @@ interface CsServerDetails {
     game: string;
     secure: number;
     rules: CsgoRules;
-}
-
-interface SquadServerDetails {
-    map: string;
-    gameMode: string;
-    version: string;
-    secure: number;
-    licensedServer: boolean;
-    licenseId: string;
-    numPubConn: string;
-    numPrivConn: number;
-    numOpenPrivConn: number;
-    squad_playerReserveCount: number;
-    squad_playTime: number;
-    squad_publicQueueLimit: number;
-    squad_reservedQueue: number;
-    squad_teamOne: string;
-    squad_teamTwo: string;
-    modded: false;
-    serverSteamId: string;
 }
 
 interface DayzServerDetails {

@@ -1,4 +1,4 @@
-import { CommandInteraction, InteractionReplyOptions } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
 import { BaseServerData } from './types/servers';
 import { PlayerData } from './types/players';
 
@@ -8,14 +8,16 @@ declare module 'discord.js' {
     }
 }
 
-CommandInteraction.prototype.respond = async function (content: InteractionReplyOptions | string) {
+CommandInteraction.prototype.respond = async function (options: InteractionReplyOptions | string): Promise<Message<boolean> | undefined> {
     if (this.replied) {
-        await this.editReply(content);
+        await this.editReply(options);
 
         return;
     }
 
-    await this.reply(content);
+    await this.reply(options);
+
+    if (typeof options != 'string' && options.fetchReply) return this.fetchReply();
 };
 
 class Util {

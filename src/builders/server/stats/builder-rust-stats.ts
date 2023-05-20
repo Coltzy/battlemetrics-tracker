@@ -2,6 +2,7 @@ import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink
 import { RustServerData } from '../../../types/servers';
 import moment from 'moment';
 import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { Page } from '../../PageBuilder';
 
 class RustServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
@@ -79,10 +80,10 @@ class RustServerStatsBuilder extends ServerStatsBaseBuilder {
             )
         .setImage(attributes.details.rust_headerimage);
 
-        const url = attributes.details.rust_url;
-        if (url) {
-            stats.setURL(url);
-        }
+        // const url = attributes.details.rust_url;
+        // if (url) {
+        //     stats.setURL(url);
+        // }
 
         const map = new EmbedBuilder()
             .setTitle('Map');
@@ -98,18 +99,18 @@ class RustServerStatsBuilder extends ServerStatsBaseBuilder {
             {
                 embed: stats,
                 button: new ButtonBuilder()
-                    .setLabel('📈 Stats')
-                    .setCustomId('stats')
+                    .setLabel('Information')
+                    .setCustomId('information')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: map,
                 button: new ButtonBuilder()
-                    .setLabel('🗺️ Map')
+                    .setLabel('Map')
                     .setCustomId('map')
                     .setStyle(ButtonStyle.Primary)
             }
-        ];
+        ] as Page[];
 
         super(interaction, pages, server);
     }

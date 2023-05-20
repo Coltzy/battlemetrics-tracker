@@ -1,6 +1,7 @@
 import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
 import { CsgoServerData } from '../../../types/servers';
 import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { Page } from '../../PageBuilder';
 
 class CsgoServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
@@ -66,18 +67,18 @@ class CsgoServerStatsBuilder extends ServerStatsBaseBuilder {
             {
                 embed: stats,
                 button: new ButtonBuilder()
-                    .setLabel('📈 Stats')
+                    .setLabel('Stats')
                     .setCustomId('01')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: rules,
                 button: new ButtonBuilder()
-                    .setLabel('📜 Rules')
+                    .setLabel('Rules')
                     .setCustomId('02')
                     .setStyle(ButtonStyle.Primary)
             }
-        ];
+        ] as Page[];
 
         super(interaction, pages, server);
     }

@@ -1,6 +1,7 @@
 import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
 import { GmodServerData } from '../../../types/servers';
 import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { Page } from '../../PageBuilder';
 
 class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
@@ -65,18 +66,18 @@ class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
             {
                 embed: stats,
                 button: new ButtonBuilder()
-                    .setLabel('📈 Stats')
+                    .setLabel('Stats')
                     .setCustomId('01')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: rules,
                 button: new ButtonBuilder()
-                    .setLabel('📜 Rules')
+                    .setLabel('Rules')
                     .setCustomId('02')
                     .setStyle(ButtonStyle.Primary)
             }
-        ];
+        ] as Page[];
 
         super(interaction, pages, server);
     }

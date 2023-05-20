@@ -1,6 +1,7 @@
 import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { MinecraftServerData } from '../../../types/servers';
 import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { Page } from '../../PageBuilder';
 
 class MinecraftServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
@@ -63,18 +64,18 @@ class MinecraftServerStatsBuilder extends ServerStatsBaseBuilder {
             {
                 embed: stats,
                 button: new ButtonBuilder()
-                    .setLabel('📈 Stats')
+                    .setLabel('Stats')
                     .setCustomId('01')
                     .setStyle(ButtonStyle.Primary)
             },
             {
                 embed: mods,
                 button: new ButtonBuilder()
-                    .setLabel('🛡️ Mods')
+                    .setLabel('Mods')
                     .setCustomId('02')
                     .setStyle(ButtonStyle.Primary)
             }
-        ];
+        ] as Page[];
 
         super(interaction, pages, server);
     }
