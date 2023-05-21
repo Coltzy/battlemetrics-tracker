@@ -1,4 +1,5 @@
-import { ButtonInteraction, ButtonStyle, CommandInteraction, EmbedBuilder } from 'discord.js';
+import { ButtonInteraction, ButtonStyle, CommandInteraction } from 'discord.js';
+import EmbedBuilder from '../utils/EmbedBuilder';
 import SliderBuilder from './SliderBuilder';
 import FilterBuildBase from './../bases/FilterBuildBase';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';

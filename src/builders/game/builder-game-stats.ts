@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import { bold } from '@discordjs/builders';
 import PageBuilder, { Page } from '../PageBuilder';
 import { Game } from '../../types/game';
@@ -15,7 +16,7 @@ class GameStatsBuilder extends PageBuilder {
         let j = 0;
 
         const attachment = new AttachmentBuilder(`./images/${game.data.id}.png`);
-        
+
         const base = new EmbedBuilder()
             .setTitle(attributes.name)
             .setURL(`https://www.battlemetrics.com/servers/${game.data.id}`)

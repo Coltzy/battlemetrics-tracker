@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
+import { CommandInteraction, hyperlink } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import SliderBuilder from '../SliderBuilder';
 import { ServerLeaderboardMongoModel } from '../../types/Models';
 import { Server } from '../../types/servers';

@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import EmbedBuilder from '../../../utils/EmbedBuilder';
 import { DayzServerData } from '../../../types/servers';
 import ServerStatsBaseBuilder from '../builder-server-stats-base';
 import { Page } from '../../PageBuilder';

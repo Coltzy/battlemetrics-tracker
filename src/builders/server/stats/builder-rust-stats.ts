@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import EmbedBuilder from '../../../utils/EmbedBuilder';
 import { RustServerData } from '../../../types/servers';
 import moment from 'moment';
 import ServerStatsBaseBuilder from '../builder-server-stats-base';

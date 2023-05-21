@@ -1,5 +1,6 @@
-import { APIButtonComponentWithCustomId, ButtonInteraction, ButtonStyle, CommandInteraction, EmbedBuilder, InteractionReplyOptions, Message } from 'discord.js';
+import { APIButtonComponentWithCustomId, ButtonInteraction, ButtonStyle, CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, inlineCode } from '@discordjs/builders';
+import EmbedBuilder from '../utils/EmbedBuilder';
 import BuilderBase from './BuilderBase';
 import fuzzysort from 'fuzzysort';
 import ms from 'ms';

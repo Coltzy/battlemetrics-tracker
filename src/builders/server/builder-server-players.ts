@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, hyperlink } from 'discord.js';
+import { CommandInteraction, hyperlink } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import SliderBuilder from '../SliderBuilder';
 import moment from 'moment';
 import { ServerWithPlayerList } from '../../types/servers';

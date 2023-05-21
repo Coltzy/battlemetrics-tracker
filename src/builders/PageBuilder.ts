@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import EmbedBuilder from '../utils/EmbedBuilder';
 import BuilderBase from './BuilderBase';
-import { ButtonInteraction, Collection, CommandInteraction, EmbedBuilder, AttachmentBuilder, InteractionReplyOptions, APIButtonComponentWithCustomId } from 'discord.js';
+import { ButtonInteraction, Collection, CommandInteraction, AttachmentBuilder, InteractionReplyOptions, APIButtonComponentWithCustomId } from 'discord.js';
 import Command from '../Command';
 
 interface PageBuilderOptions {

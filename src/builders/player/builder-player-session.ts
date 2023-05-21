@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, bold } from 'discord.js';
+import { CommandInteraction, bold } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import { Player, PlayerSessionDataWithServers } from '../../types/players';
 import Util from '../../Util';
 import moment from 'moment';

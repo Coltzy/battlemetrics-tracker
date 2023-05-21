@@ -1,4 +1,5 @@
-import { EmbedBuilder, hyperlink } from 'discord.js';
+import { hyperlink } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import FitlerBuildBase from '../../bases/FilterBuildBase';
 import { BaseServerData } from '../../types/servers';
 import chunk from 'chunk';

@@ -1,4 +1,5 @@
-import { EmbedBuilder, CommandInteraction, inlineCode, hyperlink, quote } from 'discord.js';
+import { CommandInteraction, inlineCode, hyperlink, quote } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import BuilderBase from '../BuilderBase';
 import { PlayerWithServerMeta } from '../../types/players';
 import moment from 'moment';

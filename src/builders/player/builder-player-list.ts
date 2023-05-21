@@ -1,4 +1,5 @@
-import { EmbedBuilder, hyperlink } from 'discord.js';
+import { hyperlink } from 'discord.js';
+import EmbedBuilder from '../../utils/EmbedBuilder';
 import { PlayerData } from '../../types/players';
 import Util from '../../Util';
 import FitlerBuildBase from '../../bases/FilterBuildBase';
