@@ -10,24 +10,23 @@ class PlayerIdentifiersBuilder extends SliderBuilder {
         interaction: CommandInteraction,
         player: PlayerWithIdentifers,
     ) {
+        player.included.sort((a, b) => Date.parse(b.attributes.lastSeen) - Date.parse(a.attributes.lastSeen));
         const pages = [];
 
-        const { attributes } = player.data;
-
-        const identifiers = player.included.sort((a, b) => Date.parse(b.attributes.lastSeen) - Date.parse(a.attributes.lastSeen));
         const base = new EmbedBuilder()
-            .setTitle(attributes.name)
-            .setURL(Util.playerToUrl(player.data));
-        const chunks = chunk(identifiers, 5);
+            .setTitle(player.data.attributes.name)
+            .setURL(Util.playerToUrl(player.data))
+            .setDescription('Players past name identifiers.');
+            
+        const chunks = chunk(player.included, 5);
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
-                .setDescription('Players past name identifiers.')
                 .addFields(
                     chunk.map(identifiers => {
                         return {
                             name: identifiers.attributes.identifier,
-                            value: 'Last seen ' + moment(identifiers.attributes.lastSeen).fromNow()
+                            value: '> Last seen ' + moment(identifiers.attributes.lastSeen).fromNow()
                         };
                     })
                 );

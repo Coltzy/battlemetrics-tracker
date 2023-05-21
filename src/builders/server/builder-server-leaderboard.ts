@@ -13,39 +13,35 @@ class ServerLeaderboardBuilder extends SliderBuilder {
         server: Server,
         data: ServerLeaderboardMongoModel[],
     ) {
-        const { attributes } = server.data;
         data.sort((a, b) => a.rank - b.rank);
         const pages = [];
 
         const base = new EmbedBuilder()
-            .setTitle(attributes.name)
+            .setTitle(server.data.attributes.name)
             .setURL(Util.serverToUrl(server.data))
             .setDescription(`
                 All time leaderboard of the server.
 
                 Last Updated: ${moment(data[0].createdAt).fromNow()}
             `);
-        const chunks = chunk(data, 10);
+
+        const chunks = chunk(data, 5);
         
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
                     chunk.map(player => {
-                        const duration = moment.duration(player.value * 1000, 'ms');
+                        const duration = moment.duration(player.value, 'seconds');
 
                         return {
                             name: `#${player.rank} ${player.name}`,
-                            value: `${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
+                            value: `> ${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
                         };
                     })
             );
 
             pages.push(embed);
         }
-
-        // {
-        //     searchRegex: new RegExp('#\\d[^ ]* (.*)')
-        // }
 
         super(interaction, pages);
     }

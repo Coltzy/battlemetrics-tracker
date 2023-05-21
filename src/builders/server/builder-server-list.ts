@@ -13,8 +13,9 @@ class ServerListBuilder extends FitlerBuildBase {
         const pages = [];
 
         const base = new EmbedBuilder()
-            .setTitle('Search results.');
-        const chunks = chunk(data, 10);
+            .setTitle('Search search');
+
+        const chunks = chunk(data, 5);
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
@@ -22,7 +23,7 @@ class ServerListBuilder extends FitlerBuildBase {
                     chunk.map((chunk) => {
                         return {
                             name: chunk.attributes.name || '\u200b',
-                            value: `Id: ${hyperlink(chunk.id, Util.serverToUrl(chunk))}`
+                            value: `> Id: ${hyperlink(chunk.id, Util.serverToUrl(chunk))}`
                         };
                     })
                 );

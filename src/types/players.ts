@@ -108,17 +108,9 @@ interface PlayerRelationships {
 }
 
 interface PlayerServerRelationship {
-    server: PlayerRelationships;
-    player: PlayerRelationships;
+    server: PlayerRelationshipsServer;
+    player: PlayerRelationshipsServer;
 
-}
-
-interface RelationshipIdentifiers {
-    identifiers: RelationshipIdentifiersData;
-}
-
-interface RelationshipIdentifiersData {
-    data: RelationshipIdentifiers;
 }
 
 interface PlayerRelationshipsServer {

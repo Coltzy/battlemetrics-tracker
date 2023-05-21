@@ -13,8 +13,9 @@ class PlayerListBuilder extends FitlerBuildBase {
         const pages = [];
 
         const base = new EmbedBuilder()
-            .setTitle('Search results.');
-        const chunks = chunk(data, 10);
+            .setTitle('Player search');
+
+        const chunks = chunk(data, 5);
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
@@ -22,7 +23,7 @@ class PlayerListBuilder extends FitlerBuildBase {
                     chunk.map((chunk) => {
                         return {
                             name: chunk.attributes.name,
-                            value: `Id: ${hyperlink(chunk.id, Util.playerToUrl(chunk))}`
+                            value: `> Id: ${hyperlink(chunk.id, Util.playerToUrl(chunk))}`
                         };
                     })
                 );

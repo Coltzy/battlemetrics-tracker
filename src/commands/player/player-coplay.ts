@@ -23,8 +23,9 @@ class PlayerCoplayCommand implements Command {
             'filter[period]': new Date(Date.now() - ms('1d')).toISOString() + ":" + new Date(Date.now()).toISOString(),
         } as { [key: string]: string };
 
+        let server;
         if (name) {
-            const server = await interaction.client.BMF.get('servers', name);
+            server = await interaction.client.BMF.get('servers', name);
             
             if (!server) {
                 return await interaction.respond('No search results were found for the server.');
@@ -41,7 +42,7 @@ class PlayerCoplayCommand implements Command {
             return await interaction.respond('This player has no previous coplay experiences.');
         }
 
-        new PlayerCoplayBuilder(interaction, response, res as PlayerCoplayData);
+        new PlayerCoplayBuilder(interaction, response, res as PlayerCoplayData, server?.data);
     }
 }
 

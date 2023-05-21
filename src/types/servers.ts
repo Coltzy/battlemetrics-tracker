@@ -3,13 +3,17 @@ import { PlayerServerData } from './players';
 /* Base Server */
 export interface Server {
     data: BaseServerData;
-    included?: PlayerServerData[];
 }
 
 export interface ServerSearch {
     data: BaseServerData[];
     links: EndpointSliderLinks;
     included: unknown[];
+}
+
+export interface ServerWithPlayerList {
+    data: BaseServerData;
+    included: PlayerServerData[];
 }
 
 /* Base Server Data */

@@ -1,4 +1,4 @@
-import { EmbedBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
+import { EmbedBuilder, CommandInteraction, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
 import { bold } from '@discordjs/builders';
 import PageBuilder, { Page } from '../PageBuilder';
 import { Game } from '../../types/game';
@@ -15,11 +15,13 @@ class GameStatsBuilder extends PageBuilder {
         let j = 0;
 
         const attachment = new AttachmentBuilder(`./images/${game.data.id}.png`);
-
-        const stats = new EmbedBuilder()
+        
+        const base = new EmbedBuilder()
             .setTitle(attributes.name)
             .setURL(`https://www.battlemetrics.com/servers/${game.data.id}`)
-            .setThumbnail(`attachment://${game.data.id}.png`)
+            .setThumbnail(`attachment://${game.data.id}.png`);
+
+        const stats = new EmbedBuilder(base.data)
             .addFields(
                 {
                     name: 'Total Players',
@@ -64,8 +66,7 @@ class GameStatsBuilder extends PageBuilder {
             );
         }
 
-        const players = new EmbedBuilder()
-            .setTitle(game.data.id)
+        const players = new EmbedBuilder(base.data)
             .addFields(
                 {
                     name: 'Min Players (24H)',
@@ -113,15 +114,6 @@ class GameStatsBuilder extends PageBuilder {
                     inline: true
                 }
             );
-
-        const links = new ActionRowBuilder<ButtonBuilder>();
-
-        links.addComponents(
-            new ButtonBuilder()
-                .setLabel('Raw')
-                .setStyle(ButtonStyle.Link)
-                .setURL(interaction.client.BMF.uri(`games/${game.data.id}`))
-        );
 
         const pages = [
             {

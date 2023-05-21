@@ -18,23 +18,24 @@ class PlayerSessionBuilder extends SliderBuilder {
         const base = new EmbedBuilder()
             .setTitle(player.data.attributes.name)
             .setURL(Util.playerToUrl(player.data));
+
         const chunks = chunk(sessions.data, 5);
-        let index = 0;
 
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .setDescription('Player session history.')
                 .addFields(
-                    chunk.map(session => {
+                    chunk.map((session) => {
+                        const server = sessions.included.find((server) => server.id == session.relationships.server.data.id);
                         const start = moment(session.attributes.start);
                         const stop = moment(session.attributes.stop);
 
                         return {
-                            name: sessions.included[index++].attributes.name,
+                            name: server?.attributes.name || '\u200b',
                             value: stripIndent`
-                                ${bold('Start')}: ${start.fromNow()} - ${start.format('l hh:mm a')}
-                                ${bold('Stop')}: ${stop.fromNow()} - ${stop.format('l hh:mm a')}
-                                ${bold('Duration')}: ${moment.duration(stop.diff(start)).format('*hh:mm')}
+                            > ${bold('Start')}: ${start.fromNow()} - ${start.format('l hh:mm a')}
+                            > ${bold('Stop')}: ${stop.fromNow()} - ${stop.format('l hh:mm a')}
+                            > ${bold('Duration')}: ${moment.duration(stop.diff(start)).format('*hh:mm')}
                             `
                         };
                     })
