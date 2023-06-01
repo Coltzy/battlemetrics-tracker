@@ -3,6 +3,7 @@ import PageBuilder, { Page } from '../PageBuilder';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 import ServerPlayersCommand from '../../commands/server/server-players';
 import { BaseServerData } from '../../types/servers';
+import ServerFavoriteCommand from '../../commands/server/server-favorite';
 
 class ServerStatsBaseBuilder extends PageBuilder {
     constructor(
@@ -26,6 +27,13 @@ class ServerStatsBaseBuilder extends PageBuilder {
                     .setLabel('Player list')
                     .setCustomId('players')
                     .setStyle(ButtonStyle.Secondary)
+            },
+            {
+                command: new ServerFavoriteCommand(),
+                button: new ButtonBuilder()
+                    .setEmoji({ name: '⭐' })
+                    .setCustomId('favorite')
+                    .setStyle(ButtonStyle.Primary)
             }
         ];
 

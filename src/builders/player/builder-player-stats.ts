@@ -7,7 +7,7 @@ import Util from '../../Util';
 import { stripIndent } from 'common-tags';
 import 'moment-duration-format';
 import PlayerServersCommand from '../../commands/player/player-servers';
-import Command from '../../Command';
+import PlayerFavoriteCommand from '../../commands/player/player-favorite';
 
 class PlayerStatsBuilder extends BuilderBase {
     constructor(
@@ -41,12 +41,19 @@ class PlayerStatsBuilder extends BuilderBase {
 
         const cbs = [
             {
-                command: new PlayerServersCommand() as unknown as Command,
+                command: new PlayerServersCommand(),
                 button: new ButtonBuilder()
                     .setLabel('Servers')
                     .setCustomId('servers')
-                    .setStyle(ButtonStyle.Primary)
+                    .setStyle(ButtonStyle.Secondary)
             },
+            {
+                command: new PlayerFavoriteCommand(),
+                button: new ButtonBuilder()
+                    .setEmoji({ name: '⭐' })
+                    .setCustomId('favorite')
+                    .setStyle(ButtonStyle.Secondary)
+            }
         ];
 
         super(interaction, cbs);
