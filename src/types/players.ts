@@ -1,8 +1,13 @@
-import { BaseServerData } from "./servers";
+import { BaseServerData, PaginationLinks } from "./servers";
 
 /* Player */
 export interface Player {
     data: PlayerData;
+}
+
+export interface PlayerSearch {
+    data: PlayerData[];
+    links: PaginationLinks;
 }
 
 export interface PlayerWithServerMeta extends Player {

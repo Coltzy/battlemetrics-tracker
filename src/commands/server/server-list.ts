@@ -36,7 +36,7 @@ class ServerListCommand implements Command {
         }
 
         const builder = new ServerListBuilder();
-        const pages = builder.build(response.data as BaseServerData[]);
+        const slides = builder.build(response.data as BaseServerData[]);
         const uri = interaction.client.BMF.uri('servers', options);
 
         const filters = [
@@ -57,7 +57,7 @@ class ServerListCommand implements Command {
             }
         ] as FilterButton[];
 
-        new FilterBuilder(interaction, pages, uri, builder, filters);
+        new FilterBuilder(interaction, slides, uri, response.links, builder, filters);
     }
 }
 

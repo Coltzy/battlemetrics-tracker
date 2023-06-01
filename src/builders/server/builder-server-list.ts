@@ -1,6 +1,6 @@
 import { hyperlink } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
-import FitlerBuildBase from '../../bases/FilterBuildBase';
+import FitlerBuildBase from '../../bases/BuildMethodBase';
 import { BaseServerData } from '../../types/servers';
 import chunk from 'chunk';
 import Util from '../../Util';
@@ -11,7 +11,7 @@ class ServerListBuilder extends FitlerBuildBase {
     }
 
     build(data: BaseServerData[]): EmbedBuilder[] {
-        const pages = [];
+        const slides = [];
 
         const base = new EmbedBuilder()
             .setTitle('Search search');
@@ -29,10 +29,10 @@ class ServerListBuilder extends FitlerBuildBase {
                     })
                 );
 
-            pages.push(embed);
+            slides.push(embed);
         }
 
-        return pages;
+        return slides;
     }
 }
 

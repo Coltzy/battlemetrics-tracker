@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import PlayerSessionBuilder from '../../builders/player/builder-player-session';
-import { PlayerSessionDataWithServers } from '../../types/players';
+import PaginationBuilder from '../../builders/PaginationBuilder';
 
 class PlayerSessionCommand implements Command {
     public name = 'player-session';
@@ -19,7 +19,8 @@ class PlayerSessionCommand implements Command {
         }
 
         const options = {
-            'include': 'server'
+            'include': 'server',
+            'page[size]': '100'
         } as { [key: string]: string };
 
         if (name) {
@@ -40,7 +41,10 @@ class PlayerSessionCommand implements Command {
             return await interaction.respond('This player has no previous sessions.');
         }
 
-        new PlayerSessionBuilder(interaction, response, res as PlayerSessionDataWithServers);
+        const builder = new PlayerSessionBuilder(response);
+        const slides = builder.build(res);
+
+        new PaginationBuilder(interaction, slides, res.links, builder);
     }
 }
 

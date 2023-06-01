@@ -1,6 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import Command from '../../Command';
-import { PlayerData } from '../../types/players';
+import { PlayerSearch } from '../../types/players';
 import PlayerListBuilder from '../../builders/player/builder-player-list';
 import FilterBuilder, { FilterButton } from '../../builders/FilterBuilder';
 
@@ -13,12 +13,11 @@ class PlayerListCommand implements Command {
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string | undefined;
         const server = interaction.options.get('server')?.value as string | undefined;
-        const limit = interaction.options.get('limit')?.value || 10 as number;
         const online = interaction.options.get('online')?.value || false as boolean;
 
         const options = {
             'filter[online]': online,
-            'page[size]': limit
+            'page[size]': '100'
         } as { [key: string]: string };
 
         if (query) options['filter[search]'] = query;
@@ -40,7 +39,7 @@ class PlayerListCommand implements Command {
         }
 
         const builder = new PlayerListBuilder();
-        const pages = builder.build(response.data as PlayerData[]);
+        const slides = builder.build(response as PlayerSearch);
         const uri = interaction.client.BMF.uri('players', options);
 
         const filters = [
@@ -65,7 +64,7 @@ class PlayerListCommand implements Command {
             });
         }
         
-        new FilterBuilder(interaction, pages, uri, builder, filters);
+        new FilterBuilder(interaction, slides, uri, response.links, builder, filters);
     }
 }
 

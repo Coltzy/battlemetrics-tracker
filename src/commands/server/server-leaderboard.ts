@@ -1,11 +1,8 @@
-import { Client, CommandInteraction, inlineCode } from 'discord.js';
+import { CommandInteraction, inlineCode } from 'discord.js';
 import Command from '../../Command';
-import { ServerLeaderboard } from '../../types/servers';
-import LeaderboardModel from '../../models/Leaderboard';
-import { ServerLeaderboardMongoModel } from '../../types/Models';
-import { BMErrors } from '../../types/BMError';
 import ServerLeaderboardBuilder from '../../builders/server/builder-server-leaderboard';
 import Util from '../../Util';
+import PaginationBuilder from '../../builders/PaginationBuilder';
 
 class ServerLeaderboardCommand implements Command {
     public name = 'server-leaderboard';
@@ -27,66 +24,21 @@ class ServerLeaderboardCommand implements Command {
             return await interaction.respond(`The server type ${inlineCode(id)} does not support player lists.`);
         }
 
-        const docs = await LeaderboardModel.find({ server: response.data.id });
-
-        if (!docs.length) {
-            await interaction.respond({
-                content: 'Fetching leaderboard information this may take a few seconds...',
-                components: [],
-                embeds: [],
-                fetchReply: true,
-            });
-
-            const leaderboard = await this.fetch(interaction.client, response.data.id, period);
-
-            if ('errors' in leaderboard) {
-                return await interaction.respond('There was an unexpected error when running this command!');
-            }
-
-            new ServerLeaderboardBuilder(interaction, response, leaderboard);
-
-            return;
-        }
-
-        new ServerLeaderboardBuilder(interaction, response, docs);
-    }
-
-    private async fetch(client: Client, id: string, period: string) {
-        await LeaderboardModel.deleteMany({ server: id });
-        const docs: ServerLeaderboardMongoModel[] = [];
-
-        let uri: string;
-
-        uri = client.BMF.uri(`servers/${id}/relationships/leaderboards/time`, {
+        const uri = interaction.client.BMF.uri(`servers/${response.data.id}/relationships/leaderboards/time`, {
             'filter[period]': period,
             'page[size]': '100'
         });
 
-        for (let i = 0; i < 10; i++) {
-            if (!uri) break;
-            const data = await client.BMF.direct_fetch(uri) as BMErrors | ServerLeaderboard;
+        const res = await interaction.client.BMF.direct_fetch(uri);
 
-            if ('errors' in data) {
-                return data;
-            }
-
-            uri = data.links.next as string;
-            for (const player of data.data) {
-                const doc = new LeaderboardModel({
-                    server: id,
-                    id: player.id,
-                    name: player.attributes.name,
-                    value: player.attributes.value,
-                    rank: player.attributes.rank
-                });
-
-                docs.push(doc);
-            }
+        if (!res || !res.data?.length) {
+            return await interaction.respond('There was an issue when fetching the leaderboard information.');
         }
 
-        await LeaderboardModel.insertMany(docs);
+        const builder = new ServerLeaderboardBuilder(response);
+        const slides = builder.build(res);
 
-        return docs;
+        new PaginationBuilder(interaction, slides, res.links, builder);
     }
 }
 

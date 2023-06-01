@@ -1,50 +1,44 @@
-import { CommandInteraction, hyperlink } from 'discord.js';
+import { hyperlink } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
-import SliderBuilder from '../SliderBuilder';
-import { ServerLeaderboardMongoModel } from '../../types/Models';
-import { Server } from '../../types/servers';
+import FitlerBuildBase from '../../bases/BuildMethodBase';
+import { Server, ServerLeaderboard } from '../../types/servers';
 import moment from 'moment';
-import chunk from 'chunk';
 import Util from '../../Util';
 import 'moment-duration-format';
+import chunk from 'chunk';
 
-class ServerLeaderboardBuilder extends SliderBuilder {
-    constructor(
-        interaction: CommandInteraction, 
-        server: Server,
-        data: ServerLeaderboardMongoModel[],
-    ) {
-        data.sort((a, b) => a.rank - b.rank);
-        const pages = [];
+class ServerLeaderboardBuilder extends FitlerBuildBase {
+    constructor(server: Server) {
+        super({ 'server': server });
+    }
+
+    public build(leaderboard: ServerLeaderboard) {
+        leaderboard.data.sort((a, b) => a.attributes.rank - b.attributes.rank);
+        const server = this.map.get('server') as Server;
+        const slides = [];
 
         const base = new EmbedBuilder()
             .setTitle(server.data.attributes.name)
             .setURL(Util.serverToUrl(server.data))
-            .setDescription(`
-                All time leaderboard of the server.
+            .setDescription('All time leaderboard of the server.');
 
-                Last Updated: ${moment(data[0].createdAt).fromNow()}
-            `);
+        const chunks = chunk(leaderboard.data, 5);
 
-        const chunks = chunk(data, 5);
-        
-        for (const chunk of chunks) {
+        for (const lb of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
-                .addFields(
-                    chunk.map(player => {
-                        const duration = moment.duration(player.value, 'seconds');
+                .addFields(lb.map((player) => {
+                    const duration = moment.duration(player.attributes.value, 'seconds');
 
-                        return {
-                            name: `#${player.rank} ${player.name}`,
-                            value: `> ${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
-                        };
-                    })
-            );
+                    return {
+                        name: `#${player.attributes.rank} ${player.attributes.name}`,
+                        value: `> ${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
+                    };
+                }));
 
-            pages.push(embed);
+            slides.push(embed);
         }
 
-        super(interaction, pages);
+        return slides;
     }
 }
 

@@ -1,8 +1,9 @@
 import { ButtonInteraction, ButtonStyle, CommandInteraction } from 'discord.js';
 import EmbedBuilder from '../utils/EmbedBuilder';
-import SliderBuilder from './SliderBuilder';
-import FilterBuildBase from './../bases/FilterBuildBase';
+import BuildMethodBase from '../bases/BuildMethodBase';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { PaginationLinks } from '../types/servers';
+import PaginationBuilder from './PaginationBuilder';
 
 const UP_ARROW = '🔼';
 const DOWN_ARROW = '🔽';
@@ -16,24 +17,22 @@ export interface FilterButton {
     remove?: boolean;
 }
 
-class FilterBuilder extends SliderBuilder {
+class FilterBuilder extends PaginationBuilder {
     private uri: string;
-    private builder: FilterBuildBase;
     private filters: FilterButton[];
     private sort: string;
 
     constructor(
         interaction: CommandInteraction, 
-        pages: EmbedBuilder[],
-        uri: string, 
-        builder: FilterBuildBase,
+        slides: EmbedBuilder[],
+        uri: string,
+        links: PaginationLinks,
+        builder: BuildMethodBase,
         filters: FilterButton[]
     ) {
-        super(interaction, pages);
+        super(interaction, slides, links, builder);
 
         this.uri = uri;
-
-        this.builder = builder;
 
         this.filters = filters;
 
@@ -42,8 +41,8 @@ class FilterBuilder extends SliderBuilder {
         const match = uri.match(regex);
         this.sort = match ? match[1] : filters.find((filter) => filter.remove)?.value as string;
 
-        this.descriptors(pages);
-        super.set(pages, { components: [this.build()] });
+        this.descriptions(slides);
+        this.set(slides, 0, { components: [this.row()] });
     }
 
     public async fcollector(i: ButtonInteraction) {
@@ -57,15 +56,14 @@ class FilterBuilder extends SliderBuilder {
         }
 
         this.uri = this.href();
-        const pages = await this.fetch(this.interaction);
 
-        this.descriptors(pages);
-        await super.set(pages, { components: [this.build()] });
-    }
+        const embeds = await this.fetch(this.uri, true);
+        const slides = [...this.slides, ...embeds];
+        this.descriptions(slides);
 
-    private async fetch(interaction: CommandInteraction) {
-        const responce = await interaction.client.BMF.direct_fetch(this.uri);
-        return this.builder.build(responce.data);
+        await this.set(slides, 0, {
+            components: [this.row()]
+        });
     }
 
     private href(): string {
@@ -80,15 +78,16 @@ class FilterBuilder extends SliderBuilder {
         return url.href;
     }
 
-    private descriptors(pages: EmbedBuilder[]) {
+    public async descriptions(embeds: EmbedBuilder[]) {
         const filter = this.filters.find((f) => f.value == this.sort.replace('-', '')) as FilterButton;
-        for (const page of pages) {
-            const description = typeof filter.description == 'function' ? filter.description(this.sort.startsWith('-')) : filter.description;
-            page.setDescription(description);
+        const description = typeof filter.description == 'function' ? filter.description(this.sort.startsWith('-')) : filter.description;
+
+        for (const embed of embeds) {
+            embed.setDescription(description);
         }
     }
 
-    public build() {
+    public row() {
         const row = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 new ButtonBuilder()

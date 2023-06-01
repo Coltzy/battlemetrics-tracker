@@ -1,4 +1,4 @@
-import { APIButtonComponentWithCustomId, ButtonInteraction, ButtonStyle, CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
+import { ButtonInteraction, ButtonStyle, CommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, inlineCode } from '@discordjs/builders';
 import EmbedBuilder from '../utils/EmbedBuilder';
 import BuilderBase from './BuilderBase';
@@ -6,16 +6,16 @@ import fuzzysort from 'fuzzysort';
 import ms from 'ms';
 
 interface SliderBuilder {
-    fcollector(i: ButtonInteraction): Promise<void>; 
-    build(): ActionRowBuilder<ButtonBuilder>;
+    subcollector(i: ButtonInteraction): Promise<void>; 
 }
 
 class SliderBuilder extends BuilderBase {
+    private force: boolean;
     public slides: EmbedBuilder[];
     public index: number;
-    private buttons: ActionRowBuilder<ButtonBuilder>;
+    public buttons: ActionRowBuilder<ButtonBuilder>;
 
-    constructor(interaction: CommandInteraction, slides: EmbedBuilder[]) {
+    constructor(interaction: CommandInteraction, slides: EmbedBuilder[], force = false) {
         const buttons = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 new ButtonBuilder()
@@ -44,15 +44,19 @@ class SliderBuilder extends BuilderBase {
 
         this.buttons = buttons;
 
-        if (!this.fcollector) this.set(slides);
+        this.force = force;
+
+        if (!this.subcollector) {
+            this.set(slides, this.index);
+        }
     }
 
-    public set(slides: EmbedBuilder[], options?: InteractionReplyOptions) {
+    public set(slides: EmbedBuilder[], index = 0, options?: InteractionReplyOptions) {
         this.slides = slides;
 
-        if (this.slides.length > 1) this.enumerate();
+        if (this.slides.length > 1) this.number();
 
-        this.index = 0;
+        this.index = index;
 
         const embed = this.slides[this.index];
 
@@ -62,23 +66,17 @@ class SliderBuilder extends BuilderBase {
             ...options
         } as InteractionReplyOptions;
 
-        if (this.slides.length > 1) opts.components?.unshift(this.buttons);
+        if (this.slides.length > 1 || this.force) opts.components?.unshift(this.buttons);
 
-        super.respond(opts);
+        this.respond(opts);
     }
 
     private isValidIndex(index: number) {
         return index > 0 && index < this.slides.length + 1;
     }
 
-    public async collector(i: ButtonInteraction, sent: Message) {
-        const ids = this.buttons.components.map((button) => (button.data as APIButtonComponentWithCustomId).custom_id);
-
-        if (!ids.includes(i.customId)) {
-            this.fcollector(i);
-
-            return;
-        }
+    public async collector(i: ButtonInteraction) {
+        if (typeof this.subcollector == 'function') this.subcollector(i);
 
         if (i.customId == 'next' && this.index != this.slides.length - 1) {
             this.index++;
@@ -91,16 +89,13 @@ class SliderBuilder extends BuilderBase {
         }
         
         const embed = this.slides[this.index];
-        const json = sent.embeds[0].toJSON();
-        delete json.type;
 
         if (!this.deleted) {
             await this.interaction.respond({ embeds: [embed] });
         }
     }
 
-    private enumerate() {
-        if (this.slides.length < 1) return;
+    private number() {
         let i = 1;
 
         for (const slide of this.slides) {

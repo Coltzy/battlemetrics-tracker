@@ -7,7 +7,7 @@ export interface Server {
 
 export interface ServerSearch {
     data: BaseServerData[];
-    links: EndpointSliderLinks;
+    links: PaginationLinks;
     included: unknown[];
 }
 
@@ -257,7 +257,7 @@ interface ServerGroupData {
 /* Leaderboard */
 export interface ServerLeaderboard {
     data: ServerLeaderboardPlayer[];
-    links: EndpointSliderLinks;
+    links: PaginationLinks;
 }
 
 /* Leaderboard Player */
@@ -275,7 +275,7 @@ interface ServerLeaderboardPlayerAttributes {
 }
 
 /* Leaderboard Links */
-export interface EndpointSliderLinks {
+export interface PaginationLinks {
     next?: string;
     prev?: string;
 }
