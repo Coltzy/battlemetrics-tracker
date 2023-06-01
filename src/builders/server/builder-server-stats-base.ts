@@ -1,5 +1,5 @@
 import { CommandInteraction, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
-import PageBuilder, { CommandButton, Page } from '../PageBuilder';
+import PageBuilder, { Page } from '../PageBuilder';
 import ServerLeaderboardCommand from '../../commands/server/server-leaderboard';
 import ServerPlayersCommand from '../../commands/server/server-players';
 import { BaseServerData } from '../../types/servers';
@@ -27,7 +27,7 @@ class ServerStatsBaseBuilder extends PageBuilder {
                     .setCustomId('players')
                     .setStyle(ButtonStyle.Secondary)
             }
-        ] as CommandButton[];
+        ];
 
         for (const { embed } of pages) {
             embed.setFooter({

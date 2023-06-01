@@ -1,4 +1,4 @@
-import { CommandInteraction, inlineCode, hyperlink, quote } from 'discord.js';
+import { CommandInteraction, inlineCode, hyperlink, quote, ButtonBuilder, ButtonStyle } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import BuilderBase from '../BuilderBase';
 import { PlayerWithServerMeta } from '../../types/players';
@@ -6,6 +6,8 @@ import moment from 'moment';
 import Util from '../../Util';
 import { stripIndent } from 'common-tags';
 import 'moment-duration-format';
+import PlayerServersCommand from '../../commands/player/player-servers';
+import Command from '../../Command';
 
 class PlayerStatsBuilder extends BuilderBase {
     constructor(
@@ -37,18 +39,17 @@ class PlayerStatsBuilder extends BuilderBase {
                 }
             );
 
-        // TODO: Fix cbs with base builder
-        // const cbs = [
-        //     {
-        //         command: new PlayerServersCommand() as unknown as Command,
-        //         button: new ButtonBuilder()
-        //             .setLabel('Servers')
-        //             .setCustomId('servers')
-        //             .setStyle(ButtonStyle.Primary)
-        //     },
-        // ];
+        const cbs = [
+            {
+                command: new PlayerServersCommand() as unknown as Command,
+                button: new ButtonBuilder()
+                    .setLabel('Servers')
+                    .setCustomId('servers')
+                    .setStyle(ButtonStyle.Primary)
+            },
+        ];
 
-        super(interaction);
+        super(interaction, cbs);
 
         super.respond({
             embeds: [embed]

@@ -9,21 +9,37 @@ import 'dotenv/config';
 interface BuilderBase {
     collector?(interaction: ButtonInteraction, sent: Message): void | Promise<void>; 
 }
+
+export interface CommandButton {
+    button: ButtonBuilder;
+    command: Command;
+}
  
 class BuilderBase {
-    public cbs: Collection<string, Command>;
+    public cbs?: Collection<string, Command>;
+    private cbr?: ActionRowBuilder<ButtonBuilder>;
     public deleted: boolean;
     public interaction: CommandInteraction;
     public coll: InteractionCollector<ButtonInteraction> | undefined;
 
-    constructor(interaction: CommandInteraction) {
-        this.cbs = new Collection();
-
+    constructor(interaction: CommandInteraction, cbs?: CommandButton[]) {
         this.deleted = false;
 
         this.interaction = interaction;
 
         this.coll = undefined;
+
+        if (cbs) {
+            const row = new ActionRowBuilder<ButtonBuilder>();
+            this.cbs = new Collection();
+
+            for (const cb of cbs) {
+                this.cbs.set((cb.button.data as APIButtonComponentWithCustomId).custom_id, cb.command);
+                row.addComponents(cb.button);
+            }
+
+            this.cbr = row;
+        }
     }
 
     /* Function from the collector to handle base features */
@@ -44,7 +60,7 @@ class BuilderBase {
         }
 
         /* Handles command buttons */
-        const command = this.cbs.get(i.customId);
+        const command = this.cbs?.get(i.customId);
         if (command) {
             await command.execute(this.interaction);
             this.coll?.stop();
@@ -70,8 +86,12 @@ class BuilderBase {
             .setEmoji({ name: '🗑️' })
             .setStyle(ButtonStyle.Danger);
 
-        if (!options.components?.length) {
-            options.components = [new ActionRowBuilder<ButtonBuilder>()];
+        if (!options.components) options.components = [];
+
+        if (this.cbr) {
+            options.components.push(this.cbr);
+        } else if (!options.components?.length) {
+            options.components.push(new ActionRowBuilder<ButtonBuilder>());
         }
 
         const row = options.components?.[0] as ActionRowBuilder<ButtonBuilder>;
