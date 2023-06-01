@@ -1,13 +1,14 @@
 import { CommandInteraction } from 'discord.js';
-import Command from '../../Command';
+import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import { PlayerWithServerMeta } from '../../types/players';
 import PlayerServersBuilder from '../../builders/player/builder-player-servers';
 
-class PlayerServersCommand implements Command {
+class PlayerServersCommand extends PlayerAutocompleteCommand {
     public name = 'player-servers';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    public constructor() {
+        super();
+    }
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;

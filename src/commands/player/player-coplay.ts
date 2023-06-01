@@ -1,14 +1,15 @@
 import { CommandInteraction } from 'discord.js';
-import Command from '../../Command';
+import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import ms from 'ms';
 import { PlayerCoplayData } from '../../types/players';
 import PlayerCoplayBuilder from '../../builders/player/builder-player-coplay';
 
-class PlayerCoplayCommand implements Command {
+class PlayerCoplayCommand extends PlayerAutocompleteCommand {
     public name = 'player-coplay';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    public constructor() {
+        super();
+    }
 
     public async execute(interaction: CommandInteraction) {
         const player = interaction.options.get('player')?.value as string;

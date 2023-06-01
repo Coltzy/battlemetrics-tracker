@@ -13,6 +13,7 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setDescription('The query of the search.')
                     .setRequired(true)
                     .setMaxLength(128)
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command =>
@@ -45,6 +46,7 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setDescription('The query of the leaderboard search.')
                     .setRequired(true)
                     .setMaxLength(128)
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command =>
@@ -66,16 +68,29 @@ const ServerInteraction = new SlashCommandBuilder()
                     .setMaxLength(32)
             )
     )
-        .addSubcommand(command =>
-            command
-                .setName('players')
-                .setDescription('Shows a list of all online players on a server.')
+    .addSubcommand(command =>
+        command
+            .setName('players')
+            .setDescription('Shows a list of all online players on a server.')
             .addStringOption(option =>
                 option
                     .setName('query')
                     .setDescription('The query for the server to list.')
                     .setRequired(true)
                     .setMaxLength(128)
+                    .setAutocomplete(true)
+            )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('favorite')
+            .setDescription('Add a server to your favorite list.')
+            .addStringOption(option =>
+                    option
+                        .setName('query')
+                        .setDescription('The query for the server to favorite.')
+                        .setRequired(true)
+                        .setMaxLength(128)
             )
     );
 

@@ -1,14 +1,15 @@
 import { CommandInteraction, inlineCode } from 'discord.js';
-import Command from '../../Command';
+import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
 import ServerLeaderboardBuilder from '../../builders/server/builder-server-leaderboard';
 import Util from '../../Util';
 import PaginationBuilder from '../../builders/PaginationBuilder';
 
-class ServerLeaderboardCommand implements Command {
+class ServerLeaderboardCommand extends ServerAutocompleteCommand {
     public name = 'server-leaderboard';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    public constructor() {
+        super();
+    }
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;

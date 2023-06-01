@@ -14,7 +14,7 @@ class CommandHandler {
         this.dir = dir;
 
         client.on(Events.InteractionCreate, async (interaction) => {
-            if (!interaction.isChatInputCommand()) return;
+            if (!interaction.isChatInputCommand() && !interaction.isAutocomplete()) return;
 
             const sub = interaction.options.getSubcommand(false);
             let name = interaction.commandName;
@@ -27,14 +27,18 @@ class CommandHandler {
                 command = this.modules.get(name);
             }
 
-            if (command) {
-                try {
+            if (!command) return;
+
+            try {
+                if (interaction.isAutocomplete()) {
+                    await command.autocomplete?.(interaction);
+                } else {
                     await command.execute(interaction);
                     Logger.info(`Command ${command.name} was used.`);
-                } catch (err) {
-                    Logger.error(`An error has occured whilst executing command: ${name}`);
-                    console.error(err);
                 }
+            } catch (err) {
+                Logger.error(`An error has occured whilst executing command: ${name}`);
+                console.error(err);
             }
         });
 
@@ -48,7 +52,10 @@ class CommandHandler {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { default: Base } = require(path.resolve(dir));
             const command = new Base();
-            this.modules.set(command.name, command);
+            
+            if (command.name) {
+                this.modules.set(command.name, command);
+            }
         }
     }
 }

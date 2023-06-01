@@ -1,13 +1,14 @@
 import { CommandInteraction } from 'discord.js';
-import Command from '../../Command';
+import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import { PlayerWithIdentifers } from '../../types/players';
 import PlayerIdentifiersBuilder from '../../builders/player/builder-player-identifiers';
 
-class PlayerIdentifiersCommand implements Command {
+class PlayerIdentifiersCommand extends PlayerAutocompleteCommand {
     public name = 'player-identifiers';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    public constructor() {
+        super();
+    }
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;

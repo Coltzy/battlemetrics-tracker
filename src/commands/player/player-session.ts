@@ -1,13 +1,14 @@
 import { CommandInteraction } from 'discord.js';
-import Command from '../../Command';
+import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import PlayerSessionBuilder from '../../builders/player/builder-player-session';
 import PaginationBuilder from '../../builders/PaginationBuilder';
 
-class PlayerSessionCommand implements Command {
+class PlayerSessionCommand extends PlayerAutocompleteCommand {
     public name = 'player-session';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    public constructor() {
+        super();
+    }
 
     public async execute(interaction: CommandInteraction) {
         const player = interaction.options.get('player')?.value as string;

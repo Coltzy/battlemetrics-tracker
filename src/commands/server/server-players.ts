@@ -1,14 +1,15 @@
 import { CommandInteraction, inlineCode } from 'discord.js';
-import Command from '../../Command';
+import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
 import Util from '../../Util';
 import { ServerWithPlayerList } from '../../types/servers';
 import ServerPlayersBuilder from '../../builders/server/builder-server-players';
 
-class ServerPlayersCommand implements Command {
+class ServerPlayersCommand extends ServerAutocompleteCommand {
     public name = 'server-players';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    public constructor() {
+        super();
+    }
 
     public async execute(interaction: CommandInteraction) {
         const query = interaction.options.get('query')?.value as string;

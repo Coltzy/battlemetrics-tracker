@@ -12,6 +12,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setName('query')
                     .setDescription('The ID of the player.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command =>
@@ -27,6 +28,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                 option
                     .setName('server')
                     .setDescription('The filter for a server search.')
+                    .setAutocomplete(true)
             )
             .addIntegerOption(option =>
                 option
@@ -50,6 +52,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setName('query')
                     .setDescription('The ID of the player.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command =>
@@ -61,6 +64,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setName('query')
                     .setDescription('The ID of the player.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
         )
     .addSubcommand(command =>
@@ -72,6 +76,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setName('player')
                     .setDescription('The query for the player search.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
             .addStringOption(option => 
                 option
@@ -88,11 +93,24 @@ const PlayerInteraction = new SlashCommandBuilder()
                     .setName('player')
                     .setDescription('The query for the player search.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
             .addStringOption(option =>
                 option
                     .setName('server')
                     .setDescription('The query for a server search to filter the sessions too.')
+            )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('favorite')
+            .setDescription('Add a players to your favorite list.')
+            .addStringOption(option =>
+                    option
+                        .setName('query')
+                        .setDescription('The query for the player to favorite.')
+                        .setRequired(true)
+                        .setMaxLength(128)
             )
     );
 
