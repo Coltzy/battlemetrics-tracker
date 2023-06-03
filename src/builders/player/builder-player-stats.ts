@@ -1,4 +1,4 @@
-import { CommandInteraction, inlineCode, hyperlink, quote, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { CommandInteraction, inlineCode, hyperlink, quote, ButtonBuilder, ButtonStyle, time, TimestampStyles } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import BuilderBase from '../BuilderBase';
 import { PlayerWithServerMeta } from '../../types/players';
@@ -16,6 +16,9 @@ class PlayerStatsBuilder extends BuilderBase {
     ) {
         player.included.sort((a, b) => Date.parse(b.meta.lastSeen) - Date.parse(a.meta.lastSeen));
         const online = player.included.filter((s) => s.meta.online);
+
+        const last = moment(player.included[0]?.meta.lastSeen || player.data.attributes.createdAt).unix();
+        const first = moment(player.data.attributes.createdAt).unix();
         
         const embed = new EmbedBuilder()
             .setTitle(player.data.attributes.name)
@@ -29,12 +32,12 @@ class PlayerStatsBuilder extends BuilderBase {
             .addFields(
                 {
                     name: 'First seen',
-                    value: quote(moment(player.data.attributes.createdAt).fromNow()),
+                    value: quote(time(first, TimestampStyles.RelativeTime)),
                     inline: true
                 },
                 {
                     name: 'Last seen',
-                    value: quote(online.length ? 'now' : moment(player.included[0]?.meta.lastSeen || player.data.attributes.createdAt).fromNow()),
+                    value: quote(online.length ? 'now' : time(last, TimestampStyles.RelativeTime)),
                     inline: true
                 }
             );

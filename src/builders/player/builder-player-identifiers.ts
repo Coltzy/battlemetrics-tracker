@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, TimestampStyles, time } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import { PlayerWithIdentifers } from '../../types/players';
 import Util from '../../Util';
@@ -27,7 +27,7 @@ class PlayerIdentifiersBuilder extends SliderBuilder {
                     chunk.map(identifiers => {
                         return {
                             name: identifiers.attributes.identifier,
-                            value: '> Last seen ' + moment(identifiers.attributes.lastSeen).fromNow()
+                            value: '> Last seen ' + time(moment(identifiers.attributes.lastSeen).unix(), TimestampStyles.RelativeTime)
                         };
                     })
                 );

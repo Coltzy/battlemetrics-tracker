@@ -1,4 +1,4 @@
-import { CommandInteraction, hyperlink } from 'discord.js';
+import { CommandInteraction, TimestampStyles, hyperlink, time } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import SliderBuilder from '../SliderBuilder';
 import moment from 'moment';
@@ -25,9 +25,11 @@ class ServerPlayersBuilder extends SliderBuilder {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
                     chunk.map(player => {
+                        const date = moment(player.attributes.updatedAt);
+
                         return {
                             name: player.attributes.name,
-                            value: `> Playtime: ${moment(player.attributes.updatedAt).fromNow(true)} (${hyperlink(player.id, Util.playerToUrl(player))})`
+                            value: `> Playtime: ${time(date.unix(), TimestampStyles.RelativeTime)} (${hyperlink(player.id, Util.playerToUrl(player))})`
                         };
                     })
                 );

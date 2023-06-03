@@ -1,4 +1,4 @@
-import { bold } from 'discord.js';
+import { TimestampStyles, time } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import { Player, PlayerSessionDataWithServers } from '../../types/players';
 import Util from '../../Util';
@@ -35,9 +35,9 @@ class PlayerSessionBuilder extends BuildMethodBase {
                         return {
                             name: server?.attributes.name || '\u200b',
                             value: stripIndent`
-                            > ${bold('Start')}: ${start.fromNow()} - ${start.format('l hh:mm a')}
-                            > ${bold('Stop')}: ${stop.fromNow()} - ${stop.format('l hh:mm a')}
-                            > ${bold('Duration')}: ${moment.duration(stop.diff(start)).format('*hh:mm')}
+                            > Start: ${time(start.unix(), TimestampStyles.LongDateTime)}
+                            > Stop: ${time(stop.unix(), TimestampStyles.LongDateTime)}
+                            > Duration: ${moment.duration(stop.diff(start)).format('*hh:mm')}
                             `
                         };
                     })

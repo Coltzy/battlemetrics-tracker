@@ -1,4 +1,4 @@
-import { CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink, TimestampStyles, time } from 'discord.js';
 import EmbedBuilder from '../../../utils/EmbedBuilder';
 import { RustServerData } from '../../../types/servers';
 import moment from 'moment';
@@ -40,7 +40,7 @@ class RustServerStatsBuilder extends ServerStatsBaseBuilder {
                 },
                 {
                     name: 'Last wipe',
-                    value: moment(attributes.details.rust_last_wipe).format('L'),
+                    value: time(moment(attributes.details.rust_last_wipe).unix(), TimestampStyles.ShortDate),
                     inline: true,
                 },
                 {
@@ -60,7 +60,7 @@ class RustServerStatsBuilder extends ServerStatsBaseBuilder {
                 },
                 {
                     name: 'Entity count',
-                    value: attributes.details.rust_ent_cnt_i.toString(),
+                    value: attributes.details.rust_ent_cnt_i.toLocaleString(),
                     inline: true
                 },
                 { 

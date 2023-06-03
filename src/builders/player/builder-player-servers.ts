@@ -1,4 +1,4 @@
-import { CommandInteraction, hyperlink } from 'discord.js';
+import { CommandInteraction, TimestampStyles, hyperlink, time } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import { PlayerWithServerMeta } from '../../types/players';
 import moment from 'moment';
@@ -30,10 +30,12 @@ class PlayerServersBuilder extends SliderBuilder {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
                     chunk.map(server => {
+                        const date = moment(server.meta.firstSeen).unix();
+
                         return {
                             name: server.attributes.name,
                             value: stripIndent`
-                                > First seen: ${moment(server.meta.firstSeen).fromNow()}
+                                > First seen: ${time(date, TimestampStyles.RelativeTime)}
                                 > Time played: ${moment.duration(server.meta.timePlayed, 'seconds').format('HH [hours] mm [mins]')}
                                 > Id: ${hyperlink(server.id, Util.serverToUrl(server))}
                             `
