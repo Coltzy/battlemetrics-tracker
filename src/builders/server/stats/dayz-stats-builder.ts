@@ -1,13 +1,13 @@
-import { CommandInteraction, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
 import EmbedBuilder from '../../../utils/EmbedBuilder';
-import { GmodServerData } from '../../../types/servers';
-import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { DayzServerData } from '../../../types/servers';
+import ServerStatsBaseBuilder from '../server-stats-base-builder';
 import { Page } from '../../PageBuilder';
 
-class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
+class DayzServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
         interaction: CommandInteraction, 
-        server: GmodServerData,
+        server: DayzServerData,
     ) {
         const { attributes } = server;
 
@@ -40,27 +40,44 @@ class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
                     inline: true
                 },
                 {
-                    name: 'Map',
-                    value: attributes.details.map,
+                    name: 'Time',
+                    value: attributes.details.time,
                     inline: true
                 },
                 {
                     name: 'Password Protected',
                     value: attributes.details.password.toString(),
                     inline: true
+                },
+                {
+                    name: 'Official Server',
+                    value: attributes.details.official.toString(),
+                    inline: true
+                },
+                {
+                    name: 'Version',
+                    value: attributes.details.version,
+                    inline: true
+                },
+                {
+                    name: 'Third Person',
+                    value: attributes.details.third_person.toString(),
+                    inline: true
                 }
             );
 
-        const rules = new EmbedBuilder()
-            .setTitle('Server Rules');
+        const mods = new EmbedBuilder()
+            .setTitle('Mods');
 
-        if (!attributes.details.rules) {
-            rules.setDescription('This server dosen\'t have public rules.');
-        } else {
-            rules.setDescription(
-                Object.entries(attributes.details.rules)
-                    .map(([key, value]) => inlineCode(key) + ': ' + value).join('\n')
+        if (attributes.details.modIds.length) {
+            const path = 'https://steamcommunity.com/sharedfiles/filedetails/?id=';
+            mods.setDescription(
+                Object.entries(attributes.details.modIds).map((id, index) => {
+                    return hyperlink(attributes.details.modNames[index], path + id);
+                }).join('\n')
             );
+        } else {
+            mods.setDescription('This server dosen\'t have mods.');
         }
 
         const pages = [
@@ -72,9 +89,9 @@ class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
                     .setStyle(ButtonStyle.Primary)
             },
             {
-                embed: rules,
+                embed: mods,
                 button: new ButtonBuilder()
-                    .setLabel('Rules')
+                    .setLabel('Mods')
                     .setCustomId('02')
                     .setStyle(ButtonStyle.Primary)
             }
@@ -84,4 +101,4 @@ class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
     }
 }
 
-export default GmodServerStatsBuilder;
+export default DayzServerStatsBuilder;

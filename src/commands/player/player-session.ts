@@ -1,6 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
-import PlayerSessionBuilder from '../../builders/player/builder-player-session';
+import PlayerSessionBuilder from '../../builders/player/player-session-builder';
 import PaginationBuilder from '../../builders/PaginationBuilder';
 
 class PlayerSessionCommand extends PlayerAutocompleteCommand {

@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import { PlayerWithIdentifers } from '../../types/players';
-import PlayerIdentifiersBuilder from '../../builders/player/builder-player-identifiers';
+import PlayerIdentifiersBuilder from '../../builders/player/player-identifiers-builder';
 
 class PlayerIdentifiersCommand extends PlayerAutocompleteCommand {
     public name = 'player-identifiers';

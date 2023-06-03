@@ -2,7 +2,7 @@ import { CommandInteraction, inlineCode } from 'discord.js';
 import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
 import Util from '../../Util';
 import { ServerWithPlayerList } from '../../types/servers';
-import ServerPlayersBuilder from '../../builders/server/builder-server-players';
+import ServerPlayersBuilder from '../../builders/server/server-players-builder';
 
 class ServerPlayersCommand extends ServerAutocompleteCommand {
     public name = 'server-players';

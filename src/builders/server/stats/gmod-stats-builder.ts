@@ -1,13 +1,13 @@
-import { CommandInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
 import EmbedBuilder from '../../../utils/EmbedBuilder';
-import { ArkServerData } from '../../../types/servers';
-import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { GmodServerData } from '../../../types/servers';
+import ServerStatsBaseBuilder from '../server-stats-base-builder';
 import { Page } from '../../PageBuilder';
 
-class ArkServerStatsBuilder extends ServerStatsBaseBuilder {
+class GmodServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
         interaction: CommandInteraction, 
-        server: ArkServerData,
+        server: GmodServerData,
     ) {
         const { attributes } = server;
 
@@ -45,35 +45,22 @@ class ArkServerStatsBuilder extends ServerStatsBaseBuilder {
                     inline: true
                 },
                 {
-                    name: 'In-game Day',
-                    value: attributes.details.time,
-                    inline: true
-                },
-                { 
-                    name: 'Server Type', 
-                    value: attributes.details.offical ? 'Offical' : 'Unoffical', 
-                    inline: true
-                },
-                {
-                    name: 'PVE',
-                    value: attributes.details.pve.toString(),
+                    name: 'Password Protected',
+                    value: attributes.details.password.toString(),
                     inline: true
                 }
             );
 
-        const mods = new EmbedBuilder()
-            .setTitle('Server Mods');
+        const rules = new EmbedBuilder()
+            .setTitle('Server Rules');
 
-        if (attributes.details.modIds.length) {
-            const path = 'https://steamcommunity.com/sharedfiles/filedetails/?id=';
-            
-            mods.setDescription(
-                attributes.details.modIds.map((id, index) => {
-                    return `[${attributes.details.modNames[index]}](${path + id})`;
-                }).join('\n')
-            );
+        if (!attributes.details.rules) {
+            rules.setDescription('This server dosen\'t have public rules.');
         } else {
-            mods.setDescription('This server dosen\'t have any mods.');
+            rules.setDescription(
+                Object.entries(attributes.details.rules)
+                    .map(([key, value]) => inlineCode(key) + ': ' + value).join('\n')
+            );
         }
 
         const pages = [
@@ -85,9 +72,9 @@ class ArkServerStatsBuilder extends ServerStatsBaseBuilder {
                     .setStyle(ButtonStyle.Primary)
             },
             {
-                embed: mods,
+                embed: rules,
                 button: new ButtonBuilder()
-                    .setLabel('Mods')
+                    .setLabel('Rules')
                     .setCustomId('02')
                     .setStyle(ButtonStyle.Primary)
             }
@@ -97,4 +84,4 @@ class ArkServerStatsBuilder extends ServerStatsBaseBuilder {
     }
 }
 
-export default ArkServerStatsBuilder;
+export default GmodServerStatsBuilder;

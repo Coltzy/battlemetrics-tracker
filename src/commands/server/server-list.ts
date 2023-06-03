@@ -2,7 +2,7 @@ import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInt
 import Command from '../../Command';
 import iso3311a2 from 'iso-3166-1-alpha-2';
 import { BaseServerData } from '../../types/servers';
-import ServerListBuilder from '../../builders/server/builder-server-list';
+import ServerListBuilder from '../../builders/server/server-list-builder';
 import FilterBuilder, { FilterButton } from '../../builders/FilterBuilder';
 import { GameChoiceData } from '../../Constants';
 

@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import { PlayerWithServerMeta } from '../../types/players';
-import PlayerServersBuilder from '../../builders/player/builder-player-servers';
+import PlayerServersBuilder from '../../builders/player/player-servers-builder';
 
 class PlayerServersCommand extends PlayerAutocompleteCommand {
     public name = 'player-servers';

@@ -2,7 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import ms from 'ms';
 import { PlayerCoplayData } from '../../types/players';
-import PlayerCoplayBuilder from '../../builders/player/builder-player-coplay';
+import PlayerCoplayBuilder from '../../builders/player/player-coplay-builder';
 
 class PlayerCoplayCommand extends PlayerAutocompleteCommand {
     public name = 'player-coplay';

@@ -4,7 +4,7 @@ import { bold } from '@discordjs/builders';
 import PageBuilder, { Page } from '../PageBuilder';
 import { Game } from '../../types/game';
 import iso3311a2 from 'iso-3166-1-alpha-2';
-import GameUtils from './builder-game-utils';
+import GameUtils from './game-utils-builder';
 
 class GameStatsBuilder extends PageBuilder {
     constructor(

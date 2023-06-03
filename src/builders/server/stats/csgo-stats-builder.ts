@@ -1,7 +1,7 @@
 import { CommandInteraction, ButtonBuilder, ButtonStyle, inlineCode } from 'discord.js';
 import EmbedBuilder from '../../../utils/EmbedBuilder';
 import { CsgoServerData } from '../../../types/servers';
-import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import ServerStatsBaseBuilder from '../server-stats-base-builder';
 import { Page } from '../../PageBuilder';
 
 class CsgoServerStatsBuilder extends ServerStatsBaseBuilder {

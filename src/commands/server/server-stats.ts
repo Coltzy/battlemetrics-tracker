@@ -2,12 +2,12 @@ import { CommandInteraction } from 'discord.js';
 import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
 import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData, DayzServerData, CsServerData } from '../../types/servers';
 
-import RustServerStatsBuilder from '../../builders/server/stats/builder-rust-stats';
-import ArkServerStatsBuilder from '../../builders/server/stats/builder-ark-stats';
-import CsgoServerStatsBuilder from '../../builders/server/stats/builder-csgo-stats';
-import MinecraftServerStatsBuilder from '../../builders/server/stats/builder-minecraft-stats';
-import GmodServerStatsBuilder from '../../builders/server/stats/builder-gmod-stats';
-import DayzServerStatsBuilder from '../../builders/server/stats/builder-dayz-stats';
+import RustServerStatsBuilder from '../../builders/server/stats/rust-stats-builder';
+import ArkServerStatsBuilder from '../../builders/server/stats/ark-stats-builder';
+import CsgoServerStatsBuilder from '../../builders/server/stats/csgo-stats-builder';
+import MinecraftServerStatsBuilder from '../../builders/server/stats/minecraft-stats-builder';
+import GmodServerStatsBuilder from '../../builders/server/stats/gmod-stats-builder';
+import DayzServerStatsBuilder from '../../builders/server/stats/dayz-stats-builder';
 
 type AllServerData = RustServerData & ArkServerData & CsgoServerData & MinecraftServerData & GmodServerData & DayzServerData & CsServerData;
 

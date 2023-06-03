@@ -1,6 +1,6 @@
 import { CommandInteraction, inlineCode } from 'discord.js';
 import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
-import ServerLeaderboardBuilder from '../../builders/server/builder-server-leaderboard';
+import ServerLeaderboardBuilder from '../../builders/server/server-leaderboard-builder';
 import Util from '../../Util';
 import PaginationBuilder from '../../builders/PaginationBuilder';
 

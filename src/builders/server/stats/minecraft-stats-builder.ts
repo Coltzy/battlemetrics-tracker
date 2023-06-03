@@ -1,23 +1,24 @@
-import { CommandInteraction, ButtonBuilder, ButtonStyle, hyperlink } from 'discord.js';
+import { CommandInteraction, ButtonBuilder, ButtonStyle } from 'discord.js';
 import EmbedBuilder from '../../../utils/EmbedBuilder';
-import { DayzServerData } from '../../../types/servers';
-import ServerStatsBaseBuilder from '../builder-server-stats-base';
+import { MinecraftServerData } from '../../../types/servers';
+import ServerStatsBaseBuilder from '../server-stats-base-builder';
 import { Page } from '../../PageBuilder';
 
-class DayzServerStatsBuilder extends ServerStatsBaseBuilder {
+class MinecraftServerStatsBuilder extends ServerStatsBaseBuilder {
     constructor(
         interaction: CommandInteraction, 
-        server: DayzServerData,
+        server: MinecraftServerData,
     ) {
         const { attributes } = server;
 
         const stats = new EmbedBuilder()
             .setTitle(attributes.name)
+            .setDescription(attributes.details.minecraft_clean_description)
             .addFields(
                 {
                     name: 'Rank',
                     value: '#' + attributes.rank.toString(), 
-                    inline: true 
+                    inline: true
                 },
                 { 
                     name: 'Player count', 
@@ -40,44 +41,24 @@ class DayzServerStatsBuilder extends ServerStatsBaseBuilder {
                     inline: true
                 },
                 {
-                    name: 'Time',
-                    value: attributes.details.time,
-                    inline: true
-                },
-                {
-                    name: 'Password Protected',
-                    value: attributes.details.password.toString(),
-                    inline: true
-                },
-                {
-                    name: 'Official Server',
-                    value: attributes.details.official.toString(),
-                    inline: true
-                },
-                {
                     name: 'Version',
-                    value: attributes.details.version,
+                    value: `${attributes.details.minecraft_version_name} (Protocol ${attributes.details.minecraft_version.protocol})`,
                     inline: true
                 },
                 {
-                    name: 'Third Person',
-                    value: attributes.details.third_person.toString(),
+                    name: 'Modded',
+                    value: attributes.details.minecraft_modded.toString(),
                     inline: true
                 }
             );
 
         const mods = new EmbedBuilder()
-            .setTitle('Mods');
-
-        if (attributes.details.modIds.length) {
-            const path = 'https://steamcommunity.com/sharedfiles/filedetails/?id=';
-            mods.setDescription(
-                Object.entries(attributes.details.modIds).map((id, index) => {
-                    return hyperlink(attributes.details.modNames[index], path + id);
-                }).join('\n')
-            );
+            .setTitle('Server Mods');
+            
+        if (!attributes.details.minecraft_mods?.length) {
+            mods.setDescription('This is not a modded server.');
         } else {
-            mods.setDescription('This server dosen\'t have mods.');
+            mods.setDescription(attributes.details.minecraft_mods.join('\n'));
         }
 
         const pages = [
@@ -101,4 +82,4 @@ class DayzServerStatsBuilder extends ServerStatsBaseBuilder {
     }
 }
 
-export default DayzServerStatsBuilder;
+export default MinecraftServerStatsBuilder;

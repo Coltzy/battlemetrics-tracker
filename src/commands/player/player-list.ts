@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import ServerAutocompleteCommand from '../server/autocomplete/ServerCommandAutocomplete';
 import { PlayerSearch } from '../../types/players';
-import PlayerListBuilder from '../../builders/player/builder-player-list';
+import PlayerListBuilder from '../../builders/player/player-list-builder';
 import FilterBuilder, { FilterButton } from '../../builders/FilterBuilder';
 
 class PlayerListCommand extends ServerAutocompleteCommand {

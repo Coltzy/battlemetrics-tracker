@@ -3,7 +3,7 @@ import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
 import { Game } from '../../types/game';
-import GameStatsBuilder from '../../builders/game/builder-game-stats';
+import GameStatsBuilder from '../../builders/game/game-stats-builder';
 import { BMErrors } from '../../types/BMError';
 import { GameChoiceData } from '../../Constants';
 
