@@ -13,7 +13,7 @@ class EmbedBuilder extends Builder {
     }
 
     public addFields(...fields: APIEmbedField[]) {
-        fields = fields.map(({ name, value }) => ({ name: Util.strlen(name, 128), value: Util.strlen(value, 512) }));
+        fields = fields.map(({ name, value, inline }) => ({ name: Util.strlen(name, 128), value: Util.strlen(value, 512), inline }));
         return super.addFields(fields);
     }
 
