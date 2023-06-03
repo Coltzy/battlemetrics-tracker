@@ -1,9 +1,10 @@
-import { CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import iso3311a2 from 'iso-3166-1-alpha-2';
 import { BaseServerData } from '../../types/servers';
 import ServerListBuilder from '../../builders/server/builder-server-list';
 import FilterBuilder, { FilterButton } from '../../builders/FilterBuilder';
+import { GameChoiceData } from '../../Constants';
 
 class ServerListCommand implements Command {
     public name = 'server-list';
@@ -15,6 +16,8 @@ class ServerListCommand implements Command {
         const server = interaction.options.get('query')?.value as string | undefined;
         const game = interaction.options.get('game')?.value as string | undefined;
         const country = interaction.options.get('country')?.value as string | undefined;
+
+        console.log(country);
 
         if (country && !iso3311a2.getCountry(country.toUpperCase())) {
             return await interaction.respond('This is an invalid ISO country code.');
@@ -38,7 +41,7 @@ class ServerListCommand implements Command {
         const builder = new ServerListBuilder();
         const slides = builder.build(response.data as BaseServerData[]);
         const uri = interaction.client.BMF.uri('servers', options);
-
+        
         const filters = [
             { 
                 name: 'Rank', 
@@ -58,6 +61,26 @@ class ServerListCommand implements Command {
         ] as FilterButton[];
 
         new FilterBuilder(interaction, slides, uri, response.links, builder, filters);
+    }
+
+    public async autocomplete(interaction: AutocompleteInteraction) {
+        const focused = interaction.options.getFocused(true);
+        const value = focused.value.toLocaleLowerCase();
+        let choices: ApplicationCommandOptionChoiceData[];
+
+        if (focused.name == 'country') {
+            const countries = iso3311a2.getData();
+            choices = Object.entries(countries).map(([key, value]) => ({ name: value as string, value: key }));
+            
+            choices = choices.filter((choice) => choice.name.toLocaleLowerCase().startsWith(value));
+        } else {
+            choices = GameChoiceData.filter((choice) => choice.name.toLowerCase().startsWith(value)).slice(0, 24);
+            await interaction.respond(choices);
+        }
+
+        choices = choices.slice(0, 25);
+        
+        await interaction.respond(choices);
     }
 }
 

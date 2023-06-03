@@ -29,11 +29,13 @@ const ServerInteraction = new SlashCommandBuilder()
                 option
                     .setName('game')
                     .setDescription('The game name to filter the servers.')
+                    .setAutocomplete(true)
             )
             .addStringOption(option =>
                 option
                     .setName('country')
                     .setDescription('The ISO country code to filter the servers.')
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command => 

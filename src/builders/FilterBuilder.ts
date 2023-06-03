@@ -37,7 +37,7 @@ class FilterBuilder extends PaginationBuilder {
         this.filters = filters;
 
         /* Gets the sorting method from the uri */
-        const regex = new RegExp(/https:\/\/api\.battlemetrics\.com\/.*sort=(.*)/);
+        const regex = new RegExp(/https:\/\/api\.battlemetrics\.com\/.*sort=(.*)&/);
         const match = uri.match(regex);
         this.sort = match ? match[1] : filters.find((filter) => filter.remove)?.value as string;
 

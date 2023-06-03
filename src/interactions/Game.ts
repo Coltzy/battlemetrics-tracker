@@ -9,9 +9,10 @@ const GameInteraction = new SlashCommandBuilder()
             .setDescription('Fetch game stats.')
             .addStringOption(option => 
                 option
-                    .setName('id')
-                    .setDescription('The ID of the game.')
+                    .setName('query')
+                    .setDescription('The name of the game.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
     );
 

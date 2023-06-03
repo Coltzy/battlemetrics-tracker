@@ -1,10 +1,11 @@
-import { CommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import Command from '../../Command';
 import { inlineCode } from '@discordjs/builders';
 import Logger from '../../Logger';
 import { Game } from '../../types/game';
 import GameStatsBuilder from '../../builders/game/builder-game-stats';
 import { BMErrors } from '../../types/BMError';
+import { GameChoiceData } from '../../Constants';
 
 class GameStatsCommand implements Command {
     public name = 'game-stats';
@@ -38,6 +39,12 @@ class GameStatsCommand implements Command {
         }
 
         new GameStatsBuilder(interaction, data);
+    }
+
+    public async autocomplete(interaction: AutocompleteInteraction) {
+        const focused = interaction.options.getFocused().toLowerCase();
+        const choices = GameChoiceData.filter((choice) => choice.name.toLowerCase().startsWith(focused)).slice(0, 24);
+        await interaction.respond(choices);
     }
 }
 
