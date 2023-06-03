@@ -31,7 +31,7 @@ class PlayerCoplayBuilder extends SliderBuilder {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map(coplay => {
+                    ...chunk.map((coplay) => {
                         const duration = moment.duration(coplay.attributes.duration, 'seconds');
                         const link = hyperlink(coplay.id, `https://www.battlemetrics.com/players/${coplay.id}`);
 

@@ -21,7 +21,7 @@ class ServerListBuilder extends FitlerBuildBase {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map((chunk) => {
+                    ...chunk.map((chunk) => {
                         return {
                             name: chunk.attributes.name || '\u200b',
                             value: `> Id: ${hyperlink(chunk.id, Util.serverToUrl(chunk))}`

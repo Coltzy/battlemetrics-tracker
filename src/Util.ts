@@ -21,6 +21,14 @@ CommandInteraction.prototype.respond = async function (options: InteractionReply
 };
 
 class Util {
+    static strlen(content: string, len: number) {
+        if (content.length > len) {
+            content = content.substring(0, len).slice(0, -3) + '...';
+        }
+
+        return content;
+    }
+    
     static serverToUrl(server: BaseServerData) {
         return `https://www.battlemetrics.com/servers/${server.relationships.game.data.id}/${server.id}`;
     }

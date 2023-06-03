@@ -29,7 +29,7 @@ class PlayerServersBuilder extends SliderBuilder {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map(server => {
+                    ...chunk.map((server) => {
                         const date = moment(server.meta.firstSeen).unix();
 
                         return {

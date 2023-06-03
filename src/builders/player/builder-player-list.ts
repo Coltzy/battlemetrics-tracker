@@ -21,10 +21,10 @@ class PlayerListBuilder extends BuildMethodBase {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map((chunk) => {
+                    ...chunk.map((player) => {
                         return {
-                            name: chunk.attributes.name,
-                            value: `> Id: ${hyperlink(chunk.id, Util.playerToUrl(chunk))}`
+                            name: player.attributes.name,
+                            value: `> Id: ${hyperlink(player.id, Util.playerToUrl(player))}`
                         };
                     })
                 );

@@ -24,7 +24,7 @@ class ServerPlayersBuilder extends SliderBuilder {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map(player => {
+                    ...chunk.map((player) => {
                         const date = moment(player.attributes.updatedAt);
 
                         return {

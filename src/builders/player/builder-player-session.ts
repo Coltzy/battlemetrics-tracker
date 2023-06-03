@@ -27,7 +27,7 @@ class PlayerSessionBuilder extends BuildMethodBase {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map((session) => {
+                    ...chunk.map((session) => {
                         const server = sessions.included.find((server) => server.id == session.relationships.server.data.id);
                         const start = moment(session.attributes.start);
                         const stop = moment(session.attributes.stop);

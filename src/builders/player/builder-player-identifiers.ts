@@ -24,7 +24,7 @@ class PlayerIdentifiersBuilder extends SliderBuilder {
         for (const chunk of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
                 .addFields(
-                    chunk.map(identifiers => {
+                    ...chunk.map((identifiers) => {
                         return {
                             name: identifiers.attributes.identifier,
                             value: '> Last seen ' + time(moment(identifiers.attributes.lastSeen).unix(), TimestampStyles.RelativeTime)

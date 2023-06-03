@@ -26,14 +26,16 @@ class ServerLeaderboardBuilder extends FitlerBuildBase {
 
         for (const lb of chunks) {
             const embed = new EmbedBuilder(base.toJSON())
-                .addFields(lb.map((player) => {
-                    const duration = moment.duration(player.attributes.value, 'seconds');
+                .addFields(
+                    ...lb.map((player) => {
+                        const duration = moment.duration(player.attributes.value, 'seconds');
 
-                    return {
-                        name: `#${player.attributes.rank} ${player.attributes.name}`,
-                        value: `> ${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
-                    };
-                }));
+                        return {
+                            name: `#${player.attributes.rank} ${player.attributes.name}`,
+                            value: `> ${duration.format('HH [hours] mm [mins]')} (${hyperlink(player.id, `https://www.battlemetrics.com/players/${player.id}`)})`
+                        };
+                    })
+                );
 
             slides.push(embed);
         }
