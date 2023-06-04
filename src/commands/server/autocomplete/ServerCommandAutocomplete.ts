@@ -1,6 +1,5 @@
 import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import Command from '../../../Command';
-import ServerModel from '../../../models/ServerModel';
 
 class ServerAutocompleteCommand implements Command {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -12,13 +11,16 @@ class ServerAutocompleteCommand implements Command {
     }
 
     public async autocomplete(interaction: AutocompleteInteraction) {
-        const focused = interaction.options.getFocused();
-        const docs = await ServerModel.find({ user: interaction.user.id });
-        const choices  = docs.map((doc) => ({ name: doc.name, value: doc.id }));
+        const focused = interaction.options.getFocused().toLocaleLowerCase();
+        const docs = interaction.client.servers.get(interaction.user.id);
 
-        await interaction.respond(
-            choices.filter((choice) => choice.name.startsWith(focused))
-        );
+        if (docs) {
+            const choices  = docs.map((doc) => ({ name: doc.name, value: doc.id }));
+
+            await interaction.respond(
+                choices.filter((choice) => choice.name.toLowerCase().startsWith(focused))
+            );
+        }
     }
 }
 

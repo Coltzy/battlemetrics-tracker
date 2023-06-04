@@ -18,21 +18,21 @@ class PlayerFavoriteCommand implements Command {
             return;
         } 
 
-        const docs = await PlayerModel.find({ user: interaction.user.id });
+        const doc = interaction.client.players.get(interaction.user.id);
+        const { id, name } = response.data.attributes;
         
-        if (docs.find((doc) => doc.id == response.data.id)) {
+        if (doc?.find((doc) => doc.id == id)) {
             return await interaction.respond('This server is already included in your favorite list.');
-        } else if (docs.length >= 25) {
+        } else if (doc && doc.length >= 25) {
             return await interaction.respond('You can only have 25 servers added to your favorite list.');
         }
+        
+        const { user } = interaction;
+        
+        const model = new PlayerModel({ user: user.id, name,id });
+        const saved = await model.save();
 
-        const model = new PlayerModel({
-            id: response.data.id,
-            name: response.data.attributes.name || '',
-            user: interaction.user.id
-        });
-
-        await model.save();
+        interaction.client.servers.set(user.id, saved);
 
         await interaction.respond(`Player ${inlineCode(response.data.attributes.name)} has been saved to your favorite list.`);
     }

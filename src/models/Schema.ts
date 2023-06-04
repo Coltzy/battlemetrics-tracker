@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
-export default new mongoose.Schema({
+export interface IDocument {
+    id: string;
+    name: string;
+    user: string;
+}
+
+export default new mongoose.Schema<IDocument>({
     id: {
         type: String,
         required: true

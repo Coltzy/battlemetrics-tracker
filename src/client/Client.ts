@@ -3,6 +3,8 @@ import CommandHandler from '../CommandHandler';
 import Logger from '../Logger';
 import BMF from '../framework/BMF';
 import Mongo from '../framework/Mongo';
+import Cacher from '../utils/Cacher';
+import { IDocument } from '../models/Schema';
 import 'dotenv/config';
 
 declare module 'discord.js' {
@@ -10,12 +12,16 @@ declare module 'discord.js' {
         commands: CommandHandler;
         BMF: BMF;
         mongo: Mongo;
+        players: Cacher<IDocument>;
+        servers: Cacher<IDocument>;
     }
 }
 
 class BMT extends Client {
     public commands: CommandHandler;
     public BMF: BMF;
+    public players: Cacher<IDocument>;
+    public servers: Cacher<IDocument>;
 
     constructor() {
         super({
@@ -30,7 +36,11 @@ class BMT extends Client {
 
         this.BMF = new BMF();
 
-        this.mongo = new Mongo();
+        this.mongo = new Mongo(this);
+
+        this.players = new Cacher();
+
+        this.servers = new Cacher();
 
         this.once('ready', () => {
             Logger.info('Bot active!');
