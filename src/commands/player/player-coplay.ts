@@ -1,14 +1,17 @@
-import { CommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import ms from 'ms';
 import { PlayerCoplayData } from '../../types/players';
 import PlayerCoplayBuilder from '../../builders/player/player-coplay-builder';
+import ServerAutocompleteCommand from '../server/autocomplete/ServerCommandAutocomplete';
+
+const ServerAutocomplete = new ServerAutocompleteCommand();
 
 class PlayerCoplayCommand extends PlayerAutocompleteCommand {
     public name = 'player-coplay';
 
     public constructor() {
-        super();
+        super((interaction: AutocompleteInteraction) => ServerAutocomplete.autocomplete(interaction));
     }
 
     public async execute(interaction: CommandInteraction) {

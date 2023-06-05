@@ -82,6 +82,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                 option
                     .setName('server')
                     .setDescription('The specific server for the coplay.')
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command =>
@@ -99,6 +100,7 @@ const PlayerInteraction = new SlashCommandBuilder()
                 option
                     .setName('server')
                     .setDescription('The query for a server search to filter the sessions too.')
+                    .setAutocomplete(true)
             )
     )
     .addSubcommand(command =>

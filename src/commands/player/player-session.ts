@@ -1,13 +1,16 @@
-import { CommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import PlayerSessionBuilder from '../../builders/player/player-session-builder';
 import PaginationBuilder from '../../builders/PaginationBuilder';
+import ServerAutocompleteCommand from '../server/autocomplete/ServerCommandAutocomplete';
+
+const ServerAutocomplete = new ServerAutocompleteCommand();
 
 class PlayerSessionCommand extends PlayerAutocompleteCommand {
     public name = 'player-session';
 
     public constructor() {
-        super();
+        super((interaction: AutocompleteInteraction) => ServerAutocomplete.autocomplete(interaction));
     }
 
     public async execute(interaction: CommandInteraction) {
