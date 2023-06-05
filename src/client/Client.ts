@@ -5,6 +5,7 @@ import BMF from '../framework/BMF';
 import Mongo from '../framework/Mongo';
 import Cacher from '../utils/Cacher';
 import { IDocument } from '../models/Schema';
+import '../Extentions';
 import 'dotenv/config';
 
 declare module 'discord.js' {
@@ -14,6 +15,9 @@ declare module 'discord.js' {
         mongo: Mongo;
         players: Cacher<IDocument>;
         servers: Cacher<IDocument>;
+    }
+    interface CommandInteraction {
+        respond: (content: InteractionReplyOptions | string) => void;
     }
 }
 

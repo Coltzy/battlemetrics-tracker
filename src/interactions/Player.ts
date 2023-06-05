@@ -106,11 +106,24 @@ const PlayerInteraction = new SlashCommandBuilder()
             .setName('favorite')
             .setDescription('Add a players to your favorite list.')
             .addStringOption(option =>
-                    option
-                        .setName('query')
-                        .setDescription('The query for the player to favorite.')
-                        .setRequired(true)
-                        .setMaxLength(128)
+                option
+                    .setName('query')
+                    .setDescription('The query for the player to favorite.')
+                    .setRequired(true)
+                    .setMaxLength(128)
+            )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('unfavorite')
+            .setDescription('Removes a player from your favorite list.')
+            .addStringOption(option =>
+                option
+                    .setName('query')
+                    .setDescription('The query for the player to unfavorite.')
+                    .setRequired(true)
+                    .setMaxLength(128)
+                    .setAutocomplete(true)
             )
     );
 

@@ -75,6 +75,19 @@ const ServerInteraction = new SlashCommandBuilder()
                         .setRequired(true)
                         .setMaxLength(128)
             )
+    )
+    .addSubcommand(command =>
+        command
+            .setName('unfavorite')
+            .setDescription('Removes a server from your favorite list.')
+            .addStringOption(option =>
+                option
+                    .setName('query')
+                    .setDescription('The query for the server to unfavorite.')
+                    .setRequired(true)
+                    .setMaxLength(128)
+                    .setAutocomplete(true)
+            )
     );
 
 export default ServerInteraction;
