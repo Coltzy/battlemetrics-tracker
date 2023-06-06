@@ -133,7 +133,7 @@ class GameStatsBuilder extends PageBuilder {
             }
         ] as Page[];
 
-        super(interaction, pages, { attachment });
+        super(interaction, pages, attachment);
     }
 }
 

@@ -1,4 +1,4 @@
-import { CommandInteraction, inlineCode, hyperlink, quote, ButtonBuilder, ButtonStyle, time, TimestampStyles } from 'discord.js';
+import { CommandInteraction, inlineCode, hyperlink, quote, time, TimestampStyles } from 'discord.js';
 import EmbedBuilder from '../../utils/EmbedBuilder';
 import BuilderBase from '../BuilderBase';
 import { PlayerWithServerMeta } from '../../types/players';
@@ -6,8 +6,6 @@ import moment from 'moment';
 import Util from '../../Util';
 import { stripIndent } from 'common-tags';
 import 'moment-duration-format';
-import PlayerServersCommand from '../../commands/player/player-servers';
-import PlayerFavoriteCommand from '../../commands/player/player-favorite';
 
 class PlayerStatsBuilder extends BuilderBase {
     constructor(
@@ -42,24 +40,7 @@ class PlayerStatsBuilder extends BuilderBase {
                 }
             );
 
-        const cbs = [
-            {
-                command: new PlayerServersCommand(),
-                button: new ButtonBuilder()
-                    .setLabel('Servers')
-                    .setCustomId('servers')
-                    .setStyle(ButtonStyle.Secondary)
-            },
-            {
-                command: new PlayerFavoriteCommand(),
-                button: new ButtonBuilder()
-                    .setEmoji({ name: '⭐' })
-                    .setCustomId('favorite')
-                    .setStyle(ButtonStyle.Secondary)
-            }
-        ];
-
-        super(interaction, cbs);
+        super(interaction);
 
         super.respond({
             embeds: [embed]

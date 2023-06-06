@@ -1,12 +1,7 @@
+import { ButtonInteraction, Collection, CommandInteraction, AttachmentBuilder, InteractionReplyOptions, APIButtonComponentWithCustomId } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
 import EmbedBuilder from '../utils/EmbedBuilder';
-import BuilderBase, { CommandButton } from './BuilderBase';
-import { ButtonInteraction, Collection, CommandInteraction, AttachmentBuilder, InteractionReplyOptions, APIButtonComponentWithCustomId } from 'discord.js';
-
-interface PageBuilderOptions {
-    cbs?: CommandButton[];
-    attachment?: AttachmentBuilder;
-}
+import BuilderBase from './BuilderBase';
 
 export interface Page {
     button: ButtonBuilder;
@@ -17,8 +12,8 @@ class PageBuilder extends BuilderBase {
     private pages: Collection<string, EmbedBuilder>;
     private components: ActionRowBuilder<ButtonBuilder>[];
 
-    constructor(interaction: CommandInteraction, pages: Page[], options?: PageBuilderOptions) {
-        super(interaction, options?.cbs);
+    constructor(interaction: CommandInteraction, pages: Page[], attachment?: AttachmentBuilder) {
+        super(interaction);
 
         this.pages = new Collection();
         pages.map((page) => this.pages.set((page.button.data as APIButtonComponentWithCustomId).custom_id, page.embed));
@@ -31,7 +26,7 @@ class PageBuilder extends BuilderBase {
         const opts = {
             embeds: [embed],
             components: [row],
-            files: [options?.attachment]
+            files: [attachment]
         } as InteractionReplyOptions;
 
         this.components = opts.components as ActionRowBuilder<ButtonBuilder>[];
