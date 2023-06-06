@@ -1,12 +1,12 @@
 import { CommandInteraction, inlineCode } from 'discord.js';
 import PlayerModel from '../../models/PlayerModel';
-import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 
-class PlayerUnfavoriteCommand extends PlayerAutocompleteCommand {
+class PlayerUnfavoriteCommand extends Autocomplete {
     public name = 'player-unfavorite';
 
     public constructor() {
-        super();
+        super('players', 'query');
     }
 
     public async execute(interaction: CommandInteraction) {

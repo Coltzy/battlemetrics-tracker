@@ -1,12 +1,12 @@
 import { CommandInteraction, inlineCode } from 'discord.js';
-import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 import ServerModel from '../../models/ServerModel';
 
-class ServerUnfavoriteCommand extends ServerAutocompleteCommand {
+class ServerUnfavoriteCommand extends Autocomplete {
     public name = 'server-unfavorite';
 
     public constructor() {
-        super();
+        super('servers', 'query');
     }
 
     public async execute(interaction: CommandInteraction) {

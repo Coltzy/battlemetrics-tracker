@@ -1,14 +1,14 @@
 import { CommandInteraction, inlineCode } from 'discord.js';
-import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 import ServerLeaderboardBuilder from '../../builders/server/server-leaderboard-builder';
 import Util from '../../Util';
 import PaginationBuilder from '../../builders/PaginationBuilder';
 
-class ServerLeaderboardCommand extends ServerAutocompleteCommand {
+class ServerLeaderboardCommand extends Autocomplete {
     public name = 'server-leaderboard';
 
     public constructor() {
-        super();
+        super('servers', 'query');
     }
 
     public async execute(interaction: CommandInteraction) {

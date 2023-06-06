@@ -1,5 +1,5 @@
 import { CommandInteraction } from 'discord.js';
-import ServerAutocompleteCommand from './autocomplete/ServerCommandAutocomplete';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 import { Server, RustServerData, ArkServerData, CsgoServerData, MinecraftServerData, GmodServerData, DayzServerData, CsServerData } from '../../types/servers';
 
 import RustServerStatsBuilder from '../../builders/server/stats/rust-stats-builder';
@@ -21,11 +21,11 @@ const Builders = {
     'cs': CsgoServerStatsBuilder
 };
 
-class ServerStatsCommand extends ServerAutocompleteCommand {
+class ServerStatsCommand extends Autocomplete {
     public name = 'server-stats';
 
     public constructor() {
-        super();
+        super('servers', 'query');
     }
 
     public async execute(interaction: CommandInteraction) {

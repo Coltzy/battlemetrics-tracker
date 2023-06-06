@@ -13,7 +13,7 @@ class ServerListCommand implements Command {
     public constructor() {}
 
     public async execute(interaction: CommandInteraction) {
-        const server = interaction.options.get('query')?.value as string | undefined;
+        const query = interaction.options.get('query')?.value as string | undefined;
         const game = interaction.options.get('game')?.value as string | undefined;
         const country = interaction.options.get('country')?.value as string | undefined;
 
@@ -28,7 +28,7 @@ class ServerListCommand implements Command {
             'sort': 'rank'
         } as { [key: string]: string };
 
-        if (server) options['filter[search]'] = server;
+        if (query) options['filter[search]'] = query;
         if (game) options['filter[game]'] = game;
         if (country) options['filter[countries]'] = country.toUpperCase();
 

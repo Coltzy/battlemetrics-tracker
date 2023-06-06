@@ -73,7 +73,7 @@ const PlayerInteraction = new SlashCommandBuilder()
             .setDescription('List time spent with other players over the last 24 hours.')
             .addStringOption(option =>
                 option
-                    .setName('player')
+                    .setName('query')
                     .setDescription('The query for the player search.')
                     .setRequired(true)
                     .setAutocomplete(true)
@@ -91,7 +91,7 @@ const PlayerInteraction = new SlashCommandBuilder()
             .setDescription('List a players previous session history.')
             .addStringOption(option =>
                 option
-                    .setName('player')
+                    .setName('query')
                     .setDescription('The query for the player search.')
                     .setRequired(true)
                     .setAutocomplete(true)

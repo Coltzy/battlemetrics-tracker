@@ -1,22 +1,21 @@
 import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 import PlayerSessionBuilder from '../../builders/player/player-session-builder';
 import PaginationBuilder from '../../builders/PaginationBuilder';
-import ServerAutocompleteCommand from '../server/autocomplete/ServerCommandAutocomplete';
 
-const ServerAutocomplete = new ServerAutocompleteCommand();
+const ServerAutocomplete = new Autocomplete('servers', 'server');
 
-class PlayerSessionCommand extends PlayerAutocompleteCommand {
+class PlayerSessionCommand extends Autocomplete {
     public name = 'player-session';
 
     public constructor() {
-        super((interaction: AutocompleteInteraction) => ServerAutocomplete.autocomplete(interaction));
+        super('players', 'query', (interaction: AutocompleteInteraction) => ServerAutocomplete.autocomplete(interaction));
     }
 
     public async execute(interaction: CommandInteraction) {
-        const player = interaction.options.get('player')?.value as string;
+        const query = interaction.options.get('query')?.value as string;
         const name = interaction.options.get('server')?.value as string | undefined; 
-        const response = await interaction.client.BMF.get('players', player);
+        const response = await interaction.client.BMF.get('players', query);
 
         if (!response) {
             return await interaction.respond('No search results were found for the query.');

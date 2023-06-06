@@ -1,14 +1,14 @@
 import { CommandInteraction } from 'discord.js';
-import ServerAutocompleteCommand from '../server/autocomplete/ServerCommandAutocomplete';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 import { PlayerSearch } from '../../types/players';
 import PlayerListBuilder from '../../builders/player/player-list-builder';
 import FilterBuilder, { FilterButton } from '../../builders/FilterBuilder';
 
-class PlayerListCommand extends ServerAutocompleteCommand {
+class PlayerListCommand extends Autocomplete {
     public name = 'player-list';
 
     public constructor() {
-        super();
+        super('servers', 'server');
     }
 
     public async execute(interaction: CommandInteraction) {

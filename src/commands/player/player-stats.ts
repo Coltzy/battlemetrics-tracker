@@ -1,13 +1,13 @@
 import { CommandInteraction } from 'discord.js';
-import PlayerAutocompleteCommand from './autocomplete/PlayerCommandAutocomplete';
 import { PlayerWithServerMeta } from '../../types/players';
 import PlayerStatsBuilder from '../../builders/player/player-stats-builder';
+import Autocomplete from '../../autocompletes/idocument-autocomplete';
 
-class PlayerStatsCommand extends PlayerAutocompleteCommand {
+class PlayerStatsCommand extends Autocomplete {
     public name = 'player-stats';
 
     public constructor() {
-        super();
+        super('players', 'query');
     }
 
     public async execute(interaction: CommandInteraction) {
